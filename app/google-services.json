@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "713403203863",
+    "firebase_url": "https://asthma-777d4.firebaseio.com",
+    "project_id": "asthma-777d4",
+    "storage_bucket": "asthma-777d4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:713403203863:android:34ed384ec00bbba4",
+        "android_client_info": {
+          "package_name": "monash.ultimateinhaler"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "713403203863-jq87tvdtgrtki1e87eeptknp932rbpvj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "monash.ultimateinhaler",
+            "certificate_hash": "2BBF686A7BDC714328E13A193F7D9DDD55332720"
+          }
+        },
+        {
+          "client_id": "713403203863-saf5tr6fl3f0rql7qejc452b24rt1gn3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFP9AMUs5TadeOWwqJ7Crf-fhaREJk76I"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "713403203863-saf5tr6fl3f0rql7qejc452b24rt1gn3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
