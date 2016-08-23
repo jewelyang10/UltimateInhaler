@@ -247,7 +247,14 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
 
-        } else if (id == R.id.nav_log_in) {
+        } else if (id == R.id.nav_reminder) {
+//            ReminderFragment fragment = new ReminderFragment();
+//            android.support.v4.app.FragmentTransaction fragmentTransaction =
+//                    getSupportFragmentManager().beginTransaction();
+//            fragmentTransaction.replace(R.id.fragment_container, fragment);
+//            //fragmentTransaction.addToBackStack(null);
+//            fragmentTransaction.commit();
+
             LogInFragment fragment = new LogInFragment();
             android.support.v4.app.FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();

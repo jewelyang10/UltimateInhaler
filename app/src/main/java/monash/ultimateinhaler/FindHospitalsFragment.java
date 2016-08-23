@@ -319,6 +319,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 
 /**
@@ -331,7 +332,7 @@ public class FindHospitalsFragment extends Fragment implements OnMapReadyCallbac
     private double latitude, longitude;
     private UiSettings mUiSettings;
     GPSTracker gps;
-
+    List<String> quotes;
 
     public FindHospitalsFragment() {
         // Required empty public constructor
@@ -343,14 +344,7 @@ public class FindHospitalsFragment extends Fragment implements OnMapReadyCallbac
                              Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.fragment_find_hospitals, container, false);
-        gps = new GPSTracker(getActivity().getApplicationContext());
-        if (gps.canGetLocation() == true) {
-            latitude = gps.getLatitude();
-            longitude = gps.getLongitude();
-            Log.v("map", latitude + " " + longitude);
-        } else {
-            gps.showSettingsAlert();
-        }
+
 
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(R.id.map);
@@ -367,6 +361,7 @@ public class FindHospitalsFragment extends Fragment implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mUiSettings = mMap.getUiSettings();
+        mMap.setPadding(0,0,300,0);
         mUiSettings.setZoomControlsEnabled(true);
         //LatLng monash = new LatLng(latitude, longitude);//-37.876470,145.044078
 
@@ -381,6 +376,24 @@ public class FindHospitalsFragment extends Fragment implements OnMapReadyCallbac
         //Get the nearby park within 5 kms
         GetHospitals getHospitals = new GetHospitals();
         getHospitals.execute(Double.toString(-37.876470), Double.toString(145.044078));
+        DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this.getContext());
+        databaseAccess.open();
+        quotes = databaseAccess.getQuotes("-37","144");
+        databaseAccess.close();
+
+        for (int i =0; i < quotes.size()/2; i++) {
+            String[] treeDetails = quotes.get(i).split(",");
+            LatLng tree = new LatLng(Double.valueOf(treeDetails[7]), Double.valueOf(treeDetails[8]));
+            String treeName = treeDetails[0];
+            String genus = treeDetails[1];
+            String age = treeDetails[5];
+            String vicinity = "Genus: " + genus +". Date Planted: " + age;
+            //Add markers for trees
+            mMap.addMarker(new MarkerOptions().position(tree).title(treeName).snippet(vicinity)
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
+
+        }
+
     }
 
 
@@ -423,22 +436,25 @@ public class FindHospitalsFragment extends Fragment implements OnMapReadyCallbac
 
         @Override
         protected void onPostExecute(String s) {
-            JSONArray parks = null;
+            JSONArray hospitals = null;
             try {
                 JSONObject raw = new JSONObject(s);
-                parks = raw.getJSONArray("results");
+                hospitals = raw.getJSONArray("results");
                 // Populate tap point
-                for (int i = 0; i < parks.length(); i++) {
+                for (int i = 0; i < hospitals.length(); i++) {
                     // set GeoPoints and title/snippet to be used in the annotation view
-                    double lat = parks.getJSONObject(i).getJSONObject("geometry").getJSONObject("location").getDouble("lat");
-                    double lng = parks.getJSONObject(i).getJSONObject("geometry").getJSONObject("location").getDouble("lng");
-                    String name = parks.getJSONObject(i).getString("name");
-                    String vicinity = parks.getJSONObject(i).getString("vicinity");
+                    double lat = hospitals.getJSONObject(i).getJSONObject("geometry").getJSONObject("location").getDouble("lat");
+                    double lng = hospitals.getJSONObject(i).getJSONObject("geometry").getJSONObject("location").getDouble("lng");
+                    String name = hospitals.getJSONObject(i).getString("name");
+                    String vicinity = hospitals.getJSONObject(i).getString("vicinity");
                     LatLng park = new LatLng(lat, lng);
 
-                    //Add markers for parks
+                    //Add markers for hospitals
                     mMap.addMarker(new MarkerOptions().position(park).title(name).snippet(vicinity));
                 }
+
+
+
             } catch (JSONException e) {
                 Log.e("1", e.getMessage());
             }

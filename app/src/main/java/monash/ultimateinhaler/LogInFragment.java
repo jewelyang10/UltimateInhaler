@@ -35,7 +35,7 @@ public class LogInFragment extends Fragment  {
         this.listView = (ListView) rootView.findViewById(R.id.listView);
         DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this.getContext());
         databaseAccess.open();
-        List<String> quotes = databaseAccess.getQuotes();
+        List<String> quotes = databaseAccess.getQuotes("-37","145");
         databaseAccess.close();
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_list_item_1, quotes);

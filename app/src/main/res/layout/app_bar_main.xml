@@ -16,7 +16,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@drawable/skytitle"
+            android:background="#A76EE5"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
         <!-- android:layout_height="?attr/actionBarSize"
                     android:backgroundTint="#AED6F1"

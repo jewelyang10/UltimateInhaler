@@ -7,16 +7,18 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -44,6 +46,11 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
     private YahooWeatherService service;
     private ProgressDialog dialog;
 
+    ProgressBar myprogressBar;
+    TextView progressingTextView;
+    Handler progressHandler = new Handler();
+    int i = 0;
+
     public MainFragment() {
         // Required empty public constructor
     }
@@ -53,25 +60,33 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
-        swipeRefreshLayout.setColorSchemeColors(android.R.color.holo_blue_dark, android.R.color.holo_green_light,android.R.color.holo_green_dark);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                swipeRefreshLayout.setRefreshing(true);
-                Log.d("Swipe", "Refreshing");
-                ( new Handler()).postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        swipeRefreshLayout.setRefreshing(false);
-                        dialog.setMessage("Loading...");
-                        dialog.show();
-                        service.refreshWeather("Melbourne, Australia");
+//        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
+//        swipeRefreshLayout.setColorSchemeColors(android.R.color.holo_blue_dark, android.R.color.holo_green_light, android.R.color.holo_green_dark);
+//        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                swipeRefreshLayout.setRefreshing(true);
+//                Log.d("Swipe", "Refreshing");
+//                ( new Handler()).postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        swipeRefreshLayout.setRefreshing(false);
+//                        dialog.setMessage("Loading...");
+//                        dialog.show();
+//                        service.refreshWeather("Melbourne, Australia");
+//
+//                    }
+//                }, 3000);
+//            }
+//        });
 
-                    }
-                }, 3000);
-            }
-        });
+        //Configure Progress Bar for pollen count
+        myprogressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
+        progressingTextView = (TextView) rootView.findViewById(R.id.pollen_count_text);
+        GetPollenCount getPollenCount = new GetPollenCount();
+        getPollenCount.execute();
+
+        //Configure weather information
         weatherIconImageView = (ImageView) rootView.findViewById(R.id.weatherIconImageView);
         temperatureTextView = (TextView) rootView.findViewById(R.id.temperatureTextView);
         conditionTextView = (TextView) rootView.findViewById(R.id.conditionTextView);
@@ -112,10 +127,10 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
         double cn = (f - 32) *  5 / 9;
         int ctn = (int) Math.floor(cn);
 
-        temperatureTextView.setText(item.getCondition().getTemperature() + "\u00B0" + channel.getUnits().getTemperature()
+        temperatureTextView.setText(" " + item.getCondition().getTemperature() + "\u00B0" + channel.getUnits().getTemperature()
         + "/ " + Integer.toString(ctn) + "\u00B0" + "C");
-        conditionTextView.setText(item.getCondition().getDescription());
-        locationTextView.setText(service.getLocation());
+        conditionTextView.setText(" " + item.getCondition().getDescription());
+        locationTextView.setText(" " + service.getLocation());
 
         weatherIconImageView_next.setImageDrawable(weatherIconDrawable_next);
 
@@ -123,10 +138,10 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
         double ct = (ft - 32) *  5 / 9;
         int ctt = (int) Math.floor(ct);
 
-        temperatureTextView_next.setText(item.getForecast().getHigh() + "\u00B0" + channel.getUnits().getTemperature()
+        temperatureTextView_next.setText(" " + item.getForecast().getHigh() + "\u00B0" + channel.getUnits().getTemperature()
                 + "/ " + Integer.toString(ctt) + "\u00B0" + "C");
-        conditionTextView_next.setText(item.getForecast().getText());
-        locationTextView_next.setText(service.getLocation());
+        conditionTextView_next.setText(" " + item.getForecast().getText());
+        locationTextView_next.setText(" " + service.getLocation());
     }
 
     @Override
@@ -137,9 +152,10 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
 
 
 
+
+
     //Get the pollen count
     private class GetPollenCount extends AsyncTask<String, Void, String> {
-        String API_key = "AIzaSyAZs_2p8PfJ1BCrvdAzOiflrVBYTfOBS3c";
 
         @Override
         protected String doInBackground(String... args) {
@@ -176,6 +192,27 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
         @Override
         protected void onPostExecute(String s) {
             JSONArray count = null;
+            try {
+                JSONObject raw = new JSONObject(s);
+                count = raw.getJSONArray("forecast");
+                String pollencount = count.getJSONObject(0).getString("pollen_count");
+                if (pollencount.equals("Low")){
+                    progressingTextView.setText("Low");
+                    myprogressBar.setProgress(30);
+                }else if (pollencount.equals("Moderate")){
+                    progressingTextView.setText("Moderate");
+                    myprogressBar.setProgress(50);
+                }else if (pollencount.equals("High")){
+                    progressingTextView.setText("High");
+                    myprogressBar.setProgress(80);
+                }else {
+                    progressingTextView.setText("No information");
+                    myprogressBar.setProgress(100);
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
         }
 
