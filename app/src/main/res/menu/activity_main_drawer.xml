@@ -11,6 +11,7 @@
             android:icon="@drawable/ic_explore_black_24dp"
             android:title="Hospitals" />
         <item
+
             android:id="@+id/nav_tips"
             android:icon="@drawable/ic_lightbulb_outline_black_24dp"
             android:title="General Tips" />
@@ -20,18 +21,22 @@
             <!--android:title="My Inhaler" />-->
     </group>
 
-    <!--<item android:title="More">-->
-        <!--<menu>-->
+    <item android:title="More">
+        <menu>
+            <item
+                android:id="@+id/nav_diary"
+                android:icon="@drawable/ic_mode_edit_black_24dp"
+                android:title="Personal Prediction" />
+            <item
+                android:id="@+id/nav_about"
+                android:icon="@drawable/ic_error_outline_black_24dp"
+                android:title="About" />
             <!--<item-->
-                <!--android:id="@+id/nav_diary"-->
-                <!--android:icon="@drawable/ic_mode_edit_black_24dp"-->
-                <!--android:title="Personal Prediction" />-->
-            <!--<item-->
-                <!--android:id="@+id/nav_about"-->
+                <!--android:id="@+id/nav_log_in"-->
                 <!--android:icon="@drawable/ic_error_outline_black_24dp"-->
-                <!--android:title="About" />-->
+                <!--android:title="Log In" />-->
 
-        <!--</menu>-->
-    <!--</item>-->
+        </menu>
+    </item>
 
 </menu>

@@ -1,0 +1,398 @@
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="monash.ultimateinhaler.TipsFragment">
+    android:background="#53C6E0">
+
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view1"
+        android:layout_gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_width="360dp"
+        android:layout_marginTop="50dp"
+        android:layout_height="300dp"
+        card_view:cardCornerRadius="5dp"
+        card_view:contentPadding="4dp"
+        card_view:cardBackgroundColor="#D3F3FA">
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:id="@+id/card_layout1">
+
+            <ImageView
+                android:id="@+id/tip1"
+                android:layout_width="match_parent"
+                android:layout_height="190dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/tip_im1"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Use allergy-proof covers on pillows and mattresses"
+                android:textColor="#fff"
+                android:textStyle="bold"
+
+                android:background="#000"
+                android:id="@+id/textView_tp1"
+                android:layout_alignBottom="@+id/tip1"
+                android:layout_alignParentStart="true" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Wash bedding weekly in hot water (above 130 degrees F) to get rid of dust mites and use a dehumidifier to reduce excess moisture and help prevent mold in your home."
+                android:textColor="#000"
+                android:id="@+id/textView"
+                android:layout_below="@+id/textView_tp1"
+                />
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view2"
+        android:layout_below="@+id/card_view1"
+        android:layout_gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_width="360dp"
+        android:layout_marginTop="5dp"
+        android:layout_height="300dp"
+        card_view:cardCornerRadius="5dp"
+        card_view:contentPadding="4dp"
+        card_view:cardBackgroundColor="#D3F3FA">
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:id="@+id/card_layout2">
+
+            <ImageView
+                android:id="@+id/tip2"
+                android:layout_width="match_parent"
+                android:layout_height="190dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/tip_im2"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Do not allow pets in bedrooms or on furniture"
+                android:textColor="#fff"
+                android:background="#000"
+                android:textStyle="bold"
+
+                android:id="@+id/textView_tp2"
+                android:layout_alignBottom="@+id/tip2"
+                android:layout_alignParentStart="true" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Pet dander - a common asthma trigger - is often difficult to avoid entirely because for many of us, our pets are just like members of the family."
+                android:textColor="#000"
+                android:id="@+id/textView2"
+                android:layout_below="@+id/textView_tp2"
+                />
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view3"
+        android:layout_below="@+id/card_view2"
+        android:layout_gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_width="360dp"
+        android:layout_marginTop="5dp"
+        android:layout_height="300dp"
+        card_view:cardCornerRadius="5dp"
+        card_view:contentPadding="4dp"
+        card_view:cardBackgroundColor="#D3F3FA">
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:id="@+id/card_layout3">
+
+            <ImageView
+                android:id="@+id/tip3"
+                android:layout_width="match_parent"
+                android:layout_height="190dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/tip_im3"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Remove carpets and stuffed toys from bedrooms"
+                android:textColor="#fff"
+                android:textStyle="bold"
+
+                android:background="#000"
+                android:id="@+id/textView_tp3"
+                android:layout_alignBottom="@+id/tip3"
+                android:layout_alignParentStart="true" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="If carpeting cannot be removed, vacuum at least twice a week with a cleaner equipped with a HEPA air filter. Ask your doctor about which cleaning products are best to use."
+                android:textColor="#000"
+                android:id="@+id/textView3"
+                android:layout_below="@+id/textView_tp3"
+                />
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view4"
+        android:layout_below="@+id/card_view3"
+        android:layout_gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_width="360dp"
+        android:layout_marginTop="5dp"
+        android:layout_height="300dp"
+        card_view:cardCornerRadius="5dp"
+        card_view:contentPadding="4dp"
+        card_view:cardBackgroundColor="#D3F3FA">
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:id="@+id/card_layout4">
+
+            <ImageView
+                android:id="@+id/tip4"
+                android:layout_width="match_parent"
+                android:layout_height="190dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/tip_im4"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Avoid areas where people smoke"
+                android:textColor="#fff"
+                android:textStyle="bold"
+                android:background="#000"
+                android:id="@+id/textView_tp4"
+                android:layout_alignBottom="@+id/tip4"
+                android:layout_alignParentStart="true" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Breathing smoke - even secondhand smoke and smoke on clothing, furniture or drapes - can trigger an asthma attack. Be sure to ask for a smoke-free hotel room when traveling."
+                android:id="@+id/textView4"
+                android:layout_below="@+id/textView_tp4"
+                />
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view5"
+        android:layout_below="@+id/card_view4"
+        android:layout_gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_width="360dp"
+        android:layout_marginTop="5dp"
+        android:layout_height="300dp"
+        card_view:cardCornerRadius="5dp"
+        card_view:contentPadding="4dp"
+        card_view:cardBackgroundColor="#D3F3FA">
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:id="@+id/card_layout5">
+
+            <ImageView
+                android:id="@+id/tip5"
+                android:layout_width="match_parent"
+                android:layout_height="190dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/tip_im5"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Avoid harsh cleaning products and chemicals"
+                android:textStyle="bold"
+                android:textColor="#fff"
+                android:background="#000"
+                android:id="@+id/textView_tp5"
+                android:layout_alignBottom="@+id/tip5"
+                android:layout_alignParentStart="true" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Fumes from household cleaners can trigger asthma. Avoid inhaling fumes at home and prevent exposure away from home as much as possible."
+                android:id="@+id/textView5"
+                android:layout_below="@+id/textView_tp5"
+                />
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view6"
+        android:layout_below="@+id/card_view5"
+        android:layout_gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_width="360dp"
+        android:layout_marginTop="5dp"
+        android:layout_height="300dp"
+        card_view:cardCornerRadius="5dp"
+        card_view:contentPadding="4dp"
+        card_view:cardBackgroundColor="#D3F3FA">
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:id="@+id/card_layout6">
+
+            <ImageView
+                android:id="@+id/tip6"
+                android:layout_width="match_parent"
+                android:layout_height="190dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/tip_im6"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Reduce stress"
+                android:textColor="#fff"
+                android:textStyle="bold"
+                android:background="#000"
+                android:id="@+id/textView_tp6"
+                android:layout_alignBottom="@+id/tip6"
+                android:layout_alignParentStart="true" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Intense emotions and worry often worsen asthma symptoms so take steps to relieve stress in your life. Make time for things you enjoy doing - and for relaxation."
+                android:id="@+id/textView6"
+                android:layout_below="@+id/textView_tp6"
+                />
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view7"
+        android:layout_below="@+id/card_view6"
+        android:layout_gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_width="360dp"
+        android:layout_marginTop="5dp"
+        android:layout_height="300dp"
+        card_view:cardCornerRadius="5dp"
+        card_view:contentPadding="4dp"
+        card_view:cardBackgroundColor="#D3F3FA">
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:id="@+id/card_layout7">
+
+            <ImageView
+                android:id="@+id/tip7"
+                android:layout_width="match_parent"
+                android:layout_height="190dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/tip_im7"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Pay attention to air quality"
+                android:textStyle="bold"
+                android:textColor="#fff"
+                android:background="#000"
+                android:id="@+id/textView_tp7"
+                android:layout_alignBottom="@+id/tip7"
+                android:layout_alignParentStart="true" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Intense emotions and worry often worsen asthma symptoms so take steps to relieve stress in your life. Make time for things you enjoy doing - and for relaxation."
+                android:id="@+id/textView7"
+                android:layout_below="@+id/textView_tp7"
+                />
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</RelativeLayout>
+    </ScrollView>
+
