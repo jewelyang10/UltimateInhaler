@@ -22,7 +22,7 @@
         android:layout_height="300dp"
         card_view:cardCornerRadius="5dp"
         card_view:contentPadding="4dp"
-        card_view:cardBackgroundColor="#D3F3FA">
+        card_view:cardBackgroundColor="#fff">
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -78,7 +78,7 @@
         android:layout_height="300dp"
         card_view:cardCornerRadius="5dp"
         card_view:contentPadding="4dp"
-        card_view:cardBackgroundColor="#D3F3FA">
+        card_view:cardBackgroundColor="#fff">
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -134,7 +134,7 @@
         android:layout_height="300dp"
         card_view:cardCornerRadius="5dp"
         card_view:contentPadding="4dp"
-        card_view:cardBackgroundColor="#D3F3FA">
+        card_view:cardBackgroundColor="#fff">
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -191,7 +191,7 @@
         android:layout_height="300dp"
         card_view:cardCornerRadius="5dp"
         card_view:contentPadding="4dp"
-        card_view:cardBackgroundColor="#D3F3FA">
+        card_view:cardBackgroundColor="#fff">
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -245,7 +245,7 @@
         android:layout_height="300dp"
         card_view:cardCornerRadius="5dp"
         card_view:contentPadding="4dp"
-        card_view:cardBackgroundColor="#D3F3FA">
+        card_view:cardBackgroundColor="#fff">
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -299,7 +299,7 @@
         android:layout_height="300dp"
         card_view:cardCornerRadius="5dp"
         card_view:contentPadding="4dp"
-        card_view:cardBackgroundColor="#D3F3FA">
+        card_view:cardBackgroundColor="#fff">
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -353,7 +353,7 @@
         android:layout_height="300dp"
         card_view:cardCornerRadius="5dp"
         card_view:contentPadding="4dp"
-        card_view:cardBackgroundColor="#D3F3FA">
+        card_view:cardBackgroundColor="#fff">
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
             xmlns:card_view="http://schemas.android.com/apk/res-auto"

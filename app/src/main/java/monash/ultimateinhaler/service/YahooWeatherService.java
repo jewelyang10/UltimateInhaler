@@ -10,7 +10,9 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.net.URLConnection;
+
+import javax.net.ssl.HttpsURLConnection;
+
 import monash.ultimateinhaler.data.Channel;
 
 /**
@@ -46,16 +48,23 @@ public class YahooWeatherService {
                 try {
                     URL url = new URL(endpoint);
 
-                    URLConnection connection = url.openConnection();
-                    InputStream inputStream = connection.getInputStream();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-                    StringBuilder result = new StringBuilder();
-                    String line;
-                    while ((line = reader.readLine()) != null){
-                        result.append(line);
+                    HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+
+
+                    StringBuilder result = null;
+                    if(connection.getResponseCode() == 200) {
+
+                        InputStream inputStream = connection.getInputStream();
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                        result = new StringBuilder();
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            result.append(line);
+                        }
                     }
                     return  result.toString();
                 } catch (Exception e) {
+
                     error = e;
                 }
 
@@ -71,6 +80,7 @@ public class YahooWeatherService {
                 }
 
                 try {
+
                     JSONObject data = new JSONObject(s);
 
                     JSONObject queryResults = data.optJSONObject("query");
@@ -83,9 +93,14 @@ public class YahooWeatherService {
                     }
 
                     Channel channel = new Channel();
+
                     channel.populate(queryResults.optJSONObject("results").optJSONObject("channel"));
+
+
+
                     callback.serviceSuccess(channel);
                 }catch (JSONException e){
+
                     callback.serviceFailure(e);
                 }
 

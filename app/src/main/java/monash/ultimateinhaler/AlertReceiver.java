@@ -19,7 +19,7 @@ public class AlertReceiver extends BroadcastReceiver {
     public void createNotification(Context context, String msg, String msgText, String msgAlert){
         PendingIntent notificIntent =  PendingIntent.getActivity(context, 0 ,new Intent(context, MainActivity.class),0);
         NotificationCompat.Builder mBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(context)
-                .setSmallIcon(R.drawable.header_drawer)
+                .setSmallIcon(R.drawable.purple_header)
                 .setContentTitle(msg)
                 .setTicker(msgAlert)
                 .setContentText(msgText);

@@ -10,13 +10,22 @@ import org.json.JSONObject;
 public class Channel implements JSONPopulator {
     private Units units;
     private Item item;
-
+    private Wind wind;
+    private Astronomy astronomy;
     public Units getUnits() {
         return units;
     }
 
     public Item getItem() {
         return item;
+    }
+
+    public Wind getWind() {
+        return wind;
+    }
+
+    public Astronomy getAstronomy() {
+        return astronomy;
     }
 
     @Override
@@ -29,6 +38,12 @@ public class Channel implements JSONPopulator {
 
         units = new Units();
         units.populate(data.optJSONObject("units"));
+
+        wind = new Wind();
+        wind.populate(data.optJSONObject("wind"));
+
+        astronomy = new Astronomy();
+        astronomy.populate(data.optJSONObject("astronomy"));
 
         item = new Item();
         item.populate(data.optJSONObject("item"));

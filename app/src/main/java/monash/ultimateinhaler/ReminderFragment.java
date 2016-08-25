@@ -49,7 +49,7 @@ public class ReminderFragment extends Fragment {
                         .setContentTitle("Message")
                         .setContentText("New Message")
                         .setTicker("Alert New Message")
-                        .setSmallIcon(R.drawable.header_drawer);
+                        .setSmallIcon(R.drawable.purple_header);
 
                 Intent moreInfoIntent = new Intent(getContext(),MoreInfoNotification.class);
                 TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(getContext());

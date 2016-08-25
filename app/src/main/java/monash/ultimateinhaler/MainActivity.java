@@ -1,14 +1,21 @@
 package monash.ultimateinhaler;
 
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,17 +24,18 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener{
+        implements NavigationView.OnNavigationItemSelectedListener {
     Toolbar toolbar = null;
     NavigationView navigationView = null;
-    String username, email, passwd,title;
+    String username, email, passwd, title;
     TextView nav_user, nav_email;
     FloatingActionButton fab_plus;
     FloatingActionButton fab_weather;
     FloatingActionButton fab_hospital;
     FloatingActionButton fab_tips;
     Animation FabOpen, FabClose, FabRClockwise, FabRanticlockwise;
-    boolean isOpen = false, isNotlogin=true;
+    boolean isOpen = false, isNotlogin = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -37,7 +45,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         //Initiate
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        View hView =  navigationView.getHeaderView(0);
+        View hView = navigationView.getHeaderView(0);
 
         title = getString(R.string.app_name);
 
@@ -57,7 +65,7 @@ public class MainActivity extends AppCompatActivity
         fab_plus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isOpen){
+                if (isOpen) {
                     fab_weather.startAnimation(FabClose);
                     fab_hospital.startAnimation(FabClose);
                     fab_tips.startAnimation(FabClose);
@@ -65,8 +73,8 @@ public class MainActivity extends AppCompatActivity
                     fab_weather.setClickable(false);
                     fab_hospital.setClickable(false);
                     fab_tips.setClickable(false);
-                    isOpen=false;
-                }else {
+                    isOpen = false;
+                } else {
                     fab_weather.startAnimation(FabOpen);
                     fab_hospital.startAnimation(FabOpen);
                     fab_tips.startAnimation(FabOpen);
@@ -74,7 +82,7 @@ public class MainActivity extends AppCompatActivity
                     fab_weather.setClickable(true);
                     fab_hospital.setClickable(true);
                     fab_tips.setClickable(true);
-                    isOpen=true;
+                    isOpen = true;
                 }
             }
         });
@@ -87,28 +95,28 @@ public class MainActivity extends AppCompatActivity
                 android.support.v4.app.FragmentTransaction fragmentTransaction =
                         getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, fragment);
-                //fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
-                if (getSupportActionBar() != null){
-                    getSupportActionBar().setTitle(title);
-                }
+//                if (getSupportActionBar() != null) {
+//                    getSupportActionBar().setTitle(title);
+//                }
             }
         });
 
         fab_hospital.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                title = "Hospitals";
+                title = "Hospitals, Biodiversity";
 
                 FindHospitalsFragment fragment = new FindHospitalsFragment();
                 android.support.v4.app.FragmentTransaction fragmentTransaction =
                         getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, fragment);
-                //fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
-                if (getSupportActionBar() != null){
-                    getSupportActionBar().setTitle(title);
-                }
+//                if (getSupportActionBar() != null) {
+//                    getSupportActionBar().setTitle(title);
+//                }
             }
         });
 
@@ -120,12 +128,12 @@ public class MainActivity extends AppCompatActivity
                 android.support.v4.app.FragmentTransaction fragmentTransaction =
                         getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, fragment);
-                //fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
 
-                if (getSupportActionBar() != null){
-                    getSupportActionBar().setTitle(title);
-                }
+//                if (getSupportActionBar() != null) {
+//                    getSupportActionBar().setTitle(title);
+//                }
             }
         });
 
@@ -146,6 +154,7 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setItemIconTintList(null);
 
 //        if(isNotlogin)
 //        {
@@ -157,21 +166,23 @@ public class MainActivity extends AppCompatActivity
 //            navigationView.getMenu().clear();
 //            navigationView.inflateMenu(R.menu.navigation_with_logout);
 //            isNotlogin = true;
-       // }
+        // }
 
-         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-            finish();
-
-        }
+//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//        if (drawer.isDrawerOpen(GravityCompat.START)) {
+//            drawer.closeDrawer(GravityCompat.START);
+//        } else if(getSupportFragmentManager().getBackStackEntryCount() != 0) {
+//            getSupportFragmentManager().popBackStack();
+//        }else{
+//            super.onBackPressed();
+//            finish();
+//
+//        }
     }
 
     @Override
@@ -189,9 +200,9 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -203,43 +214,43 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
         //String title = getString(R.string.app_name);
         if (id == R.id.nav_home) {
-            title = "Forecast";
+            //title = "Forecast";
             MainFragment fragment = new MainFragment();
             android.support.v4.app.FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, fragment);
-            //fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
-        }else if (id == R.id.nav_inhaler) {
-            title = "My Inhaler";
+        } else if (id == R.id.nav_inhaler) {
+            //title = "My Inhaler";
             FindMyInhalerFragment fragment = new FindMyInhalerFragment();
             android.support.v4.app.FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, fragment);
-            //fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         } else if (id == R.id.nav_hospital) {
-            title = "Hospitals";
+            //title = "Hospitals";
 
             FindHospitalsFragment fragment = new FindHospitalsFragment();
             android.support.v4.app.FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, fragment);
-            //fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
 
         } else if (id == R.id.nav_tips) {
-            title = "General Tips";
+            //title = "General Tips";
             TipsFragment fragment = new TipsFragment();
             android.support.v4.app.FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, fragment);
-            //fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
 
 
-        }  else if (id == R.id.nav_diary) {
-            title = "Personal Dairy";
+        } else if (id == R.id.nav_diary) {
+            //title = "Personal Dairy";
             PredictionFragment fragment = new PredictionFragment();
             android.support.v4.app.FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
@@ -247,30 +258,64 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
 
-        } else if (id == R.id.nav_reminder) {
-//            ReminderFragment fragment = new ReminderFragment();
+//        } else if (id == R.id.nav_reminder) {
+////            ReminderFragment fragment = new ReminderFragment();
+////            android.support.v4.app.FragmentTransaction fragmentTransaction =
+////                    getSupportFragmentManager().beginTransaction();
+////            fragmentTransaction.replace(R.id.fragment_container, fragment);
+////            //fragmentTransaction.addToBackStack(null);
+////            fragmentTransaction.commit();
+//
+//            LogInFragment fragment = new LogInFragment();
 //            android.support.v4.app.FragmentTransaction fragmentTransaction =
 //                    getSupportFragmentManager().beginTransaction();
 //            fragmentTransaction.replace(R.id.fragment_container, fragment);
-//            //fragmentTransaction.addToBackStack(null);
+//            fragmentTransaction.addToBackStack(null);
 //            fragmentTransaction.commit();
 
-            LogInFragment fragment = new LogInFragment();
-            android.support.v4.app.FragmentTransaction fragmentTransaction =
-                    getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container, fragment);
-            //fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
+        } else if (id == R.id.nav_call) {
+            onCall();
 
         }
 
-        if (getSupportActionBar() != null){
-            getSupportActionBar().setTitle(title);
-        }
+//        if (getSupportActionBar() != null){
+//            getSupportActionBar().setTitle(title);
+//        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
+
+    public void onCall() {
+        int permissionCheck = ContextCompat.checkSelfPermission(this, android.Manifest.permission.CALL_PHONE);
+
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{android.Manifest.permission.CALL_PHONE},
+                    123);
+        } else {
+            Intent callIntent = new Intent(Intent.ACTION_CALL);
+            callIntent.setData(Uri.parse("tel:000"));
+
+            startActivity(callIntent);            }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+
+            case 123:
+                if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                } else {
+                    Log.d("TAG", "Call Permission Not Granted");
+                }
+                break;
+
+            default:
+                break;
+        }
+    }
 
 }

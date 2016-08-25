@@ -26,6 +26,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import monash.ultimateinhaler.data.Channel;
 import monash.ultimateinhaler.data.Item;
@@ -39,9 +42,11 @@ import monash.ultimateinhaler.service.YahooWeatherService;
 public class MainFragment extends Fragment implements WeatherServiceCallback {
     View rootView;
     private ImageView weatherIconImageView, weatherIconImageView_next;
-    private TextView temperatureTextView, temperatureTextView_next;
+    private TextView temperatureTextView, temperatureTextView_next, lowtempTextView,
+            windTextView,sunriseTextView,
+            sunsetTextView, dateTextView_now;
     private TextView conditionTextView, conditionTextView_next;
-    private TextView locationTextView, locationTextView_next;
+    private TextView locationTextView, locationTextView_next, dateTextView_tomorrow;
 
     private YahooWeatherService service;
     private ProgressDialog dialog;
@@ -50,7 +55,8 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
     TextView progressingTextView;
     Handler progressHandler = new Handler();
     int i = 0;
-
+    private GetPollenCount myAsyncTask = null;
+    private boolean myAsyncTaskIsRunning = true;
     public MainFragment() {
         // Required empty public constructor
     }
@@ -80,28 +86,54 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
 //            }
 //        });
 
-        //Configure Progress Bar for pollen count
-        myprogressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
-        progressingTextView = (TextView) rootView.findViewById(R.id.pollen_count_text);
-        GetPollenCount getPollenCount = new GetPollenCount();
-        getPollenCount.execute();
+        if(savedInstanceState!=null) {
+            myAsyncTaskIsRunning = savedInstanceState.getBoolean("myAsyncTaskIsRunning");
+        }
+        if(myAsyncTaskIsRunning) {
+
+                //Configure Progress Bar for pollen count
+                myprogressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
+                progressingTextView = (TextView) rootView.findViewById(R.id.pollen_count_text);
+                myAsyncTask = new GetPollenCount();
+                myAsyncTask.execute();
+
+
+                service = new YahooWeatherService(this);
+                dialog = new ProgressDialog(this.getActivity());
+                dialog.setMessage("Loading...");
+                dialog.show();
+                service.refreshWeather("Melbourne, Australia");
+
+        }
+
+//        //Configure Progress Bar for pollen count
+//        myprogressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
+//        progressingTextView = (TextView) rootView.findViewById(R.id.pollen_count_text);
+//        GetPollenCount getPollenCount = new GetPollenCount();
+//        getPollenCount.execute();
 
         //Configure weather information
+        dateTextView_now= (TextView) rootView.findViewById(R.id.textView_today);
         weatherIconImageView = (ImageView) rootView.findViewById(R.id.weatherIconImageView);
         temperatureTextView = (TextView) rootView.findViewById(R.id.temperatureTextView);
         conditionTextView = (TextView) rootView.findViewById(R.id.conditionTextView);
         locationTextView = (TextView) rootView.findViewById(R.id.locationTextView);
+        windTextView = (TextView) rootView.findViewById(R.id.windtextView_now);
+        sunriseTextView = (TextView) rootView.findViewById(R.id.sunrisetextView);
+        sunsetTextView = (TextView) rootView.findViewById(R.id.sunsettextView);
 
+        dateTextView_tomorrow = (TextView) rootView.findViewById(R.id.textView_tomorrow);
         weatherIconImageView_next = (ImageView) rootView.findViewById(R.id.weatherIconImageView_next);
+        lowtempTextView = (TextView) rootView.findViewById(R.id.lowtemperaturetextView);
         temperatureTextView_next = (TextView) rootView.findViewById(R.id.temperatureTextView_next);
         conditionTextView_next = (TextView) rootView.findViewById(R.id.conditionTextView_next);
         locationTextView_next = (TextView) rootView.findViewById(R.id.locationTextView_next);
 
-        service = new YahooWeatherService(this);
-        dialog = new ProgressDialog(this.getActivity());
-        dialog.setMessage("Loading...");
-        dialog.show();
-        service.refreshWeather("Melbourne, Australia");
+//        service = new YahooWeatherService(this);
+//        dialog = new ProgressDialog(this.getActivity());
+//        dialog.setMessage("Loading...");
+//        dialog.show();
+//        service.refreshWeather("Melbourne, Australia");
 
 
 
@@ -109,14 +141,15 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
         return rootView;
     }
 
-
     @Override
     public void serviceSuccess(Channel channel) {
         dialog.hide();
 
         Item item = channel.getItem();
+
         int resourceId = getResources().getIdentifier("drawable/icon_" + item.getCondition().getCode(), null, getContext().getPackageName());
         int tomorrowId = getResources().getIdentifier("drawable/icon_" + item.getForecast().getCode(), null, getContext().getPackageName());
+
         @SuppressWarnings("deprecation")
         Drawable weatherIconDrawable = getResources().getDrawable(resourceId);
         @SuppressWarnings("deprecation")
@@ -127,27 +160,50 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
         double cn = (f - 32) *  5 / 9;
         int ctn = (int) Math.floor(cn);
 
+        //Get the current system date
+        DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+        Date date = new Date();
+        dateTextView_now.setText(" Now, " + dateFormat.format(date));
+
+        //Populate the weather info for today
         temperatureTextView.setText(" " + item.getCondition().getTemperature() + "\u00B0" + channel.getUnits().getTemperature()
         + "/ " + Integer.toString(ctn) + "\u00B0" + "C");
         conditionTextView.setText(" " + item.getCondition().getDescription());
         locationTextView.setText(" " + service.getLocation());
+        windTextView.setText(" Wind: " + channel.getWind().getSpeed() + " mph");
+        sunriseTextView.setText(" Sunrise: " + channel.getAstronomy().getSunrise());
+        sunsetTextView.setText(" Sunset: " + channel.getAstronomy().getSunset());
 
+        //Weathe info for tomorrow
+        dateTextView_tomorrow.setText(" " + channel.getItem().getForecast().getDay() + ", " +
+        channel.getItem().getForecast().getDate());
         weatherIconImageView_next.setImageDrawable(weatherIconDrawable_next);
 
+        //Parse the F to C
         int ft = Integer.valueOf(item.getForecast().getHigh());
         double ct = (ft - 32) *  5 / 9;
         int ctt = (int) Math.floor(ct);
 
-        temperatureTextView_next.setText(" " + item.getForecast().getHigh() + "\u00B0" + channel.getUnits().getTemperature()
+        int fl = Integer.valueOf(item.getForecast().getLow());
+        double cl = (fl - 32) *  5 / 9;
+        int clt = (int) Math.floor(cl);
+
+        temperatureTextView_next.setText(" High: " + item.getForecast().getHigh() + "\u00B0"
+                + channel.getUnits().getTemperature()
                 + "/ " + Integer.toString(ctt) + "\u00B0" + "C");
+        lowtempTextView.setText(" Low: " + item.getForecast().getLow() + "\u00B0"
+                + channel.getUnits().getTemperature()
+                + "/ " + Integer.toString(clt) + "\u00B0" + "C" );
         conditionTextView_next.setText(" " + item.getForecast().getText());
         locationTextView_next.setText(" " + service.getLocation());
+
+
     }
 
     @Override
     public void serviceFailure(Exception exception) {
         dialog.hide();
-        Toast.makeText(getActivity(), exception.getMessage(), Toast.LENGTH_LONG).show();;
+        Toast.makeText(getActivity(), exception.getMessage(), Toast.LENGTH_LONG).show();
     }
 
 
@@ -209,7 +265,9 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
                     progressingTextView.setText("No information");
                     myprogressBar.setProgress(100);
                 }
-
+                getResources().getString(R.string.app_name);
+                myAsyncTaskIsRunning = false;
+                myAsyncTask = null;
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -217,5 +275,22 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
         }
 
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("myAsyncTaskIsRunning",myAsyncTaskIsRunning);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(myAsyncTask!=null) myAsyncTask.cancel(true);
+        myAsyncTask = null;
+
+    }
+
+
+
 
 }

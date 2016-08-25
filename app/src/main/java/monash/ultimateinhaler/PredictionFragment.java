@@ -6,7 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TabHost;
+import android.widget.TextView;
 
 
 /**
@@ -14,7 +14,7 @@ import android.widget.TabHost;
  */
 public class PredictionFragment extends Fragment {
     View rootview;
-
+    TextView weather;
 
     public PredictionFragment() {
         // Required empty public constructor
@@ -26,31 +26,19 @@ public class PredictionFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootview = inflater.inflate(R.layout.fragment_prediction, container, false);
-        //Configure tabHost
-        final TabHost tabHost = (TabHost) rootview.findViewById(R.id.tabHost);
-        tabHost.setup();
+        weather = (TextView) rootview.findViewById(R.id.textView_prediction);
 
-        TabHost.TabSpec tabSpec = tabHost.newTabSpec("Diary");
-        tabSpec.setContent(R.id.diary);
-        tabSpec.setIndicator("Diary");
+        //Extract the bundle from the intent to use variables
+        Bundle bundle = getActivity().getIntent().getExtras();
+        //Extract each value from the bundle for usage
+        String temperature = bundle.getString("Temperature");
+        String wind = bundle.getString("Wind");
+        String sunrise = bundle.getString("Sunrise");
+        String sunset = bundle.getString("Sunset");
 
-        tabHost.addTab(tabSpec);
+        weather.setText(temperature + " \n" + wind + "\n " + sunrise + "\n" + sunset);
 
-        tabSpec = tabHost.newTabSpec("Calendar/Report");
-        tabSpec.setContent(R.id.calendar);
-        tabSpec.setIndicator("Calendar/Report");
-        tabHost.addTab(tabSpec);
-//        //When click the second tab, execute startTimer function
-//        tabHost.getTabWidget().getChildAt(1).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // re enforce selecting targeted tab to re apply main listener to default behaviour
-//                tabHost.setCurrentTab(1);
-//                startTimer(rootview);
-//                // re enforce selecting targeted tab to re apply main listener to default behaviour
-//                tabHost.setCurrentTab(1);
-//            }
-//        });
+
 
         return rootview;
     }
