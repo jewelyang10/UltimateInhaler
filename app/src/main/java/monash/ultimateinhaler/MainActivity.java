@@ -1,7 +1,12 @@
 package monash.ultimateinhaler;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -22,6 +27,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -62,6 +68,11 @@ public class MainActivity extends AppCompatActivity
         FabRClockwise = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_clockwise);
         FabRanticlockwise = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.roate_anticlockwise);
 
+        if (!CheckNetwork()){
+
+            Toast.makeText(MainActivity.this, "No internet!Please check your internet!", Toast.LENGTH_SHORT).show();
+            openDialog();
+        }
         fab_plus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -156,18 +167,6 @@ public class MainActivity extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setItemIconTintList(null);
 
-//        if(isNotlogin)
-//        {
-//            navigationView.getMenu().clear();
-//            navigationView.inflateMenu(R.menu.navigation_with_login);
-//            isNotlogin = false;
-//        } else
-//        {
-//            navigationView.getMenu().clear();
-//            navigationView.inflateMenu(R.menu.navigation_with_logout);
-//            isNotlogin = true;
-        // }
-
         navigationView.setNavigationItemSelectedListener(this);
     }
 
@@ -221,14 +220,6 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.replace(R.id.fragment_container, fragment);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
-        } else if (id == R.id.nav_inhaler) {
-            //title = "My Inhaler";
-            FindMyInhalerFragment fragment = new FindMyInhalerFragment();
-            android.support.v4.app.FragmentTransaction fragmentTransaction =
-                    getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container, fragment);
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
         } else if (id == R.id.nav_hospital) {
             //title = "Hospitals";
 
@@ -251,27 +242,33 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_diary) {
             //title = "Personal Dairy";
-            PredictionFragment fragment = new PredictionFragment();
+            CalendarFragment fragment = new CalendarFragment();
             android.support.v4.app.FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, fragment);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
 
-//        } else if (id == R.id.nav_reminder) {
-////            ReminderFragment fragment = new ReminderFragment();
-////            android.support.v4.app.FragmentTransaction fragmentTransaction =
-////                    getSupportFragmentManager().beginTransaction();
-////            fragmentTransaction.replace(R.id.fragment_container, fragment);
-////            //fragmentTransaction.addToBackStack(null);
-////            fragmentTransaction.commit();
-//
+        } else if (id == R.id.nav_prediction) {
+//            ReminderFragment fragment = new ReminderFragment();
+//            android.support.v4.app.FragmentTransaction fragmentTransaction =
+//                    getSupportFragmentManager().beginTransaction();
+//            fragmentTransaction.replace(R.id.fragment_container, fragment);
+//            //fragmentTransaction.addToBackStack(null);
+//            fragmentTransaction.commit();
+
 //            LogInFragment fragment = new LogInFragment();
 //            android.support.v4.app.FragmentTransaction fragmentTransaction =
 //                    getSupportFragmentManager().beginTransaction();
 //            fragmentTransaction.replace(R.id.fragment_container, fragment);
 //            fragmentTransaction.addToBackStack(null);
 //            fragmentTransaction.commit();
+            PredictionFragment fragment = new PredictionFragment();
+            android.support.v4.app.FragmentTransaction fragmentTransaction =
+                    getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, fragment);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
 
         } else if (id == R.id.nav_call) {
             onCall();
@@ -316,6 +313,38 @@ public class MainActivity extends AppCompatActivity
             default:
                 break;
         }
+    }
+
+    //Open dialog when internet error occurs
+    public void openDialog() {
+        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+        alertDialog.setTitle("Internet Error");
+        alertDialog.setMessage("Make sure your open your internet connection!");
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
+
+    //Check the mobile's network state
+    private boolean CheckNetwork() {
+        boolean haveConnectedWifi = false;
+        boolean haveConnectedMobile = false;
+
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
+        for (NetworkInfo ni : netInfo) {
+            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
+                if (ni.isConnected())
+                    haveConnectedWifi = true;
+            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
+                if (ni.isConnected())
+                    haveConnectedMobile = true;
+        }
+        return haveConnectedWifi || haveConnectedMobile;
     }
 
 }

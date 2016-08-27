@@ -26,17 +26,6 @@ public class PredictionFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootview = inflater.inflate(R.layout.fragment_prediction, container, false);
-        weather = (TextView) rootview.findViewById(R.id.textView_prediction);
-
-        //Extract the bundle from the intent to use variables
-        Bundle bundle = getActivity().getIntent().getExtras();
-        //Extract each value from the bundle for usage
-        String temperature = bundle.getString("Temperature");
-        String wind = bundle.getString("Wind");
-        String sunrise = bundle.getString("Sunrise");
-        String sunset = bundle.getString("Sunset");
-
-        weather.setText(temperature + " \n" + wind + "\n " + sunrise + "\n" + sunset);
 
 
 
