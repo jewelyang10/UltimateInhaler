@@ -93,6 +93,8 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
 
                 //Configure Progress Bar for pollen count
                 myprogressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
+
+
                 progressingTextView = (TextView) rootView.findViewById(R.id.pollen_count_text);
                 myAsyncTask = new GetPollenCount();
                 myAsyncTask.execute();

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
-    <!--xmlns:tools="http://schemas.android.com/tools"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:background="@drawable/sky"-->
-    <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
-    <!--android:id="@+id/swipe">-->
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/sky"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:id="@+id/swipe">
 <RelativeLayout
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="#6260D6">
+    android:background="@drawable/sky">
 
 
     <LinearLayout
@@ -28,17 +28,18 @@
 
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            >
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="16dp"
-                android:text="Pollen Count"
-                android:textSize="18sp"
-                android:textColor="#fff"
-                android:textStyle="bold" />
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_centerHorizontal="true"-->
+                <!--android:layout_marginTop="20dp"-->
+                <!--android:text="Pollen Count"-->
+                <!--android:textSize="18sp"-->
+                <!--android:textColor="#000"-->
+                <!--android:textStyle="bold" />-->
 
             <ProgressBar
                 android:id="@+id/progressBar"
@@ -51,17 +52,30 @@
                 android:max="100"
                 android:progress="10"
                 android:progressDrawable="@drawable/circular_progress_bar" />
+            <TextView
+                android:id="@+id/pollen_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:textColor="#000"
+                android:textSize="18sp"
+                android:text="Pollen"
+                android:layout_marginTop="90dp"
+                android:textStyle="normal"
+                android:layout_centerHorizontal="true" />
 
             <TextView
                 android:id="@+id/pollen_count_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
                 android:background="@android:color/transparent"
-                android:gravity="center"
-                android:textColor="#fff"
+                android:textColor="#000"
                 android:textSize="30sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_below="@+id/pollen_count"
+                android:layout_centerHorizontal="true" />
+
         </RelativeLayout>
     </LinearLayout>
 
@@ -93,7 +107,7 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/purple"
+                    android:background="@drawable/cardview"
                     android:scaleType="fitXY"/>
 
                 <ImageView
@@ -242,7 +256,7 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/purple"
+                    android:background="@drawable/cardview"
                     android:scaleType="fitXY"
                     android:layout_alignParentBottom="true" />
 
@@ -345,10 +359,17 @@
 
             </RelativeLayout>
         </android.support.v7.widget.CardView>
+            <TextView
+                android:id="@+id/blank"
+                android:layout_below="@+id/card_view_next"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_alignParentBottom="true" />
+
         </RelativeLayout>
 
     </ScrollView>
 
 </RelativeLayout>
 
-    <!--</android.support.v4.widget.SwipeRefreshLayout>-->
+    </android.support.v4.widget.SwipeRefreshLayout>

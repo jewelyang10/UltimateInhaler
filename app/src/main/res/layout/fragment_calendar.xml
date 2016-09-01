@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+<LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="50dp">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginTop="60dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
         <LinearLayout
             android:id="@+id/calendar1"
@@ -17,37 +14,25 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
         </LinearLayout>
+         <!--<ScrollView-->
+            <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent">-->
 
-        <LinearLayout
-            android:id="@+id/button_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+             <!--<LinearLayout-->
+                 <!--android:id="@+id/weekReport"-->
+                 <!--android:layout_width="match_parent"-->
+                 <!--android:layout_height="match_parent"-->
+                 <!--android:orientation="vertical">-->
 
+                 <!--<com.github.mikephil.charting.charts.BarChart-->
+                     <!--android:id="@+id/BarChart"-->
+                     <!--android:layout_width="match_parent"-->
+                     <!--android:layout_height="300dp" />-->
 
-            <!--<Button-->
-                <!--android:id="@+id/customize_button"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_weight="1"-->
-                <!--android:text="customize"/>-->
+             <!--</LinearLayout>-->
 
-            <!--<Button-->
-                <!--android:id="@+id/show_dialog_button"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_weight="1"-->
-                <!--android:text="show_dialog"/>-->
-        </LinearLayout>
+        <!--</ScrollView>-->
 
-       <!--<TableLayout-->
-           <!--android:layout_width="match_parent"-->
-           <!--android:layout_height="wrap_content">-->
-
-           <!--<TableRow>-->
-               <!--<-->
-           <!--</TableRow>-->
-       <!--</TableLayout>-->
 
     </LinearLayout>
-</ScrollView>

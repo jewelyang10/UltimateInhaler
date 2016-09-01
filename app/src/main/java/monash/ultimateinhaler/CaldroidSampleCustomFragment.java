@@ -13,6 +13,9 @@ public class CaldroidSampleCustomFragment extends CaldroidFragment {
         // TODO Auto-generated method stub
         return new CaldroidSampleCustomAdapter(getActivity(), month, year,
                 getCaldroidData(), extraData);
+
     }
+
+
 
 }

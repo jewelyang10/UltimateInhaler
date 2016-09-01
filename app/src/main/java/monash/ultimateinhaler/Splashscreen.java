@@ -50,6 +50,8 @@ public class Splashscreen extends Activity {
                         sleep(100);
                         waited += 100;
                     }
+//                    Intent intent = new Intent(Splashscreen.this,
+//                            MainActivity.class);
                     Intent intent = new Intent(Splashscreen.this,
                             MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);

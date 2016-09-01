@@ -3,14 +3,19 @@ package monash.ultimateinhaler;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidGridAdapter;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 
 import hirondelle.date4j.DateTime;
@@ -28,8 +33,12 @@ public class CaldroidSampleCustomAdapter extends CaldroidGridAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        // Get your data here
+        Drawable drawableRed = (Drawable) extraData.get("DrawableRed");
+        Drawable drawableWhite = (Drawable) extraData.get("DrawableWhite");
+        ArrayList<Date> dateFromDatabase = (ArrayList<Date>) extraData.get("dateFromDatabase");
         LayoutInflater inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View cellView = convertView;
 
         // For reuse
@@ -43,7 +52,8 @@ public class CaldroidSampleCustomAdapter extends CaldroidGridAdapter {
         int rightPadding = cellView.getPaddingRight();
 
         TextView tv1 = (TextView) cellView.findViewById(R.id.tv1);
-        TextView tv2 = (TextView) cellView.findViewById(R.id.tv2);
+        ImageView imageView = (ImageView) cellView.findViewById(R.id.imageEvent);
+        //imageView.setImageDrawable(drawableWhite);
 
         tv1.setTextColor(Color.BLACK);
 
@@ -51,8 +61,13 @@ public class CaldroidSampleCustomAdapter extends CaldroidGridAdapter {
         DateTime dateTime = this.datetimeList.get(position);
         Resources resources = context.getResources();
 
+        //Get today date
+        Date date= Calendar.getInstance().getTime();
+
+
         // Set color of the dates in previous / next month
         if (dateTime.getMonth() != month) {
+            //noinspection deprecation
             tv1.setTextColor(resources
                     .getColor(com.caldroid.R.color.caldroid_darker_gray));
         }
@@ -82,11 +97,20 @@ public class CaldroidSampleCustomAdapter extends CaldroidGridAdapter {
 
         // Customize for selected dates
         if (selectedDates != null && selectedDates.indexOf(dateTime) != -1) {
-            //noinspection deprecation
-            cellView.setBackgroundColor(resources
-                    .getColor(com.caldroid.R.color.caldroid_sky_blue));
+            int year = selectedDates.get(0).getYear();
+            int datetimeMonth =  selectedDates.get(0).getMonth();
+            int day =  selectedDates.get(0).getDay();
+            Calendar cal = Calendar.getInstance();
+            cal.clear();
 
-            tv1.setTextColor(Color.BLACK);
+            // datetimeMonth start at 1. Need to minus 1 to get javaMonth
+            cal.set(year, datetimeMonth - 1, day);
+            if (cal.getTime().before(date)) {
+                cellView.setBackgroundColor(resources
+                        .getColor(com.caldroid.R.color.caldroid_holo_blue_light));
+//            imageView.setImageDrawable(drawable);
+                tv1.setTextColor(Color.BLACK);
+            }
 
         } else {
             shouldResetSelectedView = true;
@@ -101,9 +125,54 @@ public class CaldroidSampleCustomAdapter extends CaldroidGridAdapter {
             }
         }
 
-        tv1.setText("" + dateTime.getDay());
-        tv2.setText("Hi");
+        if (dateFromDatabase != null){
+            for (int i = 0 ; i < dateFromDatabase.size(); i++){
+                int year = dateTime.getYear();
+                int datetimeMonth = dateTime.getMonth();
+                int day = dateTime.getDay();
 
+                Calendar calendar = Calendar.getInstance();
+                calendar.clear();
+                // datetimeMonth start at 1. Need to minus 1 to get javaMonth
+                calendar.set(year, datetimeMonth - 1, day);
+
+                //If the date in calendar exits, use a custom layout
+                if (dateFromDatabase.get(i).equals(calendar.getTime())) {
+                    imageView.setImageDrawable(drawableRed);
+                }
+
+                else{
+                    //make visible to program
+                    cellView.setBackgroundResource(com.caldroid.R.drawable.cell_bg);
+
+                }
+            }
+            if (dateTime.equals(getToday())) {
+                cellView.setBackgroundResource(com.caldroid.R.drawable.red_border);
+            } else {
+                cellView.setBackgroundResource(com.caldroid.R.drawable.cell_bg);
+            }
+            if (selectedDates != null && selectedDates.indexOf(dateTime) != -1) {
+                int year = selectedDates.get(0).getYear();
+                int datetimeMonth =  selectedDates.get(0).getMonth();
+                int day =  selectedDates.get(0).getDay();
+                Calendar cal = Calendar.getInstance();
+                cal.clear();
+
+                // datetimeMonth start at 1. Need to minus 1 to get javaMonth
+                cal.set(year, datetimeMonth - 1, day);
+                if (cal.getTime().before(date)) {
+                    cellView.setBackgroundColor(resources
+                            .getColor(com.caldroid.R.color.caldroid_holo_blue_light));
+                    tv1.setTextColor(Color.BLACK);
+                }
+
+            } else {
+                shouldResetSelectedView = true;
+            }
+        }
+
+        tv1.setText("" + dateTime.getDay());
         // Somehow after setBackgroundResource, the padding collapse.
         // This is to recover the padding
         cellView.setPadding(leftPadding, topPadding, rightPadding,
@@ -114,6 +183,7 @@ public class CaldroidSampleCustomAdapter extends CaldroidGridAdapter {
 
         return cellView;
     }
+
 
 
 

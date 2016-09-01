@@ -5,7 +5,8 @@
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/thermometer"
-            android:title="Now, Today" />
+            android:title="Now, Today"
+            />
         <item
             android:id="@+id/nav_hospital"
             android:icon="@drawable/red_worldwide_location"

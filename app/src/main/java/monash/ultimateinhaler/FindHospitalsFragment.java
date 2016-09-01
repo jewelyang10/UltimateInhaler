@@ -212,6 +212,8 @@ public class FindHospitalsFragment extends Fragment implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mUiSettings = mMap.getUiSettings();
+//        mMap.setPadding(100,100,0,200);
+
         mMap.setPadding(0,0,300,0);
 
         mUiSettings.setZoomControlsEnabled(true);

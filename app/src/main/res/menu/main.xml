@@ -8,6 +8,27 @@
         <!--app:showAsAction="never"-->
         <!--android:icon="@android:drawable/ic_menu_manage"/>-->
 
+    <!--<item-->
+        <!--android:id="@+id/nav_home"-->
+        <!--android:icon="@drawable/thermometer"-->
+        <!--android:title="Now, Today" />-->
+    <!--<item-->
+        <!--android:id="@+id/nav_hospital"-->
+        <!--android:icon="@drawable/red_worldwide_location"-->
+        <!--android:title="Hospitals, Biodiversity" />-->
+    <!--<item-->
 
+        <!--android:id="@+id/nav_tips"-->
+        <!--android:icon="@drawable/idea"-->
+        <!--android:title="General Tips" />-->
+    <!--<item-->
+        <!--android:id="@+id/nav_diary"-->
+        <!--android:icon="@drawable/ic_mode_edit_black_24dp"-->
+        <!--android:title="Diary" />-->
+
+    <!--<item-->
+        <!--android:id="@+id/nav_prediction"-->
+        <!--android:icon="@drawable/ic_mode_edit_black_24dp"-->
+        <!--android:title="Personal Prediction" />-->
 
 </menu>

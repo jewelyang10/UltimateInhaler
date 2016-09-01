@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <title>Prediction</title>
+    <meta name="description" content=""/>
+    <meta name="author" content="magician-harry"/>
+
+    <meta name="viewport" content="width=device-width; initial-scale=1.0"/>
+    <script src="file:///android_asset/Chart.min.js"></script>
+
+</head>
+
+<body>
+
+<header>
+    <h1>Prediction For asthma</h1>
+</header>
+<div>
+    <h2>Overall Prediction of danger level in percentage</h2>
+    <canvas id="overallDanger" width="100%" height="100%"></canvas>
+</div>
+
+<div>
+    <h2>contribution of each parameter</h2>
+    <canvas id="predictionEvidence" width="100%" height="100%"></canvas>
+</div>
+
+<div>
+    <h2>long term prediction and history</h2>
+    <canvas id="longTermPrediction" width="100%" height="100%"></canvas>
+</div>
+
+<div>
+    <h2>Pollen tendency</h2>
+    <canvas id="pollenTend" width="100%" height="100%"></canvas>
+</div>
+
+<div>
+    <h2>biodiversity of surrounding and personal triggering history</h2>
+    <canvas id="bioCondition" width="100%" height="100%"></canvas>
+</div>
+
+<footer>
+    <p>
+        &copy; Copyright by Olympia
+    </p>
+</footer>
+
+</body>
+<script type="text/javascript">
+		var myLongTermPrediction = new Chart(
+			document.getElementById("longTermPrediction").getContext("2d"), 
+											 {
+    type: 'bar',
+    data: {
+        labels: ["previous", "yesterday", "Today", "tomorrow", "afterwards"],
+        datasets: [{
+            label: 'percentage (%)',
+            data: [12, 19, 25, 5, 2],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+            ],
+            borderColor: [
+                'rgba(255,99,132,1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+            ],
+            borderWidth: 2
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }]
+        }
+    }
+});
+	var pollenTendGraph = new Chart( document.getElementById("pollenTend").getContext("2d"),
+									{
+    type: 'line',
+    data: {
+    labels: ["March", "April", "May", "June", "July", "August", "September"],
+    datasets: [
+        {
+            label: "average pollen count concentration",
+            fill: true,
+            lineTension: 0.2,
+            backgroundColor: "rgba(75,192,192,0.4)",
+            borderColor: "rgba(75,192,192,1)",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "rgba(75,192,192,1)",
+            pointBackgroundColor: "#fff",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)",
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+            data: [90, 70, 50, 25, 30, 40, 80],
+            spanGaps: false,
+        }
+    ]
+},
+    options: {
+        scales: {
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+});
+		
+
+		var myRadarChart = new Chart(document.getElementById("bioCondition").getContext("2d"), {
+    	type: 'radar',
+    	data: {
+    labels: ["Eucalyptus","Ulmus","Platanus","Acacia","Corymbia","Allocasuarina","Quercus"],
+    datasets: [
+        {
+            label: "environmental situation in percentage",
+            backgroundColor: "rgba(179,181,198,0.2)",
+            borderColor: "rgba(179,181,198,1)",
+            pointBackgroundColor: "rgba(179,181,198,1)",
+            pointBorderColor: "#fff",
+            pointHoverBackgroundColor: "#fff",
+            pointHoverBorderColor: "rgba(179,181,198,1)",
+            data: [38,14,14,11,11,7,5]
+        },
+        {
+            label: "previous trigger history",
+            backgroundColor: "rgba(255,99,132,0.2)",
+            borderColor: "rgba(255,99,132,1)",
+            pointBackgroundColor: "rgba(255,99,132,1)",
+            pointBorderColor: "#fff",
+            pointHoverBackgroundColor: "#fff",
+            pointHoverBorderColor: "rgba(255,99,132,1)",
+            data: [9, 10, 40, 28, 10, 2, 1]
+        }
+    ]
+},
+    	     options: {
+            scale: {
+                reverse: false,
+                ticks: {
+                    beginAtZero: false
+                }
+            }
+    }
+		});
+
+	var myDoughnutChart = new Chart(document.getElementById("overallDanger").getContext("2d"), {
+    type: 'doughnut',
+    data: {
+    labels: [
+        "Danger Level",
+        "confidence Inteval range",
+        "safe"
+    ],
+    datasets: [
+        {
+            data: [25, 5, 70],
+            backgroundColor: [
+                "#FF6384",
+                "#36A2EB",
+                "#FFCE56"
+            ],
+            hoverBackgroundColor: [
+                "#FF6384",
+                "#36A2EB",
+                "#FFCE56"
+            ]
+        }]
+},
+    options: {}
+});
+		
+var myEvidence = new Chart(document.getElementById("predictionEvidence").getContext("2d"), {
+    data: {
+    datasets: [{
+        data: [
+            11,
+            16,
+            25,
+            30,
+            18
+        ],
+        backgroundColor: [
+            "#FF6384",
+            "#4BC0C0",
+            "#FFCE56",
+            "#E7E9ED",
+            "#36A2EB"
+        ],
+        label: 'My dataset' // for legend
+    }],
+    labels: [
+        "Pollen count",
+        "Biodiversity",
+        "Temperature",
+        "Humidity",
+		"Atmospheric pressure"
+    ]
+},
+    type: 'polarArea',
+    options: {}
+});
+
+
+</script>
+</html>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/three_buttons_activity"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="monash.ultimateinhaler.StartActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        android:background="?attr/colorPrimary">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+             app:popupTheme="@style/AppTheme.PopupOverlay"
+            android:background="?attr/colorPrimary">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ultimate Inhaler"
+                android:layout_gravity="center"
+                android:id="@+id/toolbar_title"
+                android:textSize="17sp"
+
+                android:textStyle="bold"
+                android:textColor="#000"
+                android:typeface="serif" />
+
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/content_start" />
+
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/fab"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="bottom|end"-->
+        <!--android:layout_margin="@dimen/fab_margin"-->
+        <!--android:src="@android:drawable/ic_dialog_email" />-->
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+        <FrameLayout
+            android:id="@+id/fragment_containerStart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </FrameLayout>
+
+        <com.roughike.bottombar.BottomBar
+            android:id="@+id/bottomBar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            app:bb_tabXmlResource="@xml/bottombar_tabs"
+            android:layout_alignParentBottom="true"
+            app:bb_inActiveTabAlpha="0.6"
+            app:bb_activeTabAlpha="1"
+            app:bb_inActiveTabColor="#222222"
+            app:bb_activeTabColor="@color/colorPrimaryDark" />
+    </RelativeLayout>
+    <!--<com.aurelhubert.ahbottomnavigation.AHBottomNavigation-->
+        <!--android:id="@+id/bottom_navigation"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="bottom" />-->
+
+</android.support.design.widget.CoordinatorLayout>
