@@ -20,6 +20,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.joshdholtz.sentry.Sentry;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
@@ -162,6 +163,8 @@ public class CalendarFragment extends Fragment {
                                 formatterToDate.parse(selectedDatesString));
                     } catch (ParseException e) {
                         e.printStackTrace();
+                        Sentry.captureException(e);
+
                     }
                     //displayEventDetailForSelectedDate(selectedDate);
                     //Get the last week seven days date
@@ -207,6 +210,8 @@ public class CalendarFragment extends Fragment {
             displayEventOnCalendar();
         }catch (Exception e){
             System.out.print(e.getMessage());
+            Sentry.captureException(e);
+
         }
 
         return rootView;
@@ -339,6 +344,8 @@ public class CalendarFragment extends Fragment {
                             }
                         }catch (Exception e){
                             System.out.print(e.getMessage());
+                            Sentry.captureException(e);
+
                         }
 
                         dialog.dismiss();
@@ -407,6 +414,8 @@ public class CalendarFragment extends Fragment {
 
                 } catch (ParseException e) {
                     e.printStackTrace();
+                    Sentry.captureException(e);
+
                     //Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
@@ -429,6 +438,8 @@ public class CalendarFragment extends Fragment {
                 caldroidFragment.refreshView();
             }catch (Exception e) {
                 System.out.print(e.getMessage());
+                Sentry.captureException(e);
+
             }
         }
     }

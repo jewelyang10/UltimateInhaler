@@ -53,7 +53,7 @@ public class Splashscreen extends Activity {
 //                    Intent intent = new Intent(Splashscreen.this,
 //                            MainActivity.class);
                     Intent intent = new Intent(Splashscreen.this,
-                            MainActivity.class);
+                            StartActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     startActivity(intent);
                     Splashscreen.this.finish();

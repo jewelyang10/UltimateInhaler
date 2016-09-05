@@ -27,6 +27,7 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.joshdholtz.sentry.Sentry;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -100,6 +101,8 @@ public class FindHospitalsFragment extends Fragment implements OnMapReadyCallbac
         mapFragment.getMapAsync(this);
         } catch(InflateException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
+
             System.out.println("Predicted Time Fragment");
         }
 
@@ -135,28 +138,32 @@ public class FindHospitalsFragment extends Fragment implements OnMapReadyCallbac
      */
     @Override
     public void onConnected(Bundle bundle) {
-        Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        try {
+            Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
-        if (location == null) {
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+            if (location == null) {
+                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
 
-        } else {
-            //If everything went fine lets get latitude and longitude
-            currentLatitude = location.getLatitude();
-            currentLongitude = location.getLongitude();
+            } else {
+                //If everything went fine lets get latitude and longitude
+                currentLatitude = location.getLatitude();
+                currentLongitude = location.getLongitude();
 
-            monash = new LatLng(currentLatitude, currentLongitude);
-            //Customize the marker
-            mMap.addMarker(new MarkerOptions().position(monash).title("Current location")
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)).alpha(0.7f));
+                monash = new LatLng(currentLatitude, currentLongitude);
+                //Customize the marker
+                mMap.addMarker(new MarkerOptions().position(monash).title("Current location")
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)).alpha(0.7f));
 
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(monash, 14));
-            //Toast.makeText(this.getContext(), currentLatitude + " WORKS " + currentLongitude + "", Toast.LENGTH_LONG).show();
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(monash, 14));
+                //Toast.makeText(this.getContext(), currentLatitude + " WORKS " + currentLongitude + "", Toast.LENGTH_LONG).show();
 
 
-            //GetHospitalsGet the nearby park within 5 kms
-            GetHospitals getHospitals = new GetHospitals();
-            getHospitals.execute(Double.toString(currentLatitude), Double.toString(currentLongitude));
+                //GetHospitalsGet the nearby park within 5 kms
+                GetHospitals getHospitals = new GetHospitals();
+                getHospitals.execute(Double.toString(currentLatitude), Double.toString(currentLongitude));
+            }
+        }catch (Exception e){
+            Sentry.captureException(e);
         }
     }
 
@@ -183,6 +190,8 @@ public class FindHospitalsFragment extends Fragment implements OnMapReadyCallbac
             } catch (IntentSender.SendIntentException e) {
                 // Log the error
                 e.printStackTrace();
+                Sentry.captureException(e);
+
             }
         } else {
                 /*
@@ -212,9 +221,9 @@ public class FindHospitalsFragment extends Fragment implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mUiSettings = mMap.getUiSettings();
-//        mMap.setPadding(100,100,0,200);
+        mMap.setPadding(100,100,0,200);
 
-        mMap.setPadding(0,0,300,0);
+//        mMap.setPadding(0,0,300,0);
 
         mUiSettings.setZoomControlsEnabled(true);
         //LatLng monash = new LatLng(latitude, longitude);//-37.876470,145.044078
@@ -278,6 +287,8 @@ public class FindHospitalsFragment extends Fragment implements OnMapReadyCallbac
                 }
             } catch (Exception e) {
                 Log.e("JSON", e.getMessage());
+                Sentry.captureException(e);
+
             } finally {
                 if (conn != null) {
                     conn.disconnect();
@@ -307,6 +318,8 @@ public class FindHospitalsFragment extends Fragment implements OnMapReadyCallbac
                 }
             } catch (JSONException e) {
                 Log.e("1", e.getMessage());
+                Sentry.captureException(e);
+
             }
         }
 

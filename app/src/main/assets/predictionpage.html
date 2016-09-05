@@ -52,15 +52,16 @@
 
 </body>
 <script type="text/javascript">
+
 		var myLongTermPrediction = new Chart(
-			document.getElementById("longTermPrediction").getContext("2d"), 
+			document.getElementById("longTermPrediction").getContext("2d"),
 											 {
     type: 'bar',
     data: {
         labels: ["previous", "yesterday", "Today", "tomorrow", "afterwards"],
         datasets: [{
             label: 'percentage (%)',
-            data: [12, 19, 25, 5, 2],
+            data: JSON.parse(Android.GetLTP()),
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(54, 162, 235, 0.2)',
@@ -113,7 +114,7 @@
             pointHoverBorderWidth: 2,
             pointRadius: 1,
             pointHitRadius: 10,
-            data: [90, 70, 50, 25, 30, 40, 80],
+            data:JSON.parse(Android.GetPollen()),
             spanGaps: false,
         }
     ]
@@ -126,7 +127,7 @@
         }
     }
 });
-		
+
 
 		var myRadarChart = new Chart(document.getElementById("bioCondition").getContext("2d"), {
     	type: 'radar',
@@ -175,7 +176,7 @@
     ],
     datasets: [
         {
-            data: [25, 5, 70],
+            data: JSON.parse(Android.GetOD()),
             backgroundColor: [
                 "#FF6384",
                 "#36A2EB",
@@ -190,7 +191,7 @@
 },
     options: {}
 });
-		
+
 var myEvidence = new Chart(document.getElementById("predictionEvidence").getContext("2d"), {
     data: {
     datasets: [{

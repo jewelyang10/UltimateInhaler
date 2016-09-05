@@ -3,6 +3,7 @@ package monash.ultimateinhaler;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -14,23 +15,38 @@ import android.view.Gravity;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.joshdholtz.sentry.Sentry;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabReselectListener;
 import com.roughike.bottombar.OnTabSelectListener;
 
 public class StartActivity extends AppCompatActivity {
     private TextView mTextView;
+    private int previousPosition;
+    private Typeface ty1;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+        // Sentry will look for uncaught exceptions from previous runs and send them
+        Sentry.init(this.getApplicationContext(), "https://4c9327e0877c45bcbacee3fff7a38236:193fac1f37f74ba29983ecb1fb10be3f@sentry.io/96599");
+        Sentry.captureMessage("Test test test");
+
+        //Configure the typeface
+        ty1 = Typeface.createFromAsset(getAssets(),"fonts/PTSansWide.ttf");
+
+        //Customize the title bar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mTextView = (TextView) toolbar.findViewById(R.id.toolbar_title);
         mTextView.setText("Ultimate Inhaler");
         mTextView.setGravity(Gravity.CENTER);
+        mTextView.setTypeface(ty1);
+        mTextView.setTextSize(27);
+        mTextView.setTypeface(mTextView.getTypeface(), Typeface.BOLD);
+
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
       //  getSupportActionBar().setIcon(R.drawable.applogoblack);
@@ -57,7 +73,6 @@ public class StartActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(@IdRes int tabId) {
                 String title = "";
-
                 switch (tabId) {
                     case R.id.nav_home:
                         title = "Ultimate Inhaler";
@@ -108,6 +123,7 @@ public class StartActivity extends AppCompatActivity {
                 // update selected fragment and title
                 if (getSupportActionBar() != null) {
                     mTextView.setText(title);
+                    mTextView.setTypeface(ty1);
 
                 }
             }

@@ -55,6 +55,8 @@ dependencies {
     compile 'com.google.android.gms:play-services-identity:9.4.0'
     compile 'com.google.android.gms:play-services-gcm:9.4.0'
     compile 'com.roughike:bottom-bar:2.+'
+    compile 'com.joshdholtz.sentry:sentry-android:1.4.4'
+    compile 'com.borjabravo:readmoretextview:2.0.1'
 
 }
 
