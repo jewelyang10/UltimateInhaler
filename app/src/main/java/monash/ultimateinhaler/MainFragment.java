@@ -281,13 +281,21 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
         return dp * (context.getResources().getDisplayMetrics().density);
     }
 
+    /*
+    GetPollenCount
+    Get the pollen count
 
-
+     */
 
     //Get the pollen count
     private class GetPollenCount extends AsyncTask<String, Void, String> {
 
         @Override
+        /*
+        doInBackground
+        @
+
+         */
         protected String doInBackground(String... args) {
             URL url;
             HttpURLConnection conn = null;

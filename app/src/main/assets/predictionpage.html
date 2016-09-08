@@ -12,36 +12,197 @@
     <meta name="viewport" content="width=device-width; initial-scale=1.0"/>
     <script src="file:///android_asset/Chart.min.js"></script>
 
+    <script type="text/javascript">
+    var Calendar = function(divId) {
+			//Store div id
+			this.divId = divId;
+			// Days of week, starting on Sunday
+			this.DaysOfWeek = [
+				'Sunday',
+				'Monday',
+				'Tuesday',
+				'Wednesday',
+				'Thursday',
+				'Friday',
+				'Saturday'
+			];
+			// Months, stating on January
+			this.Months = [	'January','February','March','April',
+						   'May','June','July','August',
+						   'September','October','November','December'];
+			// Set the current month, year
+			var d = new Date();
+			this.CurrentMonth = d.getMonth();
+			this.CurrentYear = d.getFullYear();
+		};
+		// Goes to next month
+		Calendar.prototype.nextMonth = function() {
+			if ( this.CurrentMonth == 11 ) {
+				this.CurrentMonth = 0;
+				this.CurrentYear = this.CurrentYear + 1;
+			}
+			else {
+				this.CurrentMonth = this.CurrentMonth + 1;
+			}
+			this.showCurrent();
+		};
+		// Goes to previous month
+		Calendar.prototype.previousMonth = function() {
+			if ( this.CurrentMonth == 0 ) {
+				this.CurrentMonth = 11;
+				this.CurrentYear = this.CurrentYear - 1;
+			}
+			else {
+				this.CurrentMonth = this.CurrentMonth - 1;
+			}
+			this.showCurrent();
+		};
+		// Show current month
+		Calendar.prototype.showCurrent = function() {
+			this.showMonth(this.CurrentYear, this.CurrentMonth);
+		};
+		// Show month (year, month)
+		Calendar.prototype.showMonth = function(y, m) {
+			var d = new Date()
+				// First day of the week in the selected month
+				, firstDayOfMonth = new Date(y, m, 1).getDay()
+				// Last day of the selected month
+				, lastDateOfMonth =  new Date(y, m+1, 0).getDate()
+				// Last day of the previous month
+				, lastDayOfLastMonth = m == 0 ? new Date(y-1, 11, 0).getDate() : new Date(y, m, 0).getDate();
+			var html = '<table>';
+			// Write selected month and year
+			html += '<thead><td colspan="7">' + this.Months[m] + ' - ' + y + '</thead></tr>';
+			// Write the header of the days of the week
+			html += '<tr>';
+			for(var i=0; i < this.DaysOfWeek.length;i++) {
+				html += '<td>' + this.DaysOfWeek[i] + '</td>';
+			}
+			html += '</tr>';
+			// Write the days
+			var i=1;
+			do {
+				var dow = new Date(y, m, i).getDay();
+				// If Sunday, start new row
+				if ( dow == 0 ) {
+					html += '<tr>';
+				}
+				// If not Sunday but first day of the month
+				// it will write the last days from the previous month
+				else if ( i == 1 ) {
+					html += '<tr>';
+					var k = lastDayOfLastMonth - firstDayOfMonth+1;
+					for(var j=0; j < firstDayOfMonth; j++) {
+						html += '<td class="not-current">' + k + '</td>';
+						k++;
+					}
+				}
+				// Write the current day in the loop
+				html += '<td class="MonthDays">' + i + '</td>';
+				// If Saturday, closes the row
+				if ( dow == 6 ) {
+					html += '</tr>';
+				}
+				// If not Saturday, but last day of the selected month
+				// it will write the next few days from the next month
+				else if ( i == lastDateOfMonth ) {
+					var k=1;
+					for(dow; dow < 6; dow++) {
+						html += '<td class="not-current MonthDays">' + k + '</td>';
+						k++;
+					}
+				}
+				i++;
+			}while(i <= lastDateOfMonth);
+			// Closes table
+			html += '</table>';
+			// Write HTML to the div
+			document.getElementById(this.divId).innerHTML = html;
+		};
+		// On Load of the window
+		window.onload = function() {
+			// Start calendar
+			var c = new Calendar("divCalendar");
+			c.showCurrent();
+			// Bind next and previous button clicks
+			getId('btnNext').onclick = function() {
+				c.nextMonth();
+			};
+			getId('btnPrev').onclick = function() {
+				c.previousMonth();
+			};
+		//onclick function waiting for buddle
+			var allDays =document.getElementsByClassName("MonthDays")
+			for (var i = 0; i < allDays.length; i++)
+			{
+				allDays[i].addEventListener("click",function(){Android.clickDate(this.innerHTML);});
+			}
+		}
+		// Get element by id
+		function getId(id) {
+			return document.getElementById(id);
+		}
+    </script>
+
+    <style type="text/css">
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        }
+        th, td {
+        text-align: left;
+        padding: 8px;
+        }
+        tr:nth-child(even){background-color: #f2f2f2}
+        td.not-current {
+        color: #777777;
+        }
+        thead {
+        color:#fff!important;
+        background-color:#f44336!important;
+        }
+    </style>
+
 </head>
 
 <body>
 
 <header>
-    <h1>Prediction For asthma</h1>
+    <h1>Prediction For Asthma</h1>
 </header>
 <div>
-    <h2>Overall Prediction of danger level in percentage</h2>
+    <h2>Overall Prediction Of Danger Level In Percentage</h2>
+    <h3 id="overallDiscription"></h3>
     <canvas id="overallDanger" width="100%" height="100%"></canvas>
 </div>
 
 <div>
-    <h2>contribution of each parameter</h2>
+    <h2>Contribution of Each Parameter</h2>
     <canvas id="predictionEvidence" width="100%" height="100%"></canvas>
 </div>
 
 <div>
-    <h2>long term prediction and history</h2>
+    <h2>Long Term Prediction and History</h2>
     <canvas id="longTermPrediction" width="100%" height="100%"></canvas>
 </div>
 
 <div>
-    <h2>Pollen tendency</h2>
+    <h2>Pollen Tendency</h2>
     <canvas id="pollenTend" width="100%" height="100%"></canvas>
 </div>
 
 <div>
-    <h2>biodiversity of surrounding and personal triggering history</h2>
+    <h2>Biodiversity of Surrounding and Personal Triggering History</h2>
     <canvas id="bioCondition" width="100%" height="100%"></canvas>
+</div>
+
+<div>
+    <div id="divCalendar" style="overflow-x:auto;">
+
+    </div>
+
+    <button id="btnPrev" type="button">Previous</button>
+    <button id="btnNext" type="button">Next</button>
 </div>
 
 <footer>
@@ -52,13 +213,14 @@
 
 </body>
 <script type="text/javascript">
-
+	
+	
 		var myLongTermPrediction = new Chart(
 			document.getElementById("longTermPrediction").getContext("2d"),
 											 {
     type: 'bar',
     data: {
-        labels: ["previous", "yesterday", "Today", "tomorrow", "afterwards"],
+        labels: ["previous week", "yesterday", "Today", "tomorrow"],
         datasets: [{
             label: 'percentage (%)',
             data: JSON.parse(Android.GetLTP()),
@@ -67,14 +229,12 @@
                 'rgba(54, 162, 235, 0.2)',
                 'rgba(255, 206, 86, 0.2)',
                 'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
             ],
             borderColor: [
                 'rgba(255,99,132,1)',
                 'rgba(54, 162, 235, 1)',
                 'rgba(255, 206, 86, 1)',
                 'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
             ],
             borderWidth: 2
         }]
@@ -127,8 +287,6 @@
         }
     }
 });
-
-
 		var myRadarChart = new Chart(document.getElementById("bioCondition").getContext("2d"), {
     	type: 'radar',
     	data: {
@@ -165,7 +323,24 @@
             }
     }
 		});
-
+	var overallPrediction = JSON.parse(Android.GetOD());
+	var elem = document.getElementById("overallDiscription");
+	
+	if (overallPrediction[0] + overallPrediction[1] <= 30 ){
+		
+		elem.style.color = "Green";
+		document.getElementById("overallDiscription").innerHTML = "Danger Level: LOW!";
+		
+	}else if( overallPrediction[0] + overallPrediction[1] >=70 ){
+		
+		elem.style.color = "Red";
+		document.getElementById("overallDiscription").innerHTML = "Danger Level: HIGH!";
+	}else{
+		
+		elem.style.color = "Yellow";
+		document.getElementById("overallDiscription").innerHTML = "Danger Level: MEDIUM!";
+	}
+	
 	var myDoughnutChart = new Chart(document.getElementById("overallDanger").getContext("2d"), {
     type: 'doughnut',
     data: {
@@ -176,11 +351,11 @@
     ],
     datasets: [
         {
-            data: JSON.parse(Android.GetOD()),
+            data: overallPrediction,
             backgroundColor: [
                 "#FF6384",
                 "#36A2EB",
-                "#FFCE56"
+                "#008000"
             ],
             hoverBackgroundColor: [
                 "#FF6384",
@@ -191,7 +366,8 @@
 },
     options: {}
 });
-
+//baseline percentage of all parameters contribution
+//it will be adjusted in iteration 3
 var myEvidence = new Chart(document.getElementById("predictionEvidence").getContext("2d"), {
     data: {
     datasets: [{
@@ -216,13 +392,11 @@ var myEvidence = new Chart(document.getElementById("predictionEvidence").getCont
         "Biodiversity",
         "Temperature",
         "Humidity",
-		"Atmospheric pressure"
+	"Atmospheric pressure"
     ]
 },
     type: 'polarArea',
     options: {}
 });
-
-
 </script>
 </html>

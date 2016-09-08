@@ -3,6 +3,7 @@ package monash.ultimateinhaler;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -20,10 +21,16 @@ import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabReselectListener;
 import com.roughike.bottombar.OnTabSelectListener;
 
+import java.util.ArrayList;
+
+import za.co.riggaroo.materialhelptutorial.TutorialItem;
+import za.co.riggaroo.materialhelptutorial.tutorial.MaterialTutorialActivity;
+
 public class StartActivity extends AppCompatActivity {
     private TextView mTextView;
     private int previousPosition;
     private Typeface ty1;
+    private static final int REQUEST_CODE = 1234;
 
 
     @Override
@@ -33,6 +40,8 @@ public class StartActivity extends AppCompatActivity {
         // Sentry will look for uncaught exceptions from previous runs and send them
         Sentry.init(this.getApplicationContext(), "https://4c9327e0877c45bcbacee3fff7a38236:193fac1f37f74ba29983ecb1fb10be3f@sentry.io/96599");
         Sentry.captureMessage("Test test test");
+
+        loadTutorial();
 
         //Configure the typeface
         ty1 = Typeface.createFromAsset(getAssets(),"fonts/PTSansWide.ttf");
@@ -272,6 +281,43 @@ public class StartActivity extends AppCompatActivity {
                     }
                 });
         alertDialog.show();
+    }
+
+    public void loadTutorial() {
+        Intent mainAct = new Intent(this, MaterialTutorialActivity.class);
+        mainAct.putParcelableArrayListExtra(MaterialTutorialActivity.MATERIAL_TUTORIAL_ARG_TUTORIAL_ITEMS, getTutorialItems(this));
+        startActivityForResult(mainAct, REQUEST_CODE);
+
+    }
+
+    private ArrayList<TutorialItem> getTutorialItems(Context context) {
+        TutorialItem tutorialItem1 = new TutorialItem(R.string.slide_1_biodiversity, R.string.slide_1_biodiversity_subtitle,
+                R.color.slide_1, R.drawable.tut_page_1_front,  R.drawable.tut_page_1_background);
+
+        TutorialItem tutorialItem2 = new TutorialItem(R.string.slide_2_diary, R.string.slide_2_diary_subtitle,
+                R.color.slide_2,  R.drawable.tut_page_2_front,  R.drawable.tut_page_2_background);
+
+        TutorialItem tutorialItem3 = new TutorialItem(R.string.slide_3_tips, R.string.slide_3_tips_subtitle,
+                R.color.slide_3, R.drawable.tut_page_3_foreground,   R.drawable.tut_page_3_background);
+
+        TutorialItem tutorialItem4 = new TutorialItem(R.string.slide_4_weather, R.string.slide_4_weather_subtitle,
+                R.color.slide_4, R.drawable.tut_page_3_background, R.drawable.tut_page_4_background);
+
+        ArrayList<TutorialItem> tutorialItems = new ArrayList<>();
+        tutorialItems.add(tutorialItem1);
+        tutorialItems.add(tutorialItem2);
+        tutorialItems.add(tutorialItem3);
+        tutorialItems.add(tutorialItem4);
+
+        return tutorialItems;
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //    super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE){
+//            Toast.makeText(this, "Tutorial finished", Toast.LENGTH_LONG).show();
+
+        }
     }
 
 }

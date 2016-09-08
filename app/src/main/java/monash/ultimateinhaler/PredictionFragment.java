@@ -24,13 +24,8 @@ public class PredictionFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-
-        //this.getActivity().requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         Bundle rawData = this.getArguments();
-
-
 
         rootview = inflater.inflate(R.layout.fragment_prediction, container, false);
         WebView predictBase = (WebView) rootview.findViewById(R.id.predictBaseContainer);
@@ -46,7 +41,7 @@ public class PredictionFragment extends Fragment {
             Context mContext;
             Bundle RawVars;
 
-            String LTP = "[12, 19, 25, 5, 2]";
+            String LTP = "[12, 19, 25, 5]";
             String pollen =  "[90, 70, 50, 25, 30, 40, 80]";
             String OD =  "[25, 5, 70]";
 
@@ -67,17 +62,26 @@ public class PredictionFragment extends Fragment {
                 }
             }
 
+            //further development required after the buddle issue
             @JavascriptInterface
-            public String GetLTP() {
+            public String GetLTP()
+            {
                 return this.LTP;
             }
             @JavascriptInterface
-            public String GetPollen(){
+            public String GetPollen()
+            {
                 return this.pollen;
             }
             @JavascriptInterface
-            public String GetOD(){
+            public String GetOD()
+            {
                 return this.OD;
+            }
+            @JavascriptInterface
+            public void clickDate(String date)
+            {
+                Toast.makeText( getContext() , "date: "+date+" are clicked and i need a buddle from Jewel to continue!" , Toast.LENGTH_LONG).show();
             }
         }
 

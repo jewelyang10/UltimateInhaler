@@ -68,8 +68,7 @@
                 android:text="Use allergy-proof covers on pillows and mattresses"
                 android:textColor="#fff"
                 android:textStyle="bold"
-
-                android:background="#000"
+                android:background="#70000000"
                 android:id="@+id/textView_tp1"
                 android:layout_alignBottom="@+id/tip1"
                 android:layout_alignParentStart="true" />
@@ -79,7 +78,7 @@
                 android:layout_marginTop="20dp"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="Wash bedding weekly in hot water (above 130 degrees F) to get rid of dust mites and use a dehumidifier to reduce excess moisture and help prevent mold in your home."
-                android:textColor="#000"
+                android:textColor="#315FEF"
                 android:id="@+id/textView"
                 android:layout_below="@+id/textView_tp1"
                 />
@@ -123,9 +122,8 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="Do not allow pets in bedrooms or on furniture"
                 android:textColor="#fff"
-                android:background="#000"
+                android:background="#70000000"
                 android:textStyle="bold"
-
                 android:id="@+id/textView_tp2"
                 android:layout_alignBottom="@+id/tip2"
                 android:layout_alignParentStart="true" />
@@ -135,7 +133,7 @@
                 android:layout_marginTop="20dp"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="Pet dander - a common asthma trigger - is often difficult to avoid entirely because for many of us, our pets are just like members of the family."
-                android:textColor="#000"
+                android:textColor="#315FEF"
                 android:id="@+id/textView2"
                 android:layout_below="@+id/textView_tp2"
                 />
@@ -181,7 +179,7 @@
                 android:textColor="#fff"
                 android:textStyle="bold"
 
-                android:background="#000"
+                android:background="#70000000"
                 android:id="@+id/textView_tp3"
                 android:layout_alignBottom="@+id/tip3"
                 android:layout_alignParentStart="true" />
@@ -191,7 +189,7 @@
                 android:layout_marginTop="20dp"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="If carpeting cannot be removed, vacuum at least twice a week with a cleaner equipped with a HEPA air filter. Ask your doctor about which cleaning products are best to use."
-                android:textColor="#000"
+                android:textColor="#315FEF"
                 android:id="@+id/textView3"
                 android:layout_below="@+id/textView_tp3"
                 />
@@ -237,7 +235,7 @@
                 android:text="Avoid areas where people smoke"
                 android:textColor="#fff"
                 android:textStyle="bold"
-                android:background="#000"
+                android:background="#70000000"
                 android:id="@+id/textView_tp4"
                 android:layout_alignBottom="@+id/tip4"
                 android:layout_alignParentStart="true" />
@@ -291,7 +289,7 @@
                 android:text="Avoid harsh cleaning products and chemicals"
                 android:textStyle="bold"
                 android:textColor="#fff"
-                android:background="#000"
+                android:background="#70000000"
                 android:id="@+id/textView_tp5"
                 android:layout_alignBottom="@+id/tip5"
                 android:layout_alignParentStart="true" />
@@ -302,6 +300,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="Fumes from household cleaners can trigger asthma. Avoid inhaling fumes at home and prevent exposure away from home as much as possible."
                 android:id="@+id/textView5"
+                android:textColor="#315FEF"
                 android:layout_below="@+id/textView_tp5"
                 />
 
@@ -345,7 +344,7 @@
                 android:text="Reduce stress"
                 android:textColor="#fff"
                 android:textStyle="bold"
-                android:background="#000"
+                android:background="#70000000"
                 android:id="@+id/textView_tp6"
                 android:layout_alignBottom="@+id/tip6"
                 android:layout_alignParentStart="true" />
@@ -356,6 +355,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="Intense emotions and worry often worsen asthma symptoms so take steps to relieve stress in your life. Make time for things you enjoy doing - and for relaxation."
                 android:id="@+id/textView6"
+                android:textColor="#315FEF"
                 android:layout_below="@+id/textView_tp6"
                 />
 
@@ -399,7 +399,7 @@
                 android:text="Pay attention to air quality"
                 android:textStyle="bold"
                 android:textColor="#fff"
-                android:background="#000"
+                android:background="#70000000"
                 android:id="@+id/textView_tp7"
                 android:layout_alignBottom="@+id/tip7"
                 android:layout_alignParentStart="true" />
@@ -411,6 +411,7 @@
                 android:text="Intense emotions and worry often worsen asthma symptoms so take steps to relieve stress in your life. Make time for things you enjoy doing - and for relaxation."
                 android:id="@+id/textView7"
                 android:layout_below="@+id/textView_tp7"
+                android:textColor="#315FEF"
                 />
 
         </RelativeLayout>
@@ -425,4 +426,3 @@
 </RelativeLayout>
     </ScrollView>
 </RelativeLayout>
-
