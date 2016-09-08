@@ -42,6 +42,7 @@ public class DatabaseAccess {
      * Open the database connection.
      */
     public void open() {
+
         this.database = openHelper.getWritableDatabase();
     }
 
