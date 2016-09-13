@@ -13,6 +13,9 @@
     <script src="file:///android_asset/Chart.min.js"></script>
 
     <script type="text/javascript">
+		
+
+		
     var Calendar = function(divId) {
 			//Store div id
 			this.divId = divId;
@@ -123,14 +126,9 @@
 		window.onload = function() {
 			// Start calendar
 			var c = new Calendar("divCalendar");
-			c.showCurrent();
+			//c.showCurrent();
 			// Bind next and previous button clicks
-			getId('btnNext').onclick = function() {
-				c.nextMonth();
-			};
-			getId('btnPrev').onclick = function() {
-				c.previousMonth();
-			};
+
 		//onclick function waiting for buddle
 			var allDays =document.getElementsByClassName("MonthDays")
 			for (var i = 0; i < allDays.length; i++)
@@ -142,6 +140,11 @@
 		function getId(id) {
 			return document.getElementById(id);
 		}
+		
+		
+  			
+
+		
     </script>
 
     <style type="text/css">
@@ -197,6 +200,7 @@
 </div>
 
 <div>
+    <h2>Monthly History and Review</h2>
     <div id="divCalendar" style="overflow-x:auto;">
     </div>
 </div>
@@ -210,29 +214,83 @@
 </body>
 <script type="text/javascript">
 	
+	//add default value in case...	
+	var finalPercentage = [11,16,25,30,18];
+	var overallPredictionPercentage = [25,5,70];
+	var tomorrowRatio = 1.1;
 	
-		var myLongTermPrediction = new Chart(
+	var xhttp = new XMLHttpRequest();
+  			xhttp.onreadystatechange = function() {
+    		if (this.readyState == 4 && this.status == 200) {
+     			
+				var responseJSON = JSON.parse(this.responseText);
+				var humidity = responseJSON["query"]["results"]["channel"]["atmosphere"]["humidity"];
+				var pressure = responseJSON["query"]["results"]["channel"]["atmosphere"]["pressure"] / 10;
+				var temp =  responseJSON["query"]["results"]["channel"]["item"]["condition"]["temp"];
+				var wind = responseJSON["query"]["results"]["channel"]["wind"]["chill"];
+				var tomorrowHigh = responseJSON["query"]["results"]["channel"]["item"]["forecast"][0]["high"];
+ 				var tomorrowLow = responseJSON["query"]["results"]["channel"]["item"]["forecast"][0]["low"];
+				var locationLatitue = responseJSON["query"]["results"]["channel"]["item"]["lat"];
+				var locationLongtitue = responseJSON["query"]["results"]["channel"]["item"]["long"];
+				
+				
+			var minMaxArray = [humidity, pressure, temp, wind];
+			minMaxArray.sort();
+			var preprocessingResult = new Array();
+			var range = minMaxArray[3] - minMaxArray[0];
+				
+			minMaxArray.forEach(function(element)
+								{preprocessingResult.push( (element - minMaxArray[0]) / range + 1 );});
+				
+			var sumStep1 =0;
+			preprocessingResult.forEach(function(ele){sumStep1+=ele;});
+			
+			preprocessingResult.push(2 - 0.8*sumStep1);
+			
+			var sumStep2 =0;
+			preprocessingResult.forEach(function(ele){sumStep2+=ele;});
+				
+			
+				
+			preprocessingResult.forEach(function(element,index){
+				finalPercentage[index] = ( Math.ceil(element/sumStep2*100));
+			});
+				
+			
+			var sumStep3 = 0;
+			finalPercentage.forEach(function(elem){sumStep3+=elem;});
+
+			var safePercentage = Math.ceil( 100 / (1+ Math.pow(  Math.E , 0 - sumStep3/100  )));
+				
+			var danger = Math.ceil( 90 - safePercentage);
+			
+			var CIrange = Math.ceil( 100 - safePercentage - danger);
+				
+			overallPredictionPercentage = [danger,CIrange,safePercentage];
+				
+			tomorrowRatio = temp / tomorrowHigh;
+				
+				
+			
+				var myLongTermPrediction = new Chart(
 			document.getElementById("longTermPrediction").getContext("2d"),
 											 {
     type: 'bar',
     data: {
-        labels: ["previous week", "yesterday", "Today", "tomorrow"],
+        labels: ["Today", "Tomorrow"],
         datasets: [{
             label: 'percentage (%)',
-            data: JSON.parse(Android.GetLTP()),
+            data: [  overallPredictionPercentage[0], Math.ceil(tomorrowRatio * overallPredictionPercentage[0])  ],
             backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
+              
                 'rgba(255, 206, 86, 0.2)',
                 'rgba(75, 192, 192, 0.2)',
             ],
             borderColor: [
-                'rgba(255,99,132,1)',
-                'rgba(54, 162, 235, 1)',
                 'rgba(255, 206, 86, 1)',
                 'rgba(75, 192, 192, 1)',
             ],
-            borderWidth: 2
+            borderWidth: 3
         }]
     },
     options: {
@@ -297,16 +355,7 @@
             pointHoverBackgroundColor: "#fff",
             pointHoverBorderColor: "rgba(179,181,198,1)",
             data: [38,14,14,11,11,7,5]
-        },
-        {
-            label: "previous trigger history",
-            backgroundColor: "rgba(255,99,132,0.2)",
-            borderColor: "rgba(255,99,132,1)",
-            pointBackgroundColor: "rgba(255,99,132,1)",
-            pointBorderColor: "#fff",
-            pointHoverBackgroundColor: "#fff",
-            pointHoverBorderColor: "rgba(255,99,132,1)",
-            data: [9, 10, 40, 28, 10, 2, 1]
+			//due to databse migration, this is a old value manually got from database
         }
     ]
 },
@@ -319,22 +368,23 @@
             }
     }
 		});
-	var overallPrediction = JSON.parse(Android.GetOD());
+	
+	var overallPrediction = overallPredictionPercentage;
 	var elem = document.getElementById("overallDiscription");
 	
 	if (overallPrediction[0] + overallPrediction[1] <= 30 ){
 		
 		elem.style.color = "Green";
-		document.getElementById("overallDiscription").innerHTML = "Danger Level: LOW!";
+		document.getElementById("overallDiscription").innerHTML = "You are Safe!";
 		
 	}else if( overallPrediction[0] + overallPrediction[1] >=70 ){
 		
 		elem.style.color = "Red";
-		document.getElementById("overallDiscription").innerHTML = "Danger Level: HIGH!";
+		document.getElementById("overallDiscription").innerHTML = "you're in Danger!";
 	}else{
 		
 		elem.style.color = "Yellow";
-		document.getElementById("overallDiscription").innerHTML = "Danger Level: MEDIUM!";
+		document.getElementById("overallDiscription").innerHTML = "Please be cautious...";
 	}
 	
 	var myDoughnutChart = new Chart(document.getElementById("overallDanger").getContext("2d"), {
@@ -347,7 +397,7 @@
     ],
     datasets: [
         {
-            data: overallPrediction,
+            data: overallPredictionPercentage,
             backgroundColor: [
                 "#FF6384",
                 "#36A2EB",
@@ -362,18 +412,17 @@
 },
     options: {}
 });
+
+//hiding 95% CI as default
+myDoughnutChart.getDatasetMeta(0).data[1].hidden = true;
+myDoughnutChart.update();
+
 //baseline percentage of all parameters contribution
 //it will be adjusted in iteration 3
 var myEvidence = new Chart(document.getElementById("predictionEvidence").getContext("2d"), {
     data: {
     datasets: [{
-        data: [
-            11,
-            16,
-            25,
-            30,
-            18
-        ],
+        data: finalPercentage,
         backgroundColor: [
             "#FF6384",
             "#4BC0C0",
@@ -383,16 +432,31 @@ var myEvidence = new Chart(document.getElementById("predictionEvidence").getCont
         ],
         label: 'My dataset' // for legend
     }],
-    labels: [
-        "Pollen count",
-        "Biodiversity",
-        "Temperature",
-        "Humidity",
-	"Atmospheric pressure"
-    ]
+    labels: ['Humidity', 'Pressure', 'Temp', 'Wind',"Biodiversity"]
 },
     type: 'polarArea',
     options: {}
-});
+});	
+				
+		
+				
+				
+				
+				
+				
+			
+			
+			
+			
+			
+			
+				
+				
+    			}
+  			};
+  			xhttp.open("GET", "https://query.yahooapis.com/v1/public/yql?q=select+*+from+weather.forecast+where+woeid+in+%28select+woeid+from+geo.places%281%29+where+text%3D%22Melbourne%2C+Australia%22%29&format=json", true);
+  			xhttp.send();
+	
+	
 </script>
 </html>

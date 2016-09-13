@@ -15,28 +15,80 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
+
+import javax.net.ssl.HttpsURLConnection;
+
 
 public class PredictionFragment extends Fragment {
     View rootview;
+    HttpsURLConnection connection = null;
+
     public PredictionFragment() {
         // Required empty public constructor
     }
+
+    //utility function to get string
+    private static String getStringFromInputStream(InputStream is) {
+
+        BufferedReader br = null;
+        StringBuilder sb = new StringBuilder();
+
+        String line;
+        try {
+
+            br = new BufferedReader(new InputStreamReader(is));
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return sb.toString();
+
+    }
+
+    public static int sigmoidConvert(ArrayList<Integer> base) {
+        int range = Collections.max(base) - Collections.min(base);
+
+        for (int singleItem : base) {
+            double result = (singleItem - Collections.min(base)) / range;
+        }
+        return 0;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         Bundle rawData = this.getArguments();
 
+        //set up basic layout
         rootview = inflater.inflate(R.layout.fragment_prediction, container, false);
         WebView predictBase = (WebView) rootview.findViewById(R.id.predictBaseContainer);
-        WebSettings webSettings = predictBase.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-        predictBase.setBackgroundColor(Color.TRANSPARENT);
-        //predictBase.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        predictBase.setWebChromeClient(new WebChromeClient());
-        predictBase.setWebViewClient(new WebViewClient());
+
+        //get GPS location
 
 
+        //get Weather
+
+
+        //interactive class between java and javascript
         class WebAppInterface {
             Context mContext;
             Bundle RawVars;
@@ -58,7 +110,7 @@ public class PredictionFragment extends Fragment {
 
                 }else
                 {
-                    Toast.makeText(getContext(), "Prediction report is in offline mode due to network issue", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Prediction report is still under development...", Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -84,6 +136,13 @@ public class PredictionFragment extends Fragment {
                 Toast.makeText( getContext() , "date: "+date+" are clicked and i need a buddle from Jewel to continue!" , Toast.LENGTH_LONG).show();
             }
         }
+
+        WebSettings webSettings = predictBase.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        predictBase.setBackgroundColor(Color.TRANSPARENT);
+        //predictBase.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        predictBase.setWebChromeClient(new WebChromeClient());
+        predictBase.setWebViewClient(new WebViewClient());
 
         predictBase.addJavascriptInterface(new WebAppInterface(rootview.getContext(),rawData), "Android");
         predictBase.loadUrl("file:///android_asset/predictionpage.html");
