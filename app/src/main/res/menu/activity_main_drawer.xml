@@ -26,6 +26,12 @@
             android:icon="@drawable/ic_mode_edit_black_24dp"
             android:title="Personal Prediction" />
 
+        <item
+            android:id="@+id/nav_about"
+            android:icon="@drawable/ic_mode_edit_black_24dp"
+            android:title="About" />
+
+
     </group>
 
     <!--<item android:title="More">-->

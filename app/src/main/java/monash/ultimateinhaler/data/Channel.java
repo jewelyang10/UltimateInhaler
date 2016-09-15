@@ -12,6 +12,8 @@ public class Channel implements JSONPopulator {
     private Item item;
     private Wind wind;
     private Astronomy astronomy;
+    private Atmosphere atmosphere;
+
     public Units getUnits() {
         return units;
     }
@@ -26,6 +28,10 @@ public class Channel implements JSONPopulator {
 
     public Astronomy getAstronomy() {
         return astronomy;
+    }
+
+    public Atmosphere getAtmosphere() {
+        return atmosphere;
     }
 
     @Override
@@ -47,6 +53,9 @@ public class Channel implements JSONPopulator {
 
         item = new Item();
         item.populate(data.optJSONObject("item"));
+
+        atmosphere = new Atmosphere();
+        atmosphere.populate(data.optJSONObject("atmosphere"));
     }
 
 }

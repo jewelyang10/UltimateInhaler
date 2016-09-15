@@ -1,29 +1,25 @@
 package monash.ultimateinhaler;
 
-import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.Button;
 
 import com.joshdholtz.sentry.Sentry;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -32,11 +28,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CalendarFragment extends Fragment {
+public class CalendarFragment extends Fragment implements Serializable {
     private boolean undo = false;
     private CaldroidFragment caldroidFragment;
     private CaldroidFragment dialogCaldroidFragment;
@@ -48,6 +46,7 @@ public class CalendarFragment extends Fragment {
     SQLiteDatabase sqLiteDatabase;
     String selectedNo;
     Date previoursDateSelected;
+    Button addDiary, showHistory;
 
     private void setCustomResourceForDates() {
         Calendar cal = Calendar.getInstance();
@@ -89,10 +88,36 @@ public class CalendarFragment extends Fragment {
 
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        StartActivity startActivity = (StartActivity) getActivity();
 
-
+        // Set title bar
+        startActivity.setToolBar("Diary", null);
         final SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy");
 
+        //Configure the button
+        addDiary = (Button) rootView.findViewById(R.id.addDiary_button);
+        showHistory = (Button) rootView.findViewById(R.id.showHistory_button);
+
+        //Configure the typeface
+        Typeface ty1 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/PTSans/PTSansRegular.ttf");
+        addDiary.setTypeface(ty1);
+
+        showHistory.setTypeface(ty1);
+
+
+        //Set click listner for add diary button
+        addDiary.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavigateToDiaryEntryFragment();
+            }
+        });
+        showHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navigateToHistoryFragment();
+            }
+        });
         // Setup caldroid fragment
         // **** If you want normal CaldroidFragment, use below line ****
         //caldroidFragment = new CaldroidFragment();
@@ -125,7 +150,7 @@ public class CalendarFragment extends Fragment {
                 // args.putBoolean(CaldroidFragment.SQUARE_TEXT_VIEW_CELL, false);
 
                 // Uncomment this line to use dark theme
-                // args.putInt(CaldroidFragment.THEME_RESOURCE, com.caldroid.R.style.CaldroidDefaultDark);
+                 args.putInt(CaldroidFragment.THEME_RESOURCE, R.style.CaldroidCustomized);
 
                 caldroidFragment.setArguments(args);
             }
@@ -145,13 +170,13 @@ public class CalendarFragment extends Fragment {
                     SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
                     String select = formatter.format(date);
                     String selectedDay = formatter.format(date).substring(0, 2);
-                    if (selectedDay.charAt(0) == '0') {
-                        selectedDay = selectedDay.substring(1, 2);
-                    }
+//                    if (selectedDay.charAt(0) == '0') {
+//                        selectedDay = selectedDay.substring(1, 2);
+//                    }
                     String selectMon = formatter.format(date).substring(3, 5);
-                    if (selectMon.charAt(0) == '0') {
-                        selectMon = selectMon.substring(1, 2);
-                    }
+//                    if (selectMon.charAt(0) == '0') {
+//                        selectMon = selectMon.substring(1, 2);
+//                    }
                     String selectYear = formatter.format(date).substring(6, 10);
                     selectedDate = selectedDay + "-" + selectMon + "-" + selectYear;
                     String selectedDatesString = selectYear + "-" + selectMon + "-" + selectedDay + " 16:21:32";
@@ -172,16 +197,22 @@ public class CalendarFragment extends Fragment {
                     c.add(Calendar.DATE, 0);
                     Date todayDate = c.getTime();
                     if (date.after(todayDate)) {
-                        android.app.AlertDialog alertDialog = new android.app.AlertDialog.Builder(getActivity()).create();
-                        alertDialog.setTitle("Notice");
-                        alertDialog.setMessage("Date should be the past!");
-                        alertDialog.setButton(android.app.AlertDialog.BUTTON_NEUTRAL, "OK",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                });
-                        alertDialog.show();
+//                        android.app.AlertDialog alertDialog = new android.app.AlertDialog.Builder(getActivity()).create();
+//                        alertDialog.setTitle("Notice");
+//                        alertDialog.setMessage("Date should be the past!");
+//                        alertDialog.setButton(android.app.AlertDialog.BUTTON_NEUTRAL, "OK",
+//                                new DialogInterface.OnClickListener() {
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        dialog.dismiss();
+//                                    }
+//                                });
+//                        alertDialog.show();
+                        new SweetAlertDialog(getContext(), SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("Notice")
+                                .setContentText("You must select a date!")
+                                .setConfirmText("Yes, got it!")
+                                .show();
+                        selectedDate = null;
                     }
                     caldroidFragment.refreshView();
 
@@ -246,152 +277,116 @@ public class CalendarFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_add_diary) {
-            if (selectedDate != null) {
+            NavigateToDiaryEntryFragment();
 
-                //When the user selected a date and click the add button on the title bar, user will be allowed to input diary.
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Diary Entry");
-
-                // I'm using fragment here so I'm using getView() to provide ViewGroup
-                // but you can provide here any other instance of ViewGroup from your Fragment / Activity
-                final View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.text_input_dialog, (ViewGroup) getView(), false);
-
-                // Set up the input
-                final RadioGroup newWithAsthmaGroup = (RadioGroup) viewInflated.findViewById(R.id.radioGroup_newWithAsthma);
-                final RadioGroup attackedTodayGroup = (RadioGroup) viewInflated.findViewById(R.id.radioGroup_attackedToday);
-                RadioButton yesNewWithAsthma = (RadioButton) viewInflated.findViewById(R.id.yesButton_newWithAsthma);
-                RadioButton noNewWithAsthma = (RadioButton) viewInflated.findViewById(R.id.noButton_newWithAsthma);
-                RadioButton yesAttacked = (RadioButton) viewInflated.findViewById(R.id.yesButton_attackByAsthma);
-                RadioButton noAttacked = (RadioButton) viewInflated.findViewById(R.id.noButton_attackByAsthma);
-                final EditText othersText = (EditText) viewInflated.findViewById(R.id.editText_others);
-                final TextView timesAttacked = (TextView) viewInflated.findViewById(R.id.howManyTimesAttacked_textView);
-
-                //Configure the numberpicker
-                np = (NumberPicker) viewInflated.findViewById(R.id.numberPicker);
-                timesAttacked.setVisibility(View.GONE);
-                np.setVisibility(View.GONE);
-
-                //Set the minimum value of NumberPicker
-                np.setMinValue(0);
-
-                //Specify the maximum value/number of NumberPicker
-                np.setMaxValue(10);
-
-                //Gets whether the selector wheel wraps when reaching the min/max value.
-                np.setWrapSelectorWheel(true);
-
-                //Set a value change listener for NumberPicker
-                np.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-                    @Override
-                    public void onValueChange(android.widget.NumberPicker picker, int oldVal, int newVal) {
-                        //Display the newly selected number from picker
-                        selectedNo = String.valueOf(newVal);
-
-                    }
-                });
-
-                yesAttacked.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        timesAttacked.setVisibility(View.VISIBLE);
-                        np.setVisibility(View.VISIBLE);
-                    }
-                });
-                noAttacked.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        timesAttacked.setVisibility(View.GONE);
-                        np.setVisibility(View.GONE);
-                    }
-                });
-
-                // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-                builder.setView(viewInflated);
-
-                // Set up the buttons
-                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        int newAsthma = newWithAsthmaGroup.indexOfChild(viewInflated.findViewById(newWithAsthmaGroup.getCheckedRadioButtonId()));
-                        int attackedToday = attackedTodayGroup.indexOfChild(viewInflated.findViewById(attackedTodayGroup.getCheckedRadioButtonId()));
-                        String others = othersText.getText().toString();
-
-                        //Justify the date is selected and insert records into database
-
-                        try {
-                            if (selectedDate != null) {
-
-                                //Justify whether the current selected date's diary exist in db, if exists, just update the records.
-                                if (myDb.currentDayDiaryExist(selectedDate) != 0) {
-                                    if (myDb.updateCurrentDayRecord(selectedDate, newAsthma, attackedToday,
-                                            Integer.parseInt(selectedNo), others)) {
-
-                                        //make visible to program
-                                        Toast.makeText(getContext(), "Successfully update", Toast.LENGTH_SHORT).show();
-                                    }
-
-                                } else {
-                                    if (selectedNo != null) {
-                                        myDb.insertDataToUser(selectedDate, newAsthma, attackedToday,
-                                                Integer.parseInt(selectedNo), others);
-                                    } else {
-                                        myDb.insertDataToUser(selectedDate, newAsthma, attackedToday,
-                                                0, others);
-                                    }
-                                }
-
-                                displayEventOnCalendar();
-                            }
-                        }catch (Exception e){
-                            System.out.print(e.getMessage());
-                            Sentry.captureException(e);
-
-                        }
-
-                        dialog.dismiss();
-
-                    }
-                });
-                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-                builder.show();
-
-                return true;
-            } else {
-                //If the user doesn't select a date and just click add button, the alert dialog will appear
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("  ");
-                // I'm using fragment here so I'm using getView() to provide ViewGroup
-                // but you can provide here any other instance of ViewGroup from your Fragment / Activity
-                final View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.text_alert_dialog, (ViewGroup) getView(), false);
-                // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-                builder.setView(viewInflated);
-
-                // Set up the buttons
-                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        dialog.dismiss();
-
-                    }
-                });
-                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-                builder.show();
-
-                return true;
-            }
+//            if (selectedDate != null) {
+//
+//                //When the user selected a date and click the add button on the title bar, user will be allowed to input diary.
+//                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+//                builder.setTitle("Diary Entry");
+//
+//                // I'm using fragment here so I'm using getView() to provide ViewGroup
+//                // but you can provide here any other instance of ViewGroup from your Fragment / Activity
+//                final View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.text_input_dialog, (ViewGroup) getView(), false);
+//
+//                // Set up the input
+//                final RadioGroup newWithAsthmaGroup = (RadioGroup) viewInflated.findViewById(R.id.radioGroup_newWithAsthma);
+//                final RadioGroup attackedTodayGroup = (RadioGroup) viewInflated.findViewById(R.id.radioGroup_attackedToday);
+//                RadioButton yesNewWithAsthma = (RadioButton) viewInflated.findViewById(R.id.yesButton_newWithAsthma);
+//                RadioButton noNewWithAsthma = (RadioButton) viewInflated.findViewById(R.id.noButton_newWithAsthma);
+//                RadioButton yesAttacked = (RadioButton) viewInflated.findViewById(R.id.yesButton_attackByAsthma);
+//                RadioButton noAttacked = (RadioButton) viewInflated.findViewById(R.id.noButton_attackByAsthma);
+//                final EditText othersText = (EditText) viewInflated.findViewById(R.id.editText_others);
+//                final TextView timesAttacked = (TextView) viewInflated.findViewById(R.id.howManyTimesAttacked_textView);
+//
+//
+//                // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+//                builder.setView(viewInflated);
+//
+//                // Set up the buttons
+//                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        int newAsthma = newWithAsthmaGroup.indexOfChild(viewInflated.findViewById(newWithAsthmaGroup.getCheckedRadioButtonId()));
+//                        int attackedToday = attackedTodayGroup.indexOfChild(viewInflated.findViewById(attackedTodayGroup.getCheckedRadioButtonId()));
+//                        String others = othersText.getText().toString();
+//
+//                        //Justify the date is selected and insert records into database
+//
+//                        try {
+//                            if (selectedDate != null) {
+//
+//                                //Justify whether the current selected date's diary exist in db, if exists, just update the records.
+//                                if (myDb.currentDayDiaryExist(selectedDate) != 0) {
+//                                    if (myDb.updateCurrentDayRecord(selectedDate, newAsthma, attackedToday,
+//                                            Integer.parseInt(selectedNo), others)) {
+//
+//                                        //make visible to program
+//                                        Toast.makeText(getContext(), "Successfully update", Toast.LENGTH_SHORT).show();
+//                                    }
+//
+//                                } else {
+//                                    if (selectedNo != null) {
+//                                        myDb.insertDataToUser(selectedDate, newAsthma, attackedToday,
+//                                                Integer.parseInt(selectedNo), others);
+//                                    } else {
+//                                        myDb.insertDataToUser(selectedDate, newAsthma, attackedToday,
+//                                                0, others);
+//                                    }
+//                                }
+//
+//                                displayEventOnCalendar();
+//                            }
+//                        }catch (Exception e){
+//                            System.out.print(e.getMessage());
+//                            Sentry.captureException(e);
+//
+//                        }
+//
+//                        dialog.dismiss();
+//
+//                    }
+//                });
+//                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//                    }
+//                });
+//
+//                builder.show();
+//
+//                return true;
+//            } else {
+//                //If the user doesn't select a date and just click add button, the alert dialog will appear
+//                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+//                builder.setTitle("  ");
+//                // I'm using fragment here so I'm using getView() to provide ViewGroup
+//                // but you can provide here any other instance of ViewGroup from your Fragment / Activity
+//                final View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.text_alert_dialog, (ViewGroup) getView(), false);
+//                // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+//                builder.setView(viewInflated);
+//
+//                // Set up the buttons
+//                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//
+//                        dialog.dismiss();
+//
+//                    }
+//                });
+//                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//                    }
+//                });
+//
+//                builder.show();
+//
+//                return true;
+//            }
 
         }
         return super.onOptionsItemSelected(item);
@@ -416,14 +411,13 @@ public class CalendarFragment extends Fragment {
                     e.printStackTrace();
                     Sentry.captureException(e);
 
-                    //Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    //Toast.m、dddiiakeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
             try {
                 //make visible to program
                 Resources res = getResources();
-                @SuppressWarnings("deprecation") Drawable drawablered = res.getDrawable(R.drawable.red_circle_solid);
-                @SuppressWarnings("deprecation") Drawable drawablewhite = res.getDrawable(R.drawable.bluefillcalendarevent);
+                @SuppressWarnings("deprecation") Drawable drawablered = res.getDrawable(R.drawable.checkmark50);
 
                 // To set the extraData:
                 Map<String, Object> extraData = caldroidFragment.getExtraData();
@@ -431,7 +425,6 @@ public class CalendarFragment extends Fragment {
 
                 //Parse the data
                 extraData.put("DrawableRed", drawablered);
-                extraData.put("DrawableWhite", drawablewhite);
                 extraDataDatabase.put("dateFromDatabase", displayDatabaseRecords);
 
                 //Refresh the calendar
@@ -442,8 +435,74 @@ public class CalendarFragment extends Fragment {
 
             }
         }
+
     }
 
+    public void NavigateToDiaryEntryFragment(){
+        if (selectedDate != null) {
+
+            Records records = myDb.getCurrentDayDiary(selectedDate);
+
+            Bundle args = new Bundle();
+            args.putSerializable("selectedDate", selectedDate);
+            args.putSerializable("records", records);
+
+            //Set the title of diary entry fragment
+            String title = selectedDate;
+
+            DiaryDetailsFragment fragment = new DiaryDetailsFragment();
+            fragment.setArguments(args);
+
+            FragmentTransaction fragmentTransaction =
+                    getFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_containerStart, fragment);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+        }else {
+//            //If the user doesn't select a date and just click add button, the alert dialog will appear
+//            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+//            builder.setTitle("  ");
+//            // I'm using fragment here so I'm using getView() to provide ViewGroup
+//            // but you can provide here any other instance of ViewGroup from your Fragment / Activity
+//            final View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.text_alert_dialog, (ViewGroup) getView(), false);
+//            // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+//            builder.setView(viewInflated);
+//
+//            // Set up the buttons
+//            builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//
+//                    dialog.dismiss();
+//
+//                }
+//            });
+//            builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    dialog.cancel();
+//                }
+//            });
+//
+//            builder.show();
+            new SweetAlertDialog(getContext(), SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText("Notice")
+                    .setContentText("You must select a date!")
+                    .setConfirmText("Yes, got it!")
+                    .show();
+        }
+
+    }
+
+
+    public void navigateToHistoryFragment(){
+        HistoryFragment fragment = new HistoryFragment();
+        FragmentTransaction fragmentTransaction =
+                getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_containerStart, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
 
 //    public void displayEventDetailForSelectedDate(String selectedDateString){
 //

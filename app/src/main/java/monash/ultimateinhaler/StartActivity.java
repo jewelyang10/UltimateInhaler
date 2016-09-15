@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +45,7 @@ public class StartActivity extends AppCompatActivity {
         loadTutorial();
 
         //Configure the typeface
-        ty1 = Typeface.createFromAsset(getAssets(),"fonts/PTSansWide.ttf");
+        ty1 = Typeface.createFromAsset(getAssets(),"fonts/PTSans/PTSansRegular.ttf");
 
         //Customize the title bar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -105,6 +106,7 @@ public class StartActivity extends AppCompatActivity {
                         title = "Tips";
 
                         TipsFragment fragment3 = new TipsFragment();
+//                        AsthmaNewsFragment fragment3 = new AsthmaNewsFragment();
                         FragmentTransaction fragmentTransaction3 =
                                 getSupportFragmentManager().beginTransaction();
                         fragmentTransaction3.replace(R.id.fragment_containerStart, fragment3);
@@ -128,6 +130,16 @@ public class StartActivity extends AppCompatActivity {
                         fragmentTransaction5.replace(R.id.fragment_containerStart, fragment5);
                         fragmentTransaction5.addToBackStack(null);
                         fragmentTransaction5.commit();                        break;
+                    case R.id.nav_about:
+                        title = "About";
+
+                        LeadsFragment fragment6 = new LeadsFragment();
+                        FragmentTransaction fragmentTransaction6 =
+                                getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction6.replace(R.id.fragment_containerStart, fragment6);
+                        fragmentTransaction6.addToBackStack(null);
+                        fragmentTransaction6.commit();                        break;
+
                 }
                 // update selected fragment and title
                 if (getSupportActionBar() != null) {
@@ -292,7 +304,7 @@ public class StartActivity extends AppCompatActivity {
 
     private ArrayList<TutorialItem> getTutorialItems(Context context) {
         TutorialItem tutorialItem1 = new TutorialItem(R.string.slide_1_biodiversity, R.string.slide_1_biodiversity_subtitle,
-                R.color.slide_1, R.drawable.tut_page_1_front,  R.drawable.tut_page_1_background);
+                R.color.slide_1, R.drawable.transparent,R.drawable.tut_page_1_background);
 
         TutorialItem tutorialItem2 = new TutorialItem(R.string.slide_2_diary, R.string.slide_2_diary_subtitle,
                 R.color.slide_2,  R.drawable.tut_page_2_front,  R.drawable.tut_page_2_background);
@@ -318,6 +330,28 @@ public class StartActivity extends AppCompatActivity {
 //            Toast.makeText(this, "Tutorial finished", Toast.LENGTH_LONG).show();
 
         }
+    }
+
+    public void setToolBar(String title, String subtitle){
+
+
+        if (subtitle != null) {
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+            mTextView = (TextView) toolbar.findViewById(R.id.toolbar_title);
+            TextView subTextView = (TextView) toolbar.findViewById(R.id.toolbar_subtitle);
+            mTextView.setText(title);
+            subTextView.setText(subtitle);
+            subTextView.setVisibility(View.VISIBLE);
+        }else{
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+            mTextView = (TextView) toolbar.findViewById(R.id.toolbar_title);
+            TextView subTextView = (TextView) toolbar.findViewById(R.id.toolbar_subtitle);
+            mTextView.setText(title);
+            subTextView.setVisibility(View.GONE);
+        }
+
     }
 
 }

@@ -26,7 +26,11 @@ public class TipsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_tips, container, false);
+        //Set the tool bar
+        StartActivity startActivity = (StartActivity) getActivity();
 
+        // Set title bar
+        startActivity.setToolBar("Tips",null);
 //        //Configure the typeface
         ty1 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/PTSansWide.ttf");
         TextView textView1 = (TextView) rootView.findViewById(R.id.textView_tp1);

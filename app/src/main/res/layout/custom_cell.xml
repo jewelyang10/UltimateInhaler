@@ -2,23 +2,33 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/custom_cell"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="50dp"
     android:background="@drawable/cell_bg"
+    android:backgroundTint="@color/calendarWholeCell"
+    android:backgroundTintMode="multiply"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="10dp" >
+    android:padding="5dp" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:orientation="vertical">
         <TextView
             android:id="@+id/tv1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-         />
+            />
 
         <ImageView
             android:id="@+id/imageEvent"
             android:layout_gravity="bottom"
+            android:scaleType="centerInside"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
             />
+    </LinearLayout>
+
 
 
 </RelativeLayout>

@@ -3,6 +3,8 @@ package monash.ultimateinhaler;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.res.Resources;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -32,7 +34,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import monash.ultimateinhaler.data.Channel;
 import monash.ultimateinhaler.data.Item;
@@ -52,6 +57,7 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
     private TextView conditionTextView, conditionTextView_next,recommendation;
     private TextView locationTextView, locationTextView_next, dateTextView_tomorrow;
 
+    private String todayDate, temperatureDb, humidityDb, pressureDb, windDb, pollenDb;
     private YahooWeatherService service;
     private ProgressDialog dialog;
 
@@ -61,6 +67,7 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
     int i = 0;
     private GetPollenCount myAsyncTask = null;
     private boolean myAsyncTaskIsRunning = true;
+    private int imageConditionCode;
 
     private ViewPager mViewPager;
 
@@ -68,6 +75,8 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
     private ShadowTransformer mCardShadowTransformer;
     private CardFragmentPagerAdapter mFragmentCardAdapter;
     private ShadowTransformer mFragmentCardShadowTransformer;
+    DatabaseHelper myDb;
+    SQLiteDatabase sqLiteDatabase;
 
     public MainFragment() {
         // Required empty public constructor
@@ -78,6 +87,10 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
+        myDb = new DatabaseHelper(this.getContext());
+//                sqLiteDatabase = myDb.getWritableDatabase();
+//                myDb.onUpgrade(sqLiteDatabase,2,3);
 //        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
 //        swipeRefreshLayout.setColorSchemeColors(android.R.color.holo_blue_dark, android.R.color.holo_green_light, android.R.color.holo_green_dark);
 //        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -97,6 +110,35 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
 //                }, 3000);
 //            }
 //        });
+
+
+        mViewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
+
+        List<Drawable> drawables = new ArrayList<>();
+        Resources res = getResources();
+
+        @SuppressWarnings("deprecation") Drawable drawableFlower = res.getDrawable(R.drawable.flower50);
+        drawables.add(drawableFlower);
+
+        @SuppressWarnings("deprecation") Drawable drawableMask = res.getDrawable(R.drawable.escapemask);
+        drawables.add(drawableMask);
+
+//        mCardAdapter = new CardPagerAdapter(this.getContext(),2,"ddd",drawables);
+        mCardAdapter = new CardPagerAdapter(this.getContext(), 2, "Recommendation & Recommendation",drawables);
+
+        mFragmentCardAdapter = new CardFragmentPagerAdapter(getFragmentManager(),
+                dpToPixels(2, getActivity()));
+        mCardShadowTransformer = new ShadowTransformer(mViewPager, mCardAdapter);
+        mFragmentCardShadowTransformer = new ShadowTransformer(mViewPager, mFragmentCardAdapter);
+        mViewPager.setAdapter(mCardAdapter);
+        mViewPager.setPageTransformer(false, mCardShadowTransformer);
+        mViewPager.setOffscreenPageLimit(3);
+
+
+        StartActivity startActivity = (StartActivity) getActivity();
+
+        // Set title bar
+        startActivity.setToolBar("Ultimate Inhaler", null);
 
         if(savedInstanceState!=null) {
             myAsyncTaskIsRunning = savedInstanceState.getBoolean("myAsyncTaskIsRunning");
@@ -118,19 +160,9 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
                 dialog.show();
                 service.refreshWeather("Melbourne, Australia");
 
+
         }
 
-        mViewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
-        mCardAdapter = new CardPagerAdapter(this.getContext());
-        mFragmentCardAdapter = new CardFragmentPagerAdapter(getFragmentManager(),
-                dpToPixels(2, getActivity()));
-
-        mCardShadowTransformer = new ShadowTransformer(mViewPager, mCardAdapter);
-        mFragmentCardShadowTransformer = new ShadowTransformer(mViewPager, mFragmentCardAdapter);
-
-        mViewPager.setAdapter(mCardAdapter);
-        mViewPager.setPageTransformer(false, mCardShadowTransformer);
-        mViewPager.setOffscreenPageLimit(3);
 
 //        //Configure Progress Bar for pollen count
 //        myprogressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
@@ -179,6 +211,8 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
         int resourceId = getResources().getIdentifier("drawable/icon_" + item.getCondition().getCode(), null, getContext().getPackageName());
         int tomorrowId = getResources().getIdentifier("drawable/icon_" + item.getForecast().getCode(), null, getContext().getPackageName());
 
+        imageConditionCode = resourceId;
+
         @SuppressWarnings("deprecation")
         Drawable weatherIconDrawable = getResources().getDrawable(resourceId);
         @SuppressWarnings("deprecation")
@@ -189,9 +223,12 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
         double cn = (f - 32) *  5 / 9;
         int ctn = (int) Math.floor(cn);
 
+
+
+
         //Get the current system date
-        DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
-        Date date = new Date();
+//        DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+//        Date date = new Date();
 //        dateTextView_now.setText(" Now, " + dateFormat.format(date));
 //        dateTextView_now.setText(" Today's Weather");
 
@@ -205,43 +242,20 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
 //        sunriseTextView.setText(" Sunrise: " + channel.getAstronomy().getSunrise());
 //        sunsetTextView.setText(" Sunset: " + channel.getAstronomy().getSunset());
 
-        //Classigy the condition code to give recommendtaions
-        int[] foggy = {19,20,21,22};
-        int[] thunderstorm = {0,1,2,3,4,5,6,35,37,38,39,40,45,47};
-        int[] snow = {8,9,10,11,12,46};
-        int[] heavySnow = {7,13,14,15,16,17,18,41,42,43};
-        int[] windy = {23,24};
-        int[] night = {27,29,31,33};
-        int[] day = {25,26,28,30,32,34,36,44};
-//        if (Arrays.toString(foggy).matches(".*[\\[ ]" + item.getCondition().getCode() + "[\\],].*")) {
-//            recommendation.setText("•\tStay indoors. \n" +
-//                    "•\tWhen travelling in the car, keep the windows shut and use recirculating air conditioning (if possible).\n"
-//            + "•\tConsider wearing a facemask in certain situations when allergy is severe and exposure to high amounts of pollen is unavoidable.\n");
-//        }else if(Arrays.toString(thunderstorm).matches(".*[\\[ ]" + item.getCondition().getCode() + "[\\],].*")){
-//            recommendation.setText("•\tStay indoors during and after thunderstorms.\n");
-//        }else if(Arrays.toString(snow).matches(".*[\\[ ]" + item.getCondition().getCode() + "[\\],].*")){
-//            recommendation.setText("•\tWhen travelling in the car, keep the windows shut and use recirculating air conditioning (if possible).\n");
-//        }else if(Arrays.toString(heavySnow).matches(".*[\\[ ]" + item.getCondition().getCode() + "[\\],].*")){
-//            recommendation.setText("•\tStay indoors. \n");
-//        }else if(Arrays.toString(windy).matches(".*[\\[ ]" + item.getCondition().getCode() + "[\\],].*")){
-//            recommendation.setText("•\tWear sunglasses when you are outside to help prevent pollen allergen from getting into your eyes.\n"
-//            + "•\tIf you’ve been outside, wash your hands and face when you return home to reduce the amount of pollen allergen on your skin.\n"
-//            + "•\tDry your bed linen and clothes indoors during the pollen season, if possible.\n"
-//            + "•\tConsider wearing a facemask in certain situations when allergy is severe and exposure to high amounts of pollen is unavoidable.\n");
-//        }else if(Arrays.toString(night).matches(".*[\\[ ]" + item.getCondition().getCode() + "[\\],].*")){
-//            recommendation.setText("•\t The evening — between 4pm and 6pm — can be the time of day with the greatest amount of pollen in the air. In other areas, the morning may be worse and should be a time when you try to stay indoors.\n");
-//        }else if(Arrays.toString(day).matches(".*[\\[ ]" + item.getCondition().getCode() + "[\\],].*")){
-//            recommendation.setText("•\tConsider wearing a facemask in certain situations when allergy is severe and exposure to high amounts of pollen is unavoidable.\n"
-//            + "•\tWhen travelling in the car, keep the windows shut and use recirculating air conditioning (if possible).\n"
-//            + "•\tDry your bed linen and clothes indoors during the pollen season, if possible.\n"
-//            + "•\tConsider having a low-allergen garden incorporating low-allergen plants and shrubs and a lawn or ground cover that needs infrequent or no mowing. Low-allergen plants tend to be those that are pollinated by insects or birds, rather than by wind, and include many native trees and shrubs.\n");
-//        }else {
-//            recommendation.setText("•\tConsider wearing a facemask in certain situations when allergy is severe and exposure to high amounts of pollen is unavoidable.\n"
-//                    + "•\tWhen travelling in the car, keep the windows shut and use recirculating air conditioning (if possible).\n"
-//                    + "•\tDry your bed linen and clothes indoors during the pollen season, if possible.\n"
-//                    + "•\tConsider having a low-allergen garden incorporating low-allergen plants and shrubs and a lawn or ground cover that needs infrequent or no mowing. Low-allergen plants tend to be those that are pollinated by insects or birds, rather than by wind, and include many native trees and shrubs.\n");
-//
-//        }
+
+        //Get today date
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        Date date = new Date();
+        todayDate = dateFormat.format(date);
+
+        //Get the weather condition and save into database
+        temperatureDb = Integer.toString(ctn);
+        humidityDb = channel.getAtmosphere().getHumidity();
+        pressureDb = channel.getAtmosphere().getPressure() + " in";
+        windDb = channel.getWind().getSpeed() + " mph";
+
+        insertWeatherIntoDatabase(todayDate,temperatureDb,humidityDb,pressureDb,windDb,pollenDb);
+
 
 
         //Weathe info for tomorrow
@@ -266,6 +280,152 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
 //                + "/ " + Integer.toString(clt) + "\u00B0" + "C" );
 //        conditionTextView_next.setText(" " + item.getForecast().getText());
 //        locationTextView_next.setText(" " + service.getLocation());
+        //Classigy the condition code to give recommendtaions
+        int[] foggy = {19,20,21,22};
+        int[] thunderstorm = {0,1,2,3,4,5,6,35,37,38,39,40,45,47};
+        int[] snow = {8,9,10,11,12,46};
+        int[] heavySnow = {7,13,14,15,16,17,18,41,42,43};
+        int[] windy = {23,24};
+        int[] night = {27,29,31,33};
+        int[] day = {25,26,28,30,32,34,36,44};
+        if (Arrays.toString(foggy).matches(".*[\\[ ]" + imageConditionCode + "[\\],].*")) {
+
+            List<Drawable> drawables = new ArrayList<>();
+            Resources res = getResources();
+            @SuppressWarnings("deprecation") Drawable drawableRain = res.getDrawable(R.drawable.torrentialrain48);
+            drawables.add(drawableRain);
+
+            @SuppressWarnings("deprecation") Drawable drawableCar = res.getDrawable(R.drawable.carpool50);
+            drawables.add(drawableCar);
+
+            @SuppressWarnings("deprecation") Drawable drawableMask = res.getDrawable(R.drawable.escapemask);
+            drawables.add(drawableMask);
+
+            String recom = "•\tStay indoors. \n" + "&" +
+                    "•\tWhen travelling in the car, keep the windows shut and use recirculating air conditioning (if possible).\n"
+                    + "&"
+                    + "•\tConsider wearing a facemask in certain situations when allergy is severe and exposure to high amounts of pollen is unavoidable.\n";
+
+            mCardAdapter = new CardPagerAdapter(this.getContext(),3,recom, drawables);
+
+        }else if(Arrays.toString(thunderstorm).matches(".*[\\[ ]" + imageConditionCode + "[\\],].*")){
+            List<Drawable> drawables = new ArrayList<>();
+            Resources res = getResources();
+            @SuppressWarnings("deprecation") Drawable drawableRain = res.getDrawable(R.drawable.torrentialrain48);
+            drawables.add(drawableRain);
+
+            String recom = "•\tStay indoors during and after thunderstorms.\n";
+
+            mCardAdapter = new CardPagerAdapter(this.getContext(),1,recom,drawables);
+
+        }else if(Arrays.toString(snow).matches(".*[\\[ ]" + imageConditionCode + "[\\],].*")){
+
+            List<Drawable> drawables = new ArrayList<>();
+            Resources res = getResources();
+            @SuppressWarnings("deprecation") Drawable drawableCar = res.getDrawable(R.drawable.carpool50);
+            drawables.add(drawableCar);
+
+            String recom = "•\tWhen travelling in the car, keep the windows shut and use recirculating air conditioning (if possible).\n";
+
+            mCardAdapter = new CardPagerAdapter(this.getContext(),1,recom,drawables);
+
+
+        }else if(Arrays.toString(heavySnow).matches(".*[\\[ ]" +imageConditionCode + "[\\],].*")){
+            List<Drawable> drawables = new ArrayList<>();
+            Resources res = getResources();
+            @SuppressWarnings("deprecation") Drawable drawableRain = res.getDrawable(R.drawable.mobilehome50);
+            drawables.add(drawableRain);
+
+            String recom = "•\tStay indoors.\n";
+
+            mCardAdapter = new CardPagerAdapter(this.getContext(),1,recom,drawables);
+
+        }else if(Arrays.toString(windy).matches(".*[\\[ ]" + imageConditionCode + "[\\],].*")){
+
+            List<Drawable> drawables = new ArrayList<>();
+            Resources res = getResources();
+
+
+            @SuppressWarnings("deprecation") Drawable drawableGlass = res.getDrawable(R.drawable.glasses48);
+            drawables.add(drawableGlass);
+
+            @SuppressWarnings("deprecation") Drawable drawableWashHand = res.getDrawable(R.drawable.washyourhands48);
+            drawables.add(drawableWashHand);
+
+            @SuppressWarnings("deprecation") Drawable drawableCarpet = res.getDrawable(R.drawable.carpetcleaning50);
+            drawables.add(drawableCarpet);
+
+            @SuppressWarnings("deprecation") Drawable drawableMask = res.getDrawable(R.drawable.escapemask);
+            drawables.add(drawableMask);
+
+            String recom = "•\tWear sunglasses when you are outside to help prevent pollen allergen from getting into your eyes.\n" + "&"
+                    + "•\tIf you’ve been outside, wash your hands and face when you return home to reduce the amount of pollen allergen on your skin.\n" + "&"
+                    + "•\tDry your bed linen and clothes indoors during the pollen season, if possible.\n" + "&"
+                    + "•\tConsider wearing a facemask in certain situations when allergy is severe and exposure to high amounts of pollen is unavoidable.\n";
+
+            mCardAdapter = new CardPagerAdapter(this.getContext(),4,recom,drawables);
+
+
+        }else if(Arrays.toString(night).matches(".*[\\[ ]" + imageConditionCode + "[\\],].*"))
+        {
+            List<Drawable> drawables = new ArrayList<>();
+            Resources res = getResources();
+
+            @SuppressWarnings("deprecation") Drawable drawableFlower = res.getDrawable(R.drawable.flower50);
+            drawables.add(drawableFlower);
+
+            String recom = "•\t The evening — between 4pm and 6pm — can be the time of day with the greatest amount of pollen in the air. In other areas, the morning may be worse and should be a time when you try to stay indoors.\n";
+
+            mCardAdapter = new CardPagerAdapter(this.getContext(),1,recom,drawables);
+
+        }else if(Arrays.toString(day).matches(".*[\\[ ]" + imageConditionCode + "[\\],].*")){
+
+
+            List<Drawable> drawables = new ArrayList<>();
+            Resources res = getResources();
+
+            @SuppressWarnings("deprecation") Drawable drawableMask = res.getDrawable(R.drawable.escapemask);
+            drawables.add(drawableMask);
+
+            @SuppressWarnings("deprecation") Drawable drawableCar = res.getDrawable(R.drawable.carpool50);
+            drawables.add(drawableCar);
+
+            @SuppressWarnings("deprecation") Drawable drawableCarpet = res.getDrawable(R.drawable.carpetcleaning50);
+            drawables.add(drawableCarpet);
+
+
+            String recom = "•\tConsider wearing a facemask in certain situations when allergy is severe and exposure to high amounts of pollen is unavoidable.\n" + "&"
+                    + "•\tWhen travelling in the car, keep the windows shut and use recirculating air conditioning (if possible).\n" + "&"
+                    + "•\tDry your bed linen and clothes indoors during the pollen season, if possible.\n";
+            mCardAdapter = new CardPagerAdapter(this.getContext(),3,recom,drawables);
+
+        }else {
+
+            List<Drawable> drawables = new ArrayList<>();
+            Resources res = getResources();
+
+            @SuppressWarnings("deprecation") Drawable drawableMask = res.getDrawable(R.drawable.escapemask);
+            drawables.add(drawableMask);
+
+            @SuppressWarnings("deprecation") Drawable drawableCar = res.getDrawable(R.drawable.carpool50);
+            drawables.add(drawableCar);
+
+            @SuppressWarnings("deprecation") Drawable drawableCarpet = res.getDrawable(R.drawable.carpetcleaning50);
+            drawables.add(drawableCarpet);
+
+
+            String recom = "•\tConsider wearing a facemask in certain situations when allergy is severe and exposure to high amounts of pollen is unavoidable.\n" + "&"
+                    + "•\tWhen travelling in the car, keep the windows shut and use recirculating air conditioning (if possible).\n" + "&"
+                    + "•\tDry your bed linen and clothes indoors during the pollen season, if possible.\n";
+            mCardAdapter = new CardPagerAdapter(this.getContext(),3,recom,drawables);
+
+        }
+
+        mCardAdapter.notifyDataSetChanged();
+        mCardShadowTransformer = new ShadowTransformer(mViewPager, mCardAdapter);
+
+        mViewPager.setAdapter(mCardAdapter);
+        mViewPager.setPageTransformer(false, mCardShadowTransformer);
 
 
     }
@@ -349,7 +509,9 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
                     progressingTextView.setText("No information");
 //                    myprogressBar.setProgress(100);
                 }
+                pollenDb = pollencount;
                 getResources().getString(R.string.app_name);
+
                 myAsyncTaskIsRunning = false;
                 myAsyncTask = null;
             } catch (JSONException e) {
@@ -376,6 +538,23 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
 
     }
 
+
+    public void insertWeatherIntoDatabase(String date, String temperature, String humidity,
+                                          String pressure, String wind, String pollen){
+        try{
+            if (myDb.todayWeatherExist(date) == 0){
+                myDb.insertWeatherIntoDatabase(date,temperature,humidity,pressure,wind,pollen);
+            }else
+            {
+                myDb.updateTodayWeatherRecord(date,temperature,humidity,pressure,wind,pollen);
+            }
+        }catch (Exception e){
+//            Toast.makeText(getContext(),"Weather Database error",Toast.LENGTH_LONG).show();
+            Log.v("Weather databse error", e.getMessage());
+        }
+
+
+    }
 
 
 

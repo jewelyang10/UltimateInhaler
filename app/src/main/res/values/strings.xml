@@ -14,14 +14,14 @@
     <string name="show_dialog">Show Dialog</string>
     <string name="undo">Undo</string>
     <string name="title_activity_start">StartActivity</string>
-<!--Sliding-->
+    <!--Sliding-->
     <string name="slide_1_biodiversity">Nearby biodiversity </string>
     <string name="slide_2_diary">Entry your diary</string>
     <string name="slide_3_tips">Search for general tips</string>
     <string name="slide_4_weather">Get the current weather and pollen count</string>
     <string name="slide_1_biodiversity_subtitle">You could know the biodiversity around you.</string>
     <string name="slide_2_diary_subtitle">We offer analysis charts according your diary</string>
-    <string name="slide_3_tips_subtitle" >We offer general tips for you to relieve yourself.</string>
+    <string name="slide_3_tips_subtitle">We offer general tips for you to relieve yourself.</string>
     <string name="slide_4_weather_subtitle">Information about weather and pollen count</string>
     <string name="view_sample_tut">View Tutorial Example</string>
 
@@ -51,4 +51,19 @@
     <string name="content_to1_mock">46th Ave</string>
     <string name="content_to2_mock">Woodside, NY 11101</string>
     <string name="title_activity_main2">Main2Activity</string>
+
+
+    <!---Number picker font-->
+
+    <!-- Font -->
+    <string name="roboto_regular">sans-serif</string>
+    <string name="roboto_light">sans-serif-light</string>
+    <string name="roboto_condensed">sans-serif-condensed</string>
+    <string name="roboto_thin">sans-serif-thin</string>
+    <string name="roboto_medium">sans-serif-medium</string>
+
+    <string name="number_picker_formatter">%02d</string>
+
+    <string name="heartBar">Heart Bar</string>
+
 </resources>

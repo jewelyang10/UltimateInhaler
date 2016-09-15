@@ -16,15 +16,23 @@
         title="Tips"
         barColorWhenSelected="#94C1DB"/>
 
+    <tab
+        id="@+id/nav_diary"
+        icon="@drawable/edit_property"
+        title="Diary"
+        barColorWhenSelected="#94C1DB"/>
+
     <!--<tab-->
-        <!--id="@+id/nav_diary"-->
-        <!--icon="@drawable/edit_property"-->
-        <!--title="Diary"-->
+        <!--id="@+id/nav_prediction"-->
+        <!--icon="@drawable/medical_doctor1600"-->
+        <!--title="Prediction"-->
         <!--barColorWhenSelected="#94C1DB"/>-->
 
+
     <tab
-        id="@+id/nav_prediction"
+        id="@+id/nav_about"
         icon="@drawable/medical_doctor1600"
-        title="Prediction"
+        title="About"
         barColorWhenSelected="#94C1DB"/>
+
 </tabs>

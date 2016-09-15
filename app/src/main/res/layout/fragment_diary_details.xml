@@ -1,9 +1,442 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="monash.ultimateinhaler.DiaryDetailsFragment">
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_height="match_parent"
+    android:background="@drawable/bluebackground">
 
-    <!-- TODO: Update blank fragment layout -->
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:id="@+id/table_sym"
+        android:background="#6E9AFD"
+        >
 
-</FrameLayout>
+        <TableRow>
+            <TextView
+                android:text="  SYMPTOMS "
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:textColor="#fff"
+                android:textSize="19dp"
+
+                >
+
+            </TextView>
+
+
+        </TableRow>
+    </TableLayout>
+
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/diary_sym_item1"
+        android:layout_gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_width="match_parent"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/table_sym"
+        android:layout_height="50dp"
+        card_view:cardCornerRadius="0dp"
+        card_view:contentPadding="0dp"
+        card_view:cardBackgroundColor="#F2FBFE">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:orientation="horizontal">
+            <TextView
+                android:text="   Tight chest"
+                android:gravity="center"
+                android:textColor="#000"
+                android:textSize="19dp"
+                android:layout_marginTop="10dp"
+                android:layout_height="30dp"
+                android:layout_width="wrap_content"
+                />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginLeft="68dp"
+                android:orientation="horizontal"
+                android:id="@+id/tightChest_radioGroup"
+                >
+
+                <RadioButton
+                    android:id="@+id/radio_button_tightChest_none"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/radio_button_background_medium"
+                    android:button="@android:color/transparent"
+                    android:text="None"
+                    android:textSize="19dp"
+                    android:textColor="#67696C"
+                    android:checked="false" />
+
+                <RadioButton
+                    android:id="@+id/radio_button_tightChest_some"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/radio_button_background_medium"
+                    android:button="@android:color/transparent"
+                    android:text="Some"
+                    android:textSize="19dp"
+                    android:textColor="#67696C"
+                    />
+
+                <RadioButton
+                    android:id="@+id/radio_button_tightChest_alot"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/radio_button_background_medium"
+                    android:button="@android:color/transparent"
+                    android:text="A lot"
+                    android:textSize="19dp"
+                    android:textColor="#67696C"
+                    />
+            </RadioGroup>
+            </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/diary_sym_item2"
+        android:layout_below="@+id/diary_sym_item1"
+        android:layout_gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_width="match_parent"
+        android:layout_marginTop="5dp"
+        android:layout_height="50dp"
+        card_view:cardCornerRadius="0dp"
+        card_view:contentPadding="0dp"
+        card_view:cardBackgroundColor="#F2FBFE">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:orientation="horizontal">
+            <TextView
+                android:text="   Wheezing"
+                android:gravity="center"
+                android:textColor="#000"
+                android:textSize="19dp"
+                android:layout_marginTop="10dp"
+                android:layout_height="30dp"
+                android:layout_width="wrap_content"
+                />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginLeft="78dp"
+                android:orientation="horizontal"
+                android:id="@+id/wheezing_radioGroup"
+                >
+
+                <RadioButton
+                    android:id="@+id/radio_button_wheezing_none"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/radio_button_background_medium"
+                    android:button="@android:color/transparent"
+                    android:text="None"
+                    android:textSize="19dp"
+                    android:textColor="#67696C"                    />
+
+                <RadioButton
+                    android:id="@+id/radio_button_wheezing_some"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/radio_button_background_medium"
+                    android:button="@android:color/transparent"
+                    android:text="Some"
+                    android:textSize="19dp"
+                    android:textColor="#67696C"
+                    />
+
+                <RadioButton
+                    android:id="@+id/radio_button_wheezing_alot"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/radio_button_background_medium"
+                    android:button="@android:color/transparent"
+                    android:text="A lot"
+                    android:textSize="19dp"
+                    android:textColor="#67696C"
+                    />
+            </RadioGroup>
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/diary_sym_item3"
+        android:layout_below="@+id/diary_sym_item2"
+        android:layout_gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_width="match_parent"
+        android:layout_marginTop="5dp"
+        android:layout_height="50dp"
+        card_view:cardCornerRadius="0dp"
+        card_view:contentPadding="0dp"
+        card_view:cardBackgroundColor="#F2FBFE">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:orientation="horizontal">
+            <TextView
+                android:text="   Tiredness"
+                android:gravity="center"
+                android:textColor="#000"
+                android:textSize="19dp"
+                android:layout_marginTop="10dp"
+                android:layout_height="30dp"
+                android:layout_width="wrap_content"
+                />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginLeft="75dp"
+                android:orientation="horizontal"
+                android:id="@+id/tiredness_radioGroup"
+                >
+
+                <RadioButton
+                    android:id="@+id/radio_button_tiredness_none"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/radio_button_background_medium"
+                    android:button="@android:color/transparent"
+                    android:text="None"
+                    android:textSize="19dp"
+                    android:textColor="#67696C"                    />
+
+                <RadioButton
+                    android:id="@+id/radio_button_tiredness_some"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/radio_button_background_medium"
+                    android:button="@android:color/transparent"
+                    android:text="Some"
+                    android:textSize="19dp"
+                    android:textColor="#67696C"
+                    />
+
+                <RadioButton
+                    android:id="@+id/radio_button_tiredness_alot"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/radio_button_background_medium"
+                    android:button="@android:color/transparent"
+                    android:text="A lot"
+                    android:textSize="19dp"
+                    android:textColor="#67696C"
+                    />
+            </RadioGroup>
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/diary_sym_item3"
+        android:id="@+id/table_medication"
+        android:background="#6E9AFD"
+        >
+
+        <TableRow>
+            <TextView
+                android:text="  MEDICATION "
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:textColor="#fff"
+                android:textSize="19dp"
+                >
+
+            </TextView>
+
+
+        </TableRow>
+    </TableLayout>
+
+
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/diary_medication"
+        android:layout_below="@+id/table_medication"
+        android:layout_gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_width="match_parent"
+        android:layout_marginTop="5dp"
+        android:layout_height="50dp"
+        card_view:cardCornerRadius="0dp"
+        card_view:contentPadding="0dp"
+        card_view:cardBackgroundColor="#F2FBFE">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left">
+            <TextView
+                android:text="   Inhaler"
+                android:gravity="center"
+                android:textColor="#000"
+                android:textSize="19dp"
+                android:layout_marginTop="10dp"
+                android:layout_height="30dp"
+                android:layout_width="wrap_content"
+                />
+
+
+            <TextView
+                android:text="  Set total inhaler"
+                android:gravity="center"
+                android:textSize="19dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="245dp"
+                android:layout_height="30dp"
+                android:layout_width="100dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:id="@+id/totalinhaler_text" />
+
+            <ImageButton
+                android:gravity="center"
+                android:background="@color/caldroid_transparent"
+                android:textSize="19dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="350dp"
+                android:layout_height="30dp"
+                android:src="@drawable/forward"
+                android:layout_width="wrap_content"
+                android:id="@+id/open_inhaler_number_button"
+                />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/diary_medication"
+        android:id="@+id/table_others"
+        android:background="#6E9AFD"
+        >
+
+        <TableRow>
+            <TextView
+                android:text="  OTHER VARIABLES "
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:textColor="#fff"
+                android:textSize="19dp"
+                >
+
+            </TextView>
+
+
+        </TableRow>
+    </TableLayout>
+
+
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/diary_others"
+        android:layout_below="@+id/table_others"
+        android:layout_gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_width="match_parent"
+        android:layout_marginTop="5dp"
+        android:layout_height="50dp"
+        card_view:cardCornerRadius="0dp"
+        card_view:contentPadding="0dp"
+        card_view:cardBackgroundColor="#F2FBFE">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:orientation="horizontal">
+            <TextView
+                android:text="   Feeling Stressed"
+                android:gravity="center"
+                android:textColor="#000"
+                android:textSize="19dp"
+                android:layout_marginTop="10dp"
+                android:layout_height="30dp"
+                android:layout_width="wrap_content"
+                />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginLeft="15dp"
+                android:orientation="horizontal"
+                android:id="@+id/others_radioGroup"
+                >
+
+                <RadioButton
+                    android:id="@+id/radio_button_others_none"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/radio_button_background_medium"
+                    android:button="@android:color/transparent"
+                    android:text="None"
+                    android:textSize="19dp"
+                    android:textColor="#67696C"                    />
+
+                <RadioButton
+                    android:id="@+id/radio_button_others_some"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/radio_button_background_medium"
+                    android:button="@android:color/transparent"
+                    android:text="Some"
+                    android:textSize="19dp"
+                    android:textColor="#67696C"
+                    />
+
+                <RadioButton
+                    android:id="@+id/radio_button_others_alot"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/radio_button_background_medium"
+                    android:button="@android:color/transparent"
+                    android:text="A lot"
+                    android:textSize="19dp"
+                    android:textColor="#67696C"
+                    />
+            </RadioGroup>
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <Button
+        android:layout_width="360dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="18dp"
+        android:text="SAVE TRACKING"
+        android:layout_below="@+id/diary_others"
+        android:layout_centerHorizontal="true"
+        android:textColor="#fff"
+        android:id="@+id/saveTracking_button"
+        android:background="@drawable/radio_button_background_left"
+        />
+
+</RelativeLayout>

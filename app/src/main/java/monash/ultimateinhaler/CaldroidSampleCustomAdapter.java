@@ -31,11 +31,11 @@ public class CaldroidSampleCustomAdapter extends CaldroidGridAdapter {
         super(context, month, year, caldroidData, extraData);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get your data here
         Drawable drawableRed = (Drawable) extraData.get("DrawableRed");
-        Drawable drawableWhite = (Drawable) extraData.get("DrawableWhite");
         ArrayList<Date> dateFromDatabase = (ArrayList<Date>) extraData.get("dateFromDatabase");
         LayoutInflater inflater = (LayoutInflater) context
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -69,7 +69,7 @@ public class CaldroidSampleCustomAdapter extends CaldroidGridAdapter {
         if (dateTime.getMonth() != month) {
             //noinspection deprecation
             tv1.setTextColor(resources
-                    .getColor(com.caldroid.R.color.caldroid_darker_gray));
+                    .getColor(com.caldroid.R.color.caldroid_555));
         }
 
         boolean shouldResetDiabledView = false;
@@ -107,8 +107,8 @@ public class CaldroidSampleCustomAdapter extends CaldroidGridAdapter {
             cal.set(year, datetimeMonth - 1, day);
             if (cal.getTime().before(date)) {
                 cellView.setBackgroundColor(resources
-                        .getColor(com.caldroid.R.color.caldroid_holo_blue_light));
-//            imageView.setImageDrawable(drawable);
+                        .getColor(R.color.btnRequest));
+                //make visible to program
                 tv1.setTextColor(Color.BLACK);
             }
 
@@ -162,8 +162,7 @@ public class CaldroidSampleCustomAdapter extends CaldroidGridAdapter {
                 // datetimeMonth start at 1. Need to minus 1 to get javaMonth
                 cal.set(year, datetimeMonth - 1, day);
                 if (cal.getTime().before(date)) {
-                    cellView.setBackgroundColor(resources
-                            .getColor(com.caldroid.R.color.caldroid_holo_blue_light));
+                    cellView.setBackgroundColor(resources.getColor(R.color.btnRequest));
                     tv1.setTextColor(Color.BLACK);
                 }
 

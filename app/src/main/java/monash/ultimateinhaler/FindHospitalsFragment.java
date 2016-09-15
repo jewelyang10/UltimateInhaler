@@ -40,10 +40,12 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
-//
 
 /**
  * A simple {@link Fragment} subclass.
+ *
+ * Get current location resource from
+ * http://stackoverflow.com/questions/17519198/how-to-get-the-current-location-latitude-and-longitude-in-android
  */
 public class FindHospitalsFragment extends Fragment implements OnMapReadyCallback,GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
@@ -72,14 +74,12 @@ public class FindHospitalsFragment extends Fragment implements OnMapReadyCallbac
                              Bundle savedInstanceState) {
         try {
         rootView = inflater.inflate(R.layout.fragment_find_hospitals, container, false);
-//        gps = new GPSTracker(getActivity().getApplicationContext());
-//        if (gps.canGetLocation() == true) {
-//            latitude = gps.getLatitude();
-//            longitude = gps.getLongitude();
-//            Log.v("map", latitude + " " + longitude);
-//        } else {
-//            gps.showSettingsAlert();
-//        }
+
+            //Set the tool bar
+            StartActivity startActivity = (StartActivity) getActivity();
+
+            // Set title bar
+            startActivity.setToolBar("Nearby",null);
 
         mGoogleApiClient = new GoogleApiClient.Builder(this.getContext())
                 // The next two lines tell the new client that “this” current class will handle connection stuff
@@ -161,6 +161,9 @@ public class FindHospitalsFragment extends Fragment implements OnMapReadyCallbac
                 //GetHospitalsGet the nearby park within 5 kms
                 GetHospitals getHospitals = new GetHospitals();
                 getHospitals.execute(Double.toString(currentLatitude), Double.toString(currentLongitude));
+
+                //Get the biodiveristy
+                GetBio(Double.toString(currentLatitude), Double.toString(currentLongitude));
             }
         }catch (Exception e){
             Sentry.captureException(e);
@@ -238,25 +241,29 @@ public class FindHospitalsFragment extends Fragment implements OnMapReadyCallbac
         //GetHospitalsGet the nearby park within 5 kms
 //         getHospitals = new GetHospitals();
 //        getHospitals.execute(Double.toString(-37.876470), Double.toString(145.044078));
+
+    }
+
+    //Get the biodiversity
+    public void GetBio(String lat, String lon){
         DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this.getContext());
         databaseAccess.open();
-        quotes = databaseAccess.getQuotes("-37","145.");
+        quotes = databaseAccess.getQuotes(lat,lon);
         databaseAccess.close();
 
         for (int i =0; i < quotes.size()/2; i++) {
-        String[] treeDetails = quotes.get(i).split(",");
-        LatLng tree = new LatLng(Double.valueOf(treeDetails[7]), Double.valueOf(treeDetails[8]));
-        String treeName = treeDetails[0];
-        String genus = treeDetails[1];
-        String age = treeDetails[5];
-        String vicinity = "Genus: " + genus +". Date Planted: " + age;
-        //Add markers for trees
-        mMap.addMarker(new MarkerOptions().position(tree).title(treeName).snippet(vicinity)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.tree)));
+            String[] treeDetails = quotes.get(i).split(",");
+            LatLng tree = new LatLng(Double.valueOf(treeDetails[2]), Double.valueOf(treeDetails[3]));
+            String treeName = treeDetails[0];
+            String scientificName = treeDetails[1];
+
+            String vicinity = "Scientific Name: " + scientificName;
+            //Add markers for trees
+            mMap.addMarker(new MarkerOptions().position(tree).title(treeName).snippet(vicinity)
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.tree)));
 
         }
     }
-
 
     //Get the hospitals within 5kms
     private class GetHospitals extends AsyncTask<String, Void, String> {

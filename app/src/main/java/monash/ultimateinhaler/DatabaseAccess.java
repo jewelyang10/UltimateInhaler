@@ -69,11 +69,13 @@ public class DatabaseAccess {
                 " and longitude BETWEEN " + (Double.valueOf(longitude) -1) + " AND " + (Double.valueOf(longitude) +1) + " LIMIT 10", null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            list.add(cursor.getString(1) + "," + cursor.getString(3) + ","+
+//            list.add(cursor.getString(1) + "," + cursor.getString(3) + ","+
+//                            cursor.getString(4) + "," + cursor.getString(5)
+//                                    +"," + cursor.getString(6) + "," + cursor.getString(7)
+//                                    +"," + cursor.getString(8) +"," + cursor.getString(15)
+//                            + "," + cursor.getString(16)
+            list.add(cursor.getString(0) + "," + cursor.getString(1) + ","+
                             cursor.getString(4) + "," + cursor.getString(5)
-                                    +"," + cursor.getString(6) + "," + cursor.getString(7)
-                                    +"," + cursor.getString(8) +"," + cursor.getString(15)
-                            + "," + cursor.getString(16)
             );
             cursor.moveToNext();
         }

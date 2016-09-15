@@ -15,7 +15,7 @@
     <!--<item-->
         <!--android:id="@+id/nav_hospital"-->
         <!--android:icon="@drawable/red_worldwide_location"-->
-        <!--android:title="Hospitals, Biodiversity" />-->
+        <!--android:title="Hospitals" />-->
     <!--<item-->
 
         <!--android:id="@+id/nav_tips"-->

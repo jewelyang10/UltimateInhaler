@@ -27,7 +27,21 @@
                 android:id="@+id/imageRecommen"
                 />
 
-            <com.borjabravo.readmoretextview.ReadMoreTextView
+            <!--<com.borjabravo.readmoretextview.ReadMoreTextView-->
+                <!--style="@style/TextAppearance.AppCompat.Body1"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:textAlignment="gravity"-->
+                <!--android:textSize="16dp"-->
+                <!--android:textStyle="normal"-->
+                <!--android:layout_marginTop="24dp"-->
+                <!--android:id="@+id/cardview_content"-->
+                <!--app:colorClickableText="@color/colorAccent"-->
+                <!--app:trimLength="200"-->
+                <!--app:showTrimExpandedText="false"-->
+
+                <!--/>-->
+            <TextView
                 style="@style/TextAppearance.AppCompat.Body1"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -36,9 +50,6 @@
                 android:textStyle="normal"
                 android:layout_marginTop="24dp"
                 android:id="@+id/cardview_content"
-                app:colorClickableText="@color/colorAccent"
-                app:trimLength="200"
-                app:showTrimExpandedText="false"
 
                 />
             <!--<Button-->

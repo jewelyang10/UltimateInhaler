@@ -1,25 +1,29 @@
 package monash.ultimateinhaler;
 
+import java.io.Serializable;
+
 /**
  * Created by jewel on 8/28/16.
  */
-public class Records {
+public class Records implements Serializable {
     private String date;
-    private String newWithAsthma;
-    private String attcked_today;
-    private String attack_times;
-    private String other;
+    private String tight_chest;
+    private String wheezing;
+    private String tiredness;
+    private String inhaler;
+    private String feeling_stressed;
 
     public Records(){
 
     }
 
-    public Records(String date, String newWithAsthma, String attcked_today, String attack_times, String other) {
+    public Records(String date, String tight_chest, String wheezing, String tiredness, String inhaler, String feeling_stressed) {
         this.date = date;
-        this.newWithAsthma = newWithAsthma;
-        this.attcked_today = attcked_today;
-        this.attack_times = attack_times;
-        this.other = other;
+        this.tight_chest = tight_chest;
+        this.wheezing = wheezing;
+        this.tiredness = tiredness;
+        this.inhaler = inhaler;
+        this.feeling_stressed = feeling_stressed;
     }
 
     public String getDate() {
@@ -30,35 +34,43 @@ public class Records {
         this.date = date;
     }
 
-    public String getNewWithAsthma() {
-        return newWithAsthma;
+    public String getTight_chest() {
+        return tight_chest;
     }
 
-    public void setNewWithAsthma(String newWithAsthma) {
-        this.newWithAsthma = newWithAsthma;
+    public void setTight_chest(String tight_chest) {
+        this.tight_chest = tight_chest;
     }
 
-    public String getAttcked_today() {
-        return attcked_today;
+    public String getWheezing() {
+        return wheezing;
     }
 
-    public void setAttcked_today(String attcked_today) {
-        this.attcked_today = attcked_today;
+    public void setWheezing(String wheezing) {
+        this.wheezing = wheezing;
     }
 
-    public String getAttack_times() {
-        return attack_times;
+    public String getTiredness() {
+        return tiredness;
     }
 
-    public void setAttack_times(String attack_times) {
-        this.attack_times = attack_times;
+    public void setTiredness(String tiredness) {
+        this.tiredness = tiredness;
     }
 
-    public String getOther() {
-        return other;
+    public String getInhaler() {
+        return inhaler;
     }
 
-    public void setOther(String other) {
-        this.other = other;
+    public void setInhaler(String inhaler) {
+        this.inhaler = inhaler;
+    }
+
+    public String getFeeling_stressed() {
+        return feeling_stressed;
+    }
+
+    public void setFeeling_stressed(String feeling_stressed) {
+        this.feeling_stressed = feeling_stressed;
     }
 }

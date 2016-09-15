@@ -42,4 +42,15 @@
     <color name="btnRequest">#ffbf12</color>
 
     <color name="black_overlay">#66000000</color>
+
+    <color name="blue_transparent">#4417308d</color>
+
+
+    <color name="calendarblue">#706E9AFD</color>
+    <color name="calendarWholeCell">#60ffffff</color>
+
+    <color name="calendarblueNontransparent">#6E9AFD</color>
+
+    <color name="red">#FFFF0000</color>
+
 </resources>

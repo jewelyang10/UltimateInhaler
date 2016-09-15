@@ -11,4 +11,13 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="card_padding">60dp</dimen>
 
+
+    <!--Selector-->
+    <dimen name="button_padding">10dp</dimen>
+    <dimen name="radio_button_horizontal_padding">12dp</dimen>
+    <dimen name="button_radius">10dp</dimen>
+
+    <!--Number Picker-->
+        <dimen name="text_size">30dp</dimen>
+
 </resources>
