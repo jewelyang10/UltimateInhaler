@@ -294,6 +294,12 @@
         }]
     },
     options: {
+    legend: {
+            display: false
+         },
+         tooltips: {
+            enabled: false
+         },
         scales: {
             yAxes: [{
                 ticks: {
@@ -437,21 +443,7 @@ var myEvidence = new Chart(document.getElementById("predictionEvidence").getCont
     type: 'polarArea',
     options: {}
 });	
-				
-		
-				
-				
-				
-				
-				
-			
-			
-			
-			
-			
-			
-				
-				
+
     			}
   			};
   			xhttp.open("GET", "https://query.yahooapis.com/v1/public/yql?q=select+*+from+weather.forecast+where+woeid+in+%28select+woeid+from+geo.places%281%29+where+text%3D%22Melbourne%2C+Australia%22%29&format=json", true);
