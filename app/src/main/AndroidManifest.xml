@@ -70,6 +70,8 @@
         <activity
             android:name="za.co.riggaroo.materialhelptutorial.tutorial.MaterialTutorialActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            
+        <service android:name=".autoRecord.autoRecordService" />    
         <!-- Google Play Services Version -->
         <meta-data
             android:name="com.google.android.gms.version"
