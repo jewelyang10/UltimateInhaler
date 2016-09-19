@@ -14,7 +14,7 @@
 
     <!--Selector-->
     <dimen name="button_padding">10dp</dimen>
-    <dimen name="radio_button_horizontal_padding">12dp</dimen>
+    <dimen name="radio_button_horizontal_padding">8dp</dimen>
     <dimen name="button_radius">10dp</dimen>
 
     <!--Number Picker-->

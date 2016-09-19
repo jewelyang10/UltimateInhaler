@@ -16,21 +16,19 @@ import android.widget.TextView;
 public class TipsFragment extends Fragment {
     View rootView;
     Typeface ty1;
-
-    public TipsFragment() {
-        // Required empty public constructor
+    public static TipsFragment newInstance() {
+        TipsFragment f = new TipsFragment();
+        return f;
     }
-
-
-    @Override
+        @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_tips, container, false);
         //Set the tool bar
-        StartActivity startActivity = (StartActivity) getActivity();
-
-        // Set title bar
-        startActivity.setToolBar("Tips",null);
+//        StartActivity startActivity = (StartActivity) getActivity();
+//
+//        // Set title bar
+//        startActivity.setToolBar("Tips",null);
 //        //Configure the typeface
         ty1 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/PTSansWide.ttf");
         TextView textView1 = (TextView) rootView.findViewById(R.id.textView_tp1);

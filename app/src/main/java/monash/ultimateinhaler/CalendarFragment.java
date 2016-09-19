@@ -2,15 +2,14 @@ package monash.ultimateinhaler;
 
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -18,6 +17,7 @@ import android.widget.Button;
 import com.joshdholtz.sentry.Sentry;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
+import com.wooplr.spotlight.SpotlightView;
 
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -47,6 +47,10 @@ public class CalendarFragment extends Fragment implements Serializable {
     String selectedNo;
     Date previoursDateSelected;
     Button addDiary, showHistory;
+    private static final String INTRO_ADD = "Add_intro";
+    private static final String INTRO_VIEW = "View_intro";
+    private boolean isRevealEnabled = true;
+
 
     private void setCustomResourceForDates() {
         Calendar cal = Calendar.getInstance();
@@ -87,7 +91,7 @@ public class CalendarFragment extends Fragment implements Serializable {
         //        myDb.onUpgrade(sqLiteDatabase,2,3);
 
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+//        setHasOptionsMenu(true);
         StartActivity startActivity = (StartActivity) getActivity();
 
         // Set title bar
@@ -105,7 +109,10 @@ public class CalendarFragment extends Fragment implements Serializable {
         showHistory.setTypeface(ty1);
 
 
+        showIntro(addDiary,INTRO_ADD);
+//        showIntro(showHistory, INTRO_VIEW);
         //Set click listner for add diary button
+
         addDiary.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -166,6 +173,7 @@ public class CalendarFragment extends Fragment implements Serializable {
 
                 @Override
                 public void onSelectDate(Date date, View view) {
+
                     //Parse the date with custom format
                     SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
                     String select = formatter.format(date);
@@ -268,130 +276,21 @@ public class CalendarFragment extends Fragment implements Serializable {
         }
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_add_diary, menu);  // Use filter.xml from step 1
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_add_diary) {
-            NavigateToDiaryEntryFragment();
-
-//            if (selectedDate != null) {
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        inflater.inflate(R.menu.menu_add_diary, menu);  // Use filter.xml from step 1
+//    }
 //
-//                //When the user selected a date and click the add button on the title bar, user will be allowed to input diary.
-//                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-//                builder.setTitle("Diary Entry");
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        int id = item.getItemId();
+//        if (id == R.id.action_add_diary) {
+//            NavigateToDiaryEntryFragment();
 //
-//                // I'm using fragment here so I'm using getView() to provide ViewGroup
-//                // but you can provide here any other instance of ViewGroup from your Fragment / Activity
-//                final View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.text_input_dialog, (ViewGroup) getView(), false);
+//        }
+//        return super.onOptionsItemSelected(item);
 //
-//                // Set up the input
-//                final RadioGroup newWithAsthmaGroup = (RadioGroup) viewInflated.findViewById(R.id.radioGroup_newWithAsthma);
-//                final RadioGroup attackedTodayGroup = (RadioGroup) viewInflated.findViewById(R.id.radioGroup_attackedToday);
-//                RadioButton yesNewWithAsthma = (RadioButton) viewInflated.findViewById(R.id.yesButton_newWithAsthma);
-//                RadioButton noNewWithAsthma = (RadioButton) viewInflated.findViewById(R.id.noButton_newWithAsthma);
-//                RadioButton yesAttacked = (RadioButton) viewInflated.findViewById(R.id.yesButton_attackByAsthma);
-//                RadioButton noAttacked = (RadioButton) viewInflated.findViewById(R.id.noButton_attackByAsthma);
-//                final EditText othersText = (EditText) viewInflated.findViewById(R.id.editText_others);
-//                final TextView timesAttacked = (TextView) viewInflated.findViewById(R.id.howManyTimesAttacked_textView);
-//
-//
-//                // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-//                builder.setView(viewInflated);
-//
-//                // Set up the buttons
-//                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        int newAsthma = newWithAsthmaGroup.indexOfChild(viewInflated.findViewById(newWithAsthmaGroup.getCheckedRadioButtonId()));
-//                        int attackedToday = attackedTodayGroup.indexOfChild(viewInflated.findViewById(attackedTodayGroup.getCheckedRadioButtonId()));
-//                        String others = othersText.getText().toString();
-//
-//                        //Justify the date is selected and insert records into database
-//
-//                        try {
-//                            if (selectedDate != null) {
-//
-//                                //Justify whether the current selected date's diary exist in db, if exists, just update the records.
-//                                if (myDb.currentDayDiaryExist(selectedDate) != 0) {
-//                                    if (myDb.updateCurrentDayRecord(selectedDate, newAsthma, attackedToday,
-//                                            Integer.parseInt(selectedNo), others)) {
-//
-//                                        //make visible to program
-//                                        Toast.makeText(getContext(), "Successfully update", Toast.LENGTH_SHORT).show();
-//                                    }
-//
-//                                } else {
-//                                    if (selectedNo != null) {
-//                                        myDb.insertDataToUser(selectedDate, newAsthma, attackedToday,
-//                                                Integer.parseInt(selectedNo), others);
-//                                    } else {
-//                                        myDb.insertDataToUser(selectedDate, newAsthma, attackedToday,
-//                                                0, others);
-//                                    }
-//                                }
-//
-//                                displayEventOnCalendar();
-//                            }
-//                        }catch (Exception e){
-//                            System.out.print(e.getMessage());
-//                            Sentry.captureException(e);
-//
-//                        }
-//
-//                        dialog.dismiss();
-//
-//                    }
-//                });
-//                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        dialog.cancel();
-//                    }
-//                });
-//
-//                builder.show();
-//
-//                return true;
-//            } else {
-//                //If the user doesn't select a date and just click add button, the alert dialog will appear
-//                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-//                builder.setTitle("  ");
-//                // I'm using fragment here so I'm using getView() to provide ViewGroup
-//                // but you can provide here any other instance of ViewGroup from your Fragment / Activity
-//                final View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.text_alert_dialog, (ViewGroup) getView(), false);
-//                // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-//                builder.setView(viewInflated);
-//
-//                // Set up the buttons
-//                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//
-//                        dialog.dismiss();
-//
-//                    }
-//                });
-//                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        dialog.cancel();
-//                    }
-//                });
-//
-//                builder.show();
-//
-//                return true;
-//            }
-
-        }
-        return super.onOptionsItemSelected(item);
-
-    }
+//    }
 
 
     public void displayEventOnCalendar(){
@@ -411,7 +310,7 @@ public class CalendarFragment extends Fragment implements Serializable {
                     e.printStackTrace();
                     Sentry.captureException(e);
 
-                    //Toast.m、dddiiakeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
             try {
@@ -459,32 +358,6 @@ public class CalendarFragment extends Fragment implements Serializable {
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         }else {
-//            //If the user doesn't select a date and just click add button, the alert dialog will appear
-//            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-//            builder.setTitle("  ");
-//            // I'm using fragment here so I'm using getView() to provide ViewGroup
-//            // but you can provide here any other instance of ViewGroup from your Fragment / Activity
-//            final View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.text_alert_dialog, (ViewGroup) getView(), false);
-//            // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-//            builder.setView(viewInflated);
-//
-//            // Set up the buttons
-//            builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialog, int which) {
-//
-//                    dialog.dismiss();
-//
-//                }
-//            });
-//            builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialog, int which) {
-//                    dialog.cancel();
-//                }
-//            });
-//
-//            builder.show();
             new SweetAlertDialog(getContext(), SweetAlertDialog.WARNING_TYPE)
                     .setTitleText("Notice")
                     .setContentText("You must select a date!")
@@ -495,14 +368,60 @@ public class CalendarFragment extends Fragment implements Serializable {
     }
 
 
+    /*
+    When the user click the View history button, it will navigate the user to the history fragment
+     */
     public void navigateToHistoryFragment(){
+
+        //Pass the current month to history
+        Bundle args = new Bundle();
+        Calendar cal = Calendar.getInstance();
+        Log.v("Month", Integer.toString(cal.get(Calendar.MONTH) + 1));
+        String month = Integer.toString(cal.get(Calendar.MONTH) + 1);
+        if (month.length() == 1)
+            args.putSerializable("month", "0" + month);
+        else {
+            args.putSerializable("month", month);
+
+        }
+
         HistoryFragment fragment = new HistoryFragment();
+        fragment.setArguments(args);
+
         FragmentTransaction fragmentTransaction =
                 getFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragment_containerStart, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
+
+    /*
+    When the user open the calendar fragment, it will show the tool tips immediately
+     */
+    private void showIntro(View view, String usageId) {
+        new SpotlightView.Builder(getActivity())
+                .introAnimationDuration(400)
+                .enableRevalAnimation(isRevealEnabled)
+                .performClick(true)
+                .fadeinTextDuration(400)
+                        //.setTypeface(FontUtil.get(this, "RemachineScript_Personal_Use"))
+                .headingTvColor(Color.parseColor("#eb273f"))
+                .headingTvSize(32)
+                .headingTvText("Track yourself")
+                .subHeadingTvColor(Color.parseColor("#ffffff"))
+                .subHeadingTvSize(16)
+                .subHeadingTvText("Want to track diary?\nWant to know the history.")
+                .maskColor(Color.parseColor("#dc000000"))
+                .target(view)
+                .lineAnimDuration(400)
+                .lineAndArcColor(Color.parseColor("#eb273f"))
+                .dismissOnTouch(true)
+                .dismissOnBackPress(true)
+                .enableDismissAfterShown(true)
+                .usageId(usageId) //UNIQUE ID
+                .show();
+    }
+}
 
 //    public void displayEventDetailForSelectedDate(String selectedDateString){
 //
@@ -525,4 +444,4 @@ public class CalendarFragment extends Fragment implements Serializable {
 //            getAttacked.setText("No diary!");
 //        }
 //    }
-}
+

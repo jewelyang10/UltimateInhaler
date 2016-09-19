@@ -133,4 +133,10 @@
         <item name="SRB_filledIcon">@string/ratingIconHeartFilled</item>
         <item name="SRB_unfilledIcon">@string/ratingIconHeartOutline</item>
     </style>
+
+    <style name="foodRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/ratingstars</item>
+        <item name="android:minHeight">21dip</item>
+        <item name="android:maxHeight">21dip</item>
+    </style>
 </resources>

@@ -7,7 +7,7 @@ package monash.ultimateinhaler;
 import java.util.UUID;
 
 /**
- * Entidad Lead
+ *
  */
 public class Lead {
     private String mId;

@@ -2,26 +2,32 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="#806E9AFD">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Artical"
-        android:id="@+id/articalText" />
+        android:textColor="#fff"
+        android:id="@+id/articalText"
+        android:background="#40000000"
+        android:backgroundTintMode="multiply"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="@android:color/white"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Description"
+        android:textSize="16dp"
+        android:textColor="#fff"
         android:id="@+id/descpText" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageView_news"
-        android:layout_column="1"
-        android:src="@mipmap/ic_launcher" />
 
 </LinearLayout>

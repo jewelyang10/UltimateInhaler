@@ -18,6 +18,8 @@
                 android:layout_height="25dp"
                 android:textColor="#fff"
                 android:textSize="19dp"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp"
 
                 >
 
@@ -37,6 +39,8 @@
         android:layout_marginTop="5dp"
         android:layout_below="@+id/table_sym"
         android:layout_height="50dp"
+        android:layout_marginRight="2dp"
+        android:layout_marginLeft="2dp"
         card_view:cardCornerRadius="0dp"
         card_view:contentPadding="0dp"
         card_view:cardBackgroundColor="#F2FBFE">
@@ -46,7 +50,7 @@
             android:layout_gravity="left"
             android:orientation="horizontal">
             <TextView
-                android:text="   Tight chest"
+                android:text="  Tight chest"
                 android:gravity="center"
                 android:textColor="#000"
                 android:textSize="19dp"
@@ -59,7 +63,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:layout_marginLeft="68dp"
+                android:layout_marginLeft="60dp"
                 android:orientation="horizontal"
                 android:id="@+id/tightChest_radioGroup"
                 >
@@ -92,10 +96,10 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/radio_button_background_medium"
                     android:button="@android:color/transparent"
-                    android:text="A lot"
+                    android:text="Much"
                     android:textSize="19dp"
                     android:textColor="#67696C"
-                    />
+                    android:checked="false" />
             </RadioGroup>
             </LinearLayout>
     </android.support.v7.widget.CardView>
@@ -110,6 +114,8 @@
         android:layout_width="match_parent"
         android:layout_marginTop="5dp"
         android:layout_height="50dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
         card_view:cardCornerRadius="0dp"
         card_view:contentPadding="0dp"
         card_view:cardBackgroundColor="#F2FBFE">
@@ -119,7 +125,7 @@
             android:layout_gravity="left"
             android:orientation="horizontal">
             <TextView
-                android:text="   Wheezing"
+                android:text="  Wheezing"
                 android:gravity="center"
                 android:textColor="#000"
                 android:textSize="19dp"
@@ -132,7 +138,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:layout_marginLeft="78dp"
+                android:layout_marginLeft="70dp"
                 android:orientation="horizontal"
                 android:id="@+id/wheezing_radioGroup"
                 >
@@ -164,10 +170,10 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/radio_button_background_medium"
                     android:button="@android:color/transparent"
-                    android:text="A lot"
+                    android:text="Much"
                     android:textSize="19dp"
                     android:textColor="#67696C"
-                    />
+                    android:checked="false" />
             </RadioGroup>
         </LinearLayout>
 
@@ -184,6 +190,8 @@
         android:layout_width="match_parent"
         android:layout_marginTop="5dp"
         android:layout_height="50dp"
+        android:layout_marginRight="2dp"
+        android:layout_marginLeft="2dp"
         card_view:cardCornerRadius="0dp"
         card_view:contentPadding="0dp"
         card_view:cardBackgroundColor="#F2FBFE">
@@ -193,7 +201,7 @@
             android:layout_gravity="left"
             android:orientation="horizontal">
             <TextView
-                android:text="   Tiredness"
+                android:text="  Tiredness"
                 android:gravity="center"
                 android:textColor="#000"
                 android:textSize="19dp"
@@ -206,7 +214,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:layout_marginLeft="75dp"
+                android:layout_marginLeft="69dp"
                 android:orientation="horizontal"
                 android:id="@+id/tiredness_radioGroup"
                 >
@@ -238,10 +246,10 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/radio_button_background_medium"
                     android:button="@android:color/transparent"
-                    android:text="A lot"
+                    android:text="Much"
                     android:textSize="19dp"
                     android:textColor="#67696C"
-                    />
+                    android:checked="false" />
             </RadioGroup>
         </LinearLayout>
 
@@ -254,6 +262,8 @@
         android:layout_below="@+id/diary_sym_item3"
         android:id="@+id/table_medication"
         android:background="#6E9AFD"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
         >
 
         <TableRow>
@@ -282,6 +292,8 @@
         android:layout_width="match_parent"
         android:layout_marginTop="5dp"
         android:layout_height="50dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
         card_view:cardCornerRadius="0dp"
         card_view:contentPadding="0dp"
         card_view:cardBackgroundColor="#F2FBFE">
@@ -305,7 +317,7 @@
                 android:gravity="center"
                 android:textSize="19dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginLeft="245dp"
+                android:layout_marginLeft="235dp"
                 android:layout_height="30dp"
                 android:layout_width="100dp"
                 android:ellipsize="end"
@@ -317,7 +329,7 @@
                 android:background="@color/caldroid_transparent"
                 android:textSize="19dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginLeft="350dp"
+                android:layout_marginLeft="330dp"
                 android:layout_height="30dp"
                 android:src="@drawable/forward"
                 android:layout_width="wrap_content"
@@ -335,6 +347,8 @@
         android:layout_below="@+id/diary_medication"
         android:id="@+id/table_others"
         android:background="#6E9AFD"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
         >
 
         <TableRow>
@@ -363,6 +377,8 @@
         android:layout_width="match_parent"
         android:layout_marginTop="5dp"
         android:layout_height="50dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
         card_view:cardCornerRadius="0dp"
         card_view:contentPadding="0dp"
         card_view:cardBackgroundColor="#F2FBFE">
@@ -372,7 +388,7 @@
             android:layout_gravity="left"
             android:orientation="horizontal">
             <TextView
-                android:text="   Feeling Stressed"
+                android:text="  Feeling Stressed"
                 android:gravity="center"
                 android:textColor="#000"
                 android:textSize="19dp"
@@ -385,7 +401,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:layout_marginLeft="15dp"
+                android:layout_marginLeft="12dp"
                 android:orientation="horizontal"
                 android:id="@+id/others_radioGroup"
                 >
@@ -417,10 +433,10 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/radio_button_background_medium"
                     android:button="@android:color/transparent"
-                    android:text="A lot"
+                    android:text="Much"
                     android:textSize="19dp"
                     android:textColor="#67696C"
-                    />
+                    android:checked="false" />
             </RadioGroup>
         </LinearLayout>
 

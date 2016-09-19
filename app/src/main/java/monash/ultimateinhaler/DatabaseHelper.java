@@ -238,4 +238,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         res.close();
         return weatherCondition;
     }
+
+
+    //Get all diary from database
+    public ArrayList<Records> getSpecifiedMonthRecords(String month) {
+        ArrayList<Records> list = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery("select * from " + DIARY_TABLE + " where " + DIARY_COL_1 + " LIKE '__-" + month + "-____'", null);
+        res.moveToFirst();
+        if (res.moveToFirst()) {
+            do {
+                Records records = new Records();
+                records.setDate(res.getString(0));
+                records.setTight_chest(res.getString(1));
+                records.setWheezing(res.getString(2));
+                records.setTiredness(res.getString(3));
+                records.setInhaler(res.getString(4));
+                records.setFeeling_stressed(res.getString(5));
+                list.add(records);
+            } while (res.moveToNext());
+
+        }
+        db.close();
+        res.close();
+        return list;
+    }
 }

@@ -1,0 +1,90 @@
+<LinearLayout
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:background="@drawable/bluebackground"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="460dp"
+        card_view:cardCornerRadius="5dp"
+        card_view:contentPadding="0dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp"
+        android:layout_below="@+id/card_diaryview"
+        card_view:cardBackgroundColor="#30ffffff">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="80dp"
+        android:id="@+id/more_fragments_linearlayout"
+        >
+        <ImageButton
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/piechart50"
+            android:layout_gravity="center"
+            android:background="@color/caldroid_transparent"
+            android:id="@+id/prediction_fragment" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:textSize="19dp"
+            android:text="Prediction"
+            android:textStyle="bold"
+            android:textColor="#fff"/>
+
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:src="@drawable/faq50"
+            android:background="@color/caldroid_transparent"
+            android:layout_gravity="center"
+            android:id="@+id/faq_fragment" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:textSize="19dp"
+            android:textColor="#fff"
+            android:textStyle="bold"
+            android:text="FAQ"/>
+
+
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="60dp"
+            android:src="@drawable/vectogramolympia"/>
+
+    </LinearLayout>
+
+
+
+    </android.support.v7.widget.CardView>
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="98dp"-->
+        <!--android:orientation="vertical"-->
+        <!--android:layout_below="@+id/more_fragments_linearlayout"-->
+        <!-->-->
+        <!-- -->
+    <!--</LinearLayout>-->
+</LinearLayout>
+

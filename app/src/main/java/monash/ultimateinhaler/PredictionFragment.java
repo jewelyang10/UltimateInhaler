@@ -5,7 +5,11 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
@@ -75,6 +79,7 @@ public class PredictionFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
 
         Bundle rawData = this.getArguments();
 
@@ -147,6 +152,30 @@ public class PredictionFragment extends Fragment {
         predictBase.addJavascriptInterface(new WebAppInterface(rootview.getContext(),rawData), "Android");
         predictBase.loadUrl("file:///android_asset/predictionpage.html");
         return rootview;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_back_diary, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_exit_diary) {
+            // Eliminar todos los leads
+//            mLeadsAdapter.clear();
+
+            MoreFragment fragment6 = new MoreFragment();
+            FragmentTransaction fragmentTransaction6 =
+                    getFragmentManager().beginTransaction();
+            fragmentTransaction6.replace(R.id.fragment_containerStart, fragment6);
+            fragmentTransaction6.addToBackStack(null);
+            fragmentTransaction6.commit();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

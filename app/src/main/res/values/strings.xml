@@ -15,14 +15,15 @@
     <string name="undo">Undo</string>
     <string name="title_activity_start">StartActivity</string>
     <!--Sliding-->
-    <string name="slide_1_biodiversity">Nearby biodiversity </string>
-    <string name="slide_2_diary">Entry your diary</string>
-    <string name="slide_3_tips">Search for general tips</string>
-    <string name="slide_4_weather">Get the current weather and pollen count</string>
-    <string name="slide_1_biodiversity_subtitle">You could know the biodiversity around you.</string>
-    <string name="slide_2_diary_subtitle">We offer analysis charts according your diary</string>
+    <string name="slide_1_biodiversity">Want to know nearby biodiversity? </string>
+    <string name="slide_2_diary">Want to track your asthma attack?</string>
+    <string name="slide_3_tips">New with asthma? Want to know the general tips and news?</string>
+    <string name="slide_4_weather">Want to know the current weather and pollen count?</string>
+
+    <string name="slide_1_biodiversity_subtitle">We offer the biodiversity around you.</string>
+    <string name="slide_2_diary_subtitle">We offer tracking overview according your diary</string>
     <string name="slide_3_tips_subtitle">We offer general tips for you to relieve yourself.</string>
-    <string name="slide_4_weather_subtitle">Information about weather and pollen count</string>
+    <string name="slide_4_weather_subtitle">We offer weather temperature and pollen count for you.</string>
     <string name="view_sample_tut">View Tutorial Example</string>
 
     <!--Fold Cell-->

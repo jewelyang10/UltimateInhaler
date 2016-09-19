@@ -22,6 +22,11 @@
             android:title="Diary" />
 
         <item
+            android:id="@+id/nav_more"
+            android:icon="@drawable/ic_mode_edit_black_24dp"
+            android:title="More" />
+
+        <item
             android:id="@+id/nav_prediction"
             android:icon="@drawable/ic_mode_edit_black_24dp"
             android:title="Personal Prediction" />

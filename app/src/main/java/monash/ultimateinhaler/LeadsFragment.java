@@ -3,6 +3,7 @@ package monash.ultimateinhaler;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,7 +27,7 @@ public class LeadsFragment extends Fragment {
 
     public static LeadsFragment newInstance(/*parámetros*/) {
         LeadsFragment fragment = new LeadsFragment();
-        // Setup parámetros
+        // Setup parámeters
         return fragment;
     }
 
@@ -34,7 +35,7 @@ public class LeadsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            // Gets parámetros
+            // Gets parámeters
         }
     }
 
@@ -43,17 +44,17 @@ public class LeadsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_leads, container, false);
 
-        // Instancia del ListView.
+        // Instance ListView.
         mLeadsList = (ListView) root.findViewById(R.id.leads_list);
 
-        // Inicializar el adaptador con la fuente de datos.
+        //
         mLeadsAdapter = new LeadsAdapter(getActivity(),
                 LeadsRepository.getInstance().getLeads());
 
-        //Relacionando la lista con el adaptador
+        //
         mLeadsList.setAdapter(mLeadsAdapter);
 
-        // Eventos
+        //
         mLeadsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -65,23 +66,38 @@ public class LeadsFragment extends Fragment {
         });
 
         setHasOptionsMenu(true);
+
+        //Set the title of this fragment
+        StartActivity startActivity = (StartActivity) getActivity();
+
+        // Set title bar
+        startActivity.setToolBar("FAQ", null);
+
+
         return root;
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-//        inflater.inflate(R.menu.menu_leads_list, menu);
+        inflater.inflate(R.menu.menu_back_diary, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-//        if (id == R.id.action_delete_all) {
-//            // Eliminar todos los leads
-//            mLeadsAdapter.clear();
-//            return true;
-//        }
+        if (id == R.id.action_exit_diary) {
+            //
+//
+
+            MoreFragment fragment6 = new MoreFragment();
+            FragmentTransaction fragmentTransaction6 =
+                    getFragmentManager().beginTransaction();
+            fragmentTransaction6.replace(R.id.fragment_containerStart, fragment6);
+            fragmentTransaction6.addToBackStack(null);
+            fragmentTransaction6.commit();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 }

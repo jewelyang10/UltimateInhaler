@@ -32,14 +32,14 @@ public class AsthmaNewsFragment extends Fragment {
     private ListView newsList;
     private NewsAdapter adapter;
     private ArrayList<News> partyNews;
+    private String title;
+    private int page;
 
-
-    public static final String JSON_DOWNLOAD_LOCATION ="https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20xml%20where%20url%3D'https%3A%2F%2Frss.sciencedaily.com%2Fhealth_medicine%2Fasthma.xml'&format=json&diagnostics=true&callback=";
-
-    public AsthmaNewsFragment() {
-        // Required empty public constructor
+    public static final String JSON_DOWNLOAD_LOCATION ="https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20xml%20where%20url%3D'https%3A%2F%2Frss.sciencedaily.com%2Fhealth_medicine%2Fallergy.xml'&format=json&diagnostics=true&callback=";
+    public static AsthmaNewsFragment newInstance() {
+        AsthmaNewsFragment f = new AsthmaNewsFragment();
+        return f;
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

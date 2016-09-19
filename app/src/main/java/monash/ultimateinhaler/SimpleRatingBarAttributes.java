@@ -5,6 +5,7 @@ package monash.ultimateinhaler;
  */
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.util.AttributeSet;
 
 class SimpleRatingBarAttributes {
@@ -19,8 +20,8 @@ class SimpleRatingBarAttributes {
     private String unfilledIcon;
 
     SimpleRatingBarAttributes(Context context, AttributeSet attrs) {
-        final int defaultFilledColor = context.getResources().getColor(SimpleRatingBar.DEFAULT_FILLED_COLOR_ID);
-        final int defaultUnfilledColor = context.getResources().getColor(SimpleRatingBar.DEFAULT_UNFILLED_COLOR_ID);
+        @SuppressWarnings("deprecation") final int defaultFilledColor = context.getResources().getColor(SimpleRatingBar.DEFAULT_FILLED_COLOR_ID);
+        @SuppressWarnings("deprecation") final int defaultUnfilledColor = context.getResources().getColor(SimpleRatingBar.DEFAULT_UNFILLED_COLOR_ID);
         TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.SimpleRatingBar, 0, 0);
         try {
             size = typedArray.getDimensionPixelSize(R.styleable.SimpleRatingBar_SRB_size, 0);
@@ -28,8 +29,8 @@ class SimpleRatingBarAttributes {
             maxRating = typedArray.getInt(R.styleable.SimpleRatingBar_SRB_maxRating, SimpleRatingBar.DEFAULT_MAX_RATING);
             filledIcon = typedArray.getString(R.styleable.SimpleRatingBar_SRB_filledIcon);
             unfilledIcon = typedArray.getString(R.styleable.SimpleRatingBar_SRB_unfilledIcon);
-            textColor = typedArray.getColor(R.styleable.SimpleRatingBar_SRB_textColor, defaultFilledColor);
-            filledIconColor = typedArray.getColor(R.styleable.SimpleRatingBar_SRB_filledIconColor, defaultFilledColor);
+            textColor = typedArray.getColor(R.styleable.SimpleRatingBar_SRB_textColor, Color.RED);
+            filledIconColor = typedArray.getColor(R.styleable.SimpleRatingBar_SRB_filledIconColor, Color.RED);
             unfilledIconColor = typedArray.getColor(R.styleable.SimpleRatingBar_SRB_unfilledIconColor,
                     defaultUnfilledColor);
         } catch (Exception e) {

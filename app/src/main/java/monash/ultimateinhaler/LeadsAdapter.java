@@ -16,7 +16,7 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 /**
- * Adaptador de leads
+ * Adapter leads
  */
 public class LeadsAdapter extends ArrayAdapter<Lead> {
     public LeadsAdapter(Context context, List<Lead> objects) {
@@ -25,15 +25,15 @@ public class LeadsAdapter extends ArrayAdapter<Lead> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // Obtener inflater.
+        //
         LayoutInflater inflater = (LayoutInflater) getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         ViewHolder holder;
 
-        // ¿Ya se infló este view?
+        //
         if (null == convertView) {
-            //Si no existe, entonces inflarlo con image_list_view.xml
+            //
             convertView = inflater.inflate(
                     R.layout.list_item_lead,
                     parent,

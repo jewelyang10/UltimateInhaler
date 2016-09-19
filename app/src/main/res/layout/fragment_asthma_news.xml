@@ -6,7 +6,9 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="monash.week4.MainActivity">
+    tools:context="monash.week4.MainActivity"
+    android:background="@drawable/bluebackground"
+    >
 
     <ListView
         android:layout_width="wrap_content"

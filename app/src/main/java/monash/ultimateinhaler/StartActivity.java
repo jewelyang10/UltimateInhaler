@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -62,7 +63,7 @@ public class StartActivity extends AppCompatActivity {
       //  getSupportActionBar().setIcon(R.drawable.applogoblack);
 
         //noinspection deprecation
-        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.transparent));
+        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.actionbarbg));
 
         if (!CheckNetwork()) {
 
@@ -94,7 +95,7 @@ public class StartActivity extends AppCompatActivity {
                         fragmentTransaction.commit();
                         break;
                     case R.id.nav_hospital:
-                        title = "Nearby";
+                        title = "NEARBY";
 
                         FindHospitalsFragment fragment2 = new FindHospitalsFragment();
                         FragmentTransaction fragmentTransaction2 =
@@ -103,17 +104,19 @@ public class StartActivity extends AppCompatActivity {
                         fragmentTransaction2.addToBackStack(null);
                         fragmentTransaction2.commit();                        break;
                     case R.id.nav_tips:
-                        title = "Tips";
+                        title = "TIPS";
 
-                        TipsFragment fragment3 = new TipsFragment();
-//                        AsthmaNewsFragment fragment3 = new AsthmaNewsFragment();
+//                        TipsFragment fragment3 = new TipsFragment();
+                        TabsNewsTipsFragment fragment3 = new TabsNewsTipsFragment();
                         FragmentTransaction fragmentTransaction3 =
                                 getSupportFragmentManager().beginTransaction();
                         fragmentTransaction3.replace(R.id.fragment_containerStart, fragment3);
                         fragmentTransaction3.addToBackStack(null);
-                        fragmentTransaction3.commit();                        break;
+                        fragmentTransaction3.commit();
+
+                        break;
                     case R.id.nav_diary:
-                        title = "Diary";
+                        title = "DIARY";
 
                         CalendarFragment fragment4 = new CalendarFragment();
                         FragmentTransaction fragmentTransaction4 =
@@ -121,24 +124,36 @@ public class StartActivity extends AppCompatActivity {
                         fragmentTransaction4.replace(R.id.fragment_containerStart, fragment4);
                         fragmentTransaction4.addToBackStack(null);
                         fragmentTransaction4.commit();                        break;
-                    case R.id.nav_prediction:
-                        title = "Prediction";
 
-                        PredictionFragment fragment5 = new PredictionFragment();
-                        FragmentTransaction fragmentTransaction5 =
-                                getSupportFragmentManager().beginTransaction();
-                        fragmentTransaction5.replace(R.id.fragment_containerStart, fragment5);
-                        fragmentTransaction5.addToBackStack(null);
-                        fragmentTransaction5.commit();                        break;
-                    case R.id.nav_about:
-                        title = "About";
+                    case R.id.nav_more:
+                        title = "MORE";
 
-                        LeadsFragment fragment6 = new LeadsFragment();
+                        MoreFragment fragment6 = new MoreFragment();
                         FragmentTransaction fragmentTransaction6 =
                                 getSupportFragmentManager().beginTransaction();
                         fragmentTransaction6.replace(R.id.fragment_containerStart, fragment6);
                         fragmentTransaction6.addToBackStack(null);
                         fragmentTransaction6.commit();                        break;
+
+//
+//                    case R.id.nav_prediction:
+//                        title = "Prediction";
+//
+//                        PredictionFragment fragment5 = new PredictionFragment();
+//                        FragmentTransaction fragmentTransaction5 =
+//                                getSupportFragmentManager().beginTransaction();
+//                        fragmentTransaction5.replace(R.id.fragment_containerStart, fragment5);
+//                        fragmentTransaction5.addToBackStack(null);
+//                        fragmentTransaction5.commit();                        break;
+//                    case R.id.nav_about:
+//                        title = "About";
+//
+//                        LeadsFragment fragment6 = new LeadsFragment();
+//                        FragmentTransaction fragmentTransaction6 =
+//                                getSupportFragmentManager().beginTransaction();
+//                        fragmentTransaction6.replace(R.id.fragment_containerStart, fragment6);
+//                        fragmentTransaction6.addToBackStack(null);
+//                        fragmentTransaction6.commit();                        break;
 
                 }
                 // update selected fragment and title
@@ -341,6 +356,8 @@ public class StartActivity extends AppCompatActivity {
             mTextView = (TextView) toolbar.findViewById(R.id.toolbar_title);
             TextView subTextView = (TextView) toolbar.findViewById(R.id.toolbar_subtitle);
             mTextView.setText(title);
+            mTextView.setTextColor(Color.BLACK);
+            subTextView.setTextColor(Color.BLACK);
             subTextView.setText(subtitle);
             subTextView.setVisibility(View.VISIBLE);
         }else{
@@ -350,8 +367,18 @@ public class StartActivity extends AppCompatActivity {
             TextView subTextView = (TextView) toolbar.findViewById(R.id.toolbar_subtitle);
             mTextView.setText(title);
             subTextView.setVisibility(View.GONE);
+            mTextView.setTextColor(Color.BLACK);
+            subTextView.setTextColor(Color.BLACK);
         }
 
     }
+
+    public void setToolBarColor(){
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        mTextView = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        mTextView.setTextColor(Color.WHITE);
+    }
+
 
 }

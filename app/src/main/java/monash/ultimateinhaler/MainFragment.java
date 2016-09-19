@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,9 +17,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.joshdholtz.sentry.Sentry;
 
@@ -36,6 +38,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -77,6 +82,10 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
     private ShadowTransformer mFragmentCardShadowTransformer;
     DatabaseHelper myDb;
     SQLiteDatabase sqLiteDatabase;
+    ArrayList<Records> history;
+//    SimpleRatingBar simpleRatingBar;
+    RatingBar simpleRatingBar;
+    TextView today_predict;
 
     public MainFragment() {
         // Required empty public constructor
@@ -89,8 +98,8 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
         rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         myDb = new DatabaseHelper(this.getContext());
-//                sqLiteDatabase = myDb.getWritableDatabase();
-//                myDb.onUpgrade(sqLiteDatabase,2,3);
+//        sqLiteDatabase = myDb.getWritableDatabase();
+//        myDb.onUpgrade(sqLiteDatabase,2,3);
 //        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
 //        swipeRefreshLayout.setColorSchemeColors(android.R.color.holo_blue_dark, android.R.color.holo_green_light, android.R.color.holo_green_dark);
 //        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -111,7 +120,8 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
 //            }
 //        });
 
-
+//        simpleRatingBar = (SimpleRatingBar) rootView.findViewById(R.id.myRatingBar);
+        simpleRatingBar = (RatingBar) rootView.findViewById(R.id.myRatingBar);
         mViewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
 
         List<Drawable> drawables = new ArrayList<>();
@@ -134,7 +144,8 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
         mViewPager.setPageTransformer(false, mCardShadowTransformer);
         mViewPager.setOffscreenPageLimit(3);
 
-
+        //call function to display the last state
+        getTheLastDiaryStressedSate();
         StartActivity startActivity = (StartActivity) getActivity();
 
         // Set title bar
@@ -179,6 +190,8 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
         temperatureTextView = (TextView) rootView.findViewById(R.id.temperatureTextView);
 //        conditionTextView = (TextView) rootView.findViewById(R.id.conditionTextView);
         locationTextView = (TextView) rootView.findViewById(R.id.locationTextView);
+        today_predict = (TextView) rootView.findViewById(R.id.today_predict);
+
 //        windTextView = (TextView) rootView.findViewById(R.id.windtextView_now);
 //        sunriseTextView = (TextView) rootView.findViewById(R.id.sunrisetextView);
 //        sunsetTextView = (TextView) rootView.findViewById(R.id.sunsettextView);
@@ -254,33 +267,8 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
         pressureDb = channel.getAtmosphere().getPressure() + " in";
         windDb = channel.getWind().getSpeed() + " mph";
 
-        insertWeatherIntoDatabase(todayDate,temperatureDb,humidityDb,pressureDb,windDb,pollenDb);
+//        insertWeatherIntoDatabase(todayDate,temperatureDb,humidityDb,pressureDb,windDb,pollenDb);
 
-
-
-        //Weathe info for tomorrow
-//        dateTextView_tomorrow.setText(" " + channel.getItem().getForecast().getDay() + ", " +
-//        channel.getItem().getForecast().getDate());
-//        weatherIconImageView_next.setImageDrawable(weatherIconDrawable_next);
-//
-//        //Parse the F to C
-//        int ft = Integer.valueOf(item.getForecast().getHigh());
-//        double ct = (ft - 32) *  5 / 9;
-//        int ctt = (int) Math.floor(ct);
-//
-//        int fl = Integer.valueOf(item.getForecast().getLow());
-//        double cl = (fl - 32) *  5 / 9;
-//        int clt = (int) Math.floor(cl);
-//
-//        temperatureTextView_next.setText(" High: " + item.getForecast().getHigh() + "\u00B0"
-//                + channel.getUnits().getTemperature()
-//                + "/ " + Integer.toString(ctt) + "\u00B0" + "C");
-//        lowtempTextView.setText(" Low: " + item.getForecast().getLow() + "\u00B0"
-//                + channel.getUnits().getTemperature()
-//                + "/ " + Integer.toString(clt) + "\u00B0" + "C" );
-//        conditionTextView_next.setText(" " + item.getForecast().getText());
-//        locationTextView_next.setText(" " + service.getLocation());
-        //Classigy the condition code to give recommendtaions
         int[] foggy = {19,20,21,22};
         int[] thunderstorm = {0,1,2,3,4,5,6,35,37,38,39,40,45,47};
         int[] snow = {8,9,10,11,12,46};
@@ -301,12 +289,14 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
             @SuppressWarnings("deprecation") Drawable drawableMask = res.getDrawable(R.drawable.escapemask);
             drawables.add(drawableMask);
 
-            String recom = "•\tStay indoors. \n" + "&" +
+            String recom = "•\tBetter to stay indoors. \n" + "&" +
                     "•\tWhen travelling in the car, keep the windows shut and use recirculating air conditioning (if possible).\n"
                     + "&"
                     + "•\tConsider wearing a facemask in certain situations when allergy is severe and exposure to high amounts of pollen is unavoidable.\n";
 
             mCardAdapter = new CardPagerAdapter(this.getContext(),3,recom, drawables);
+            today_predict.setText("You are Safe!");
+            today_predict.setTextColor(Color.parseColor("#28CB1D"));
 
         }else if(Arrays.toString(thunderstorm).matches(".*[\\[ ]" + imageConditionCode + "[\\],].*")){
             List<Drawable> drawables = new ArrayList<>();
@@ -314,9 +304,12 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
             @SuppressWarnings("deprecation") Drawable drawableRain = res.getDrawable(R.drawable.torrentialrain48);
             drawables.add(drawableRain);
 
-            String recom = "•\tStay indoors during and after thunderstorms.\n";
+            String recom = "•\tIt is better to stay indoors during and after thunderstorms.\n";
 
             mCardAdapter = new CardPagerAdapter(this.getContext(),1,recom,drawables);
+
+            today_predict.setText("Not suggest togo outside!");
+            today_predict.setTextColor(Color.parseColor("#F96651"));
 
         }else if(Arrays.toString(snow).matches(".*[\\[ ]" + imageConditionCode + "[\\],].*")){
 
@@ -328,7 +321,8 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
             String recom = "•\tWhen travelling in the car, keep the windows shut and use recirculating air conditioning (if possible).\n";
 
             mCardAdapter = new CardPagerAdapter(this.getContext(),1,recom,drawables);
-
+            today_predict.setText("You are Safe!");
+            today_predict.setTextColor(Color.parseColor("#28CB1D"));
 
         }else if(Arrays.toString(heavySnow).matches(".*[\\[ ]" +imageConditionCode + "[\\],].*")){
             List<Drawable> drawables = new ArrayList<>();
@@ -336,9 +330,12 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
             @SuppressWarnings("deprecation") Drawable drawableRain = res.getDrawable(R.drawable.mobilehome50);
             drawables.add(drawableRain);
 
-            String recom = "•\tStay indoors.\n";
+            String recom = "•\tBetter to stay indoors.\n";
 
             mCardAdapter = new CardPagerAdapter(this.getContext(),1,recom,drawables);
+
+            today_predict.setText("Not suggest togo outside!");
+            today_predict.setTextColor(Color.parseColor("#F96651"));
 
         }else if(Arrays.toString(windy).matches(".*[\\[ ]" + imageConditionCode + "[\\],].*")){
 
@@ -366,6 +363,9 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
             mCardAdapter = new CardPagerAdapter(this.getContext(),4,recom,drawables);
 
 
+            today_predict.setText("Not suggest togo outside!");
+            today_predict.setTextColor(Color.parseColor("#F96651"));
+
         }else if(Arrays.toString(night).matches(".*[\\[ ]" + imageConditionCode + "[\\],].*"))
         {
             List<Drawable> drawables = new ArrayList<>();
@@ -377,6 +377,9 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
             String recom = "•\t The evening — between 4pm and 6pm — can be the time of day with the greatest amount of pollen in the air. In other areas, the morning may be worse and should be a time when you try to stay indoors.\n";
 
             mCardAdapter = new CardPagerAdapter(this.getContext(),1,recom,drawables);
+
+            today_predict.setText("You are Safe!");
+            today_predict.setTextColor(Color.parseColor("#28CB1D"));
 
         }else if(Arrays.toString(day).matches(".*[\\[ ]" + imageConditionCode + "[\\],].*")){
 
@@ -399,6 +402,8 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
                     + "•\tDry your bed linen and clothes indoors during the pollen season, if possible.\n";
             mCardAdapter = new CardPagerAdapter(this.getContext(),3,recom,drawables);
 
+            today_predict.setText("You are Safe!");
+            today_predict.setTextColor(Color.parseColor("#28CB1D"));
         }else {
 
             List<Drawable> drawables = new ArrayList<>();
@@ -419,6 +424,8 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
                     + "•\tDry your bed linen and clothes indoors during the pollen season, if possible.\n";
             mCardAdapter = new CardPagerAdapter(this.getContext(),3,recom,drawables);
 
+            today_predict.setText("You are Safe!");
+            today_predict.setTextColor(Color.parseColor("#28CB1D"));
         }
 
         mCardAdapter.notifyDataSetChanged();
@@ -433,7 +440,7 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
     @Override
     public void serviceFailure(Exception exception) {
         dialog.hide();
-        Toast.makeText(getActivity(), exception.getMessage(), Toast.LENGTH_LONG).show();
+        Log.v("Weather exception", exception.getMessage());
     }
 
 
@@ -492,10 +499,11 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
         @Override
         protected void onPostExecute(String s) {
             JSONArray count = null;
+            String pollencount = null;
             try {
                 JSONObject raw = new JSONObject(s);
                 count = raw.getJSONArray("forecast");
-                String pollencount = count.getJSONObject(0).getString("pollen_count");
+                pollencount = count.getJSONObject(0).getString("pollen_count");
                 if (pollencount.equals("Low")){
                     progressingTextView.setText("Low");
 //                    myprogressBar.setProgress(30);
@@ -509,7 +517,7 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
                     progressingTextView.setText("No information");
 //                    myprogressBar.setProgress(100);
                 }
-                pollenDb = pollencount;
+
                 getResources().getString(R.string.app_name);
 
                 myAsyncTaskIsRunning = false;
@@ -519,6 +527,10 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
                 Sentry.captureException(e);
 
             }
+            pollencount = "Low";
+            progressingTextView.setText(pollencount);
+
+            pollenDb = pollencount;
 
         }
 
@@ -555,6 +567,72 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
 
 
     }
+
+    public void getTheLastDiaryStressedSate(){
+
+        history = myDb.getRecords();
+        TextView valueTV = new TextView(getContext());
+
+        if (history.size() != 0){
+            simpleRatingBar.setVisibility(View.VISIBLE);
+            valueTV.setVisibility(View.GONE);
+            //Order the records by DESC
+            Collections.sort(history, new Comparator<Records>() {
+                @Override
+                public int compare(Records lhs, Records rhs) {
+                    Calendar calendarlhs = Calendar.getInstance();
+                    Calendar calendarrhs = Calendar.getInstance();
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // HH:mm:ss
+                    try {
+                        calendarlhs.setTime(dateFormat.parse(lhs.getDate()));
+
+                        calendarrhs.setTime(dateFormat.parse(rhs.getDate()));
+
+                    } catch (Exception e) {
+                        Log.v("History date", e.getMessage());
+                    }
+                    if (calendarlhs.getTimeInMillis() > calendarrhs.getTimeInMillis()) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                }
+            });
+
+            simpleRatingBar.setClickable(false);
+            simpleRatingBar.setFocusable(false);
+            if (Integer.valueOf(history.get(history.size() - 1).getInhaler()) == 0) {
+                simpleRatingBar.setRating(0);
+            } else if (Integer.valueOf(history.get(history.size() - 1).getInhaler()) >= 1 &&
+                    Integer.valueOf(history.get(history.size() - 1).getInhaler()) <= 5) {
+                simpleRatingBar.setRating(1);
+            } else if (Integer.valueOf(history.get(history.size() - 1).getInhaler()) >= 6 &&
+                    Integer.valueOf(history.get(history.size() - 1).getInhaler()) <= 12) {
+                simpleRatingBar.setRating(3);
+            } else if (Integer.valueOf(history.get(history.size() - 1).getInhaler()) >= 13 &&
+                    Integer.valueOf(history.get(history.size() - 1).getInhaler()) <= 20) {
+                simpleRatingBar.setRating(4);
+            } else {
+                simpleRatingBar.setRating(0);
+            }
+        }else{
+
+            LinearLayout linearLayout = (LinearLayout) rootView.findViewById(R.id.stateOverView);
+            valueTV.setText("Track your attack now!");
+            //noinspection ResourceType
+            valueTV.setId(5);
+            valueTV.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT));
+
+            ((LinearLayout) linearLayout).addView(valueTV);
+            simpleRatingBar.setVisibility(View.GONE);
+        }
+
+
+
+    }
+
 
 
 
