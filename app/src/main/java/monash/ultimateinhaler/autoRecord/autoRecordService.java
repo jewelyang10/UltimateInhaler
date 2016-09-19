@@ -18,13 +18,11 @@ public class autoRecordService extends IntentService {
      *
      * @param name Used to name the worker thread, important only for debugging.
      */
-    public autoRecordService(String name) {
-        super(serviceTag);
-    }
 
-    public autoRecordService(Context context) {
-        super("autoRecordMainService");
-        currentContext = context;
+
+    public autoRecordService() {
+        super(serviceTag);
+        currentContext = getApplicationContext();
     }
 
 
