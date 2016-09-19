@@ -253,7 +253,7 @@
 			
 				
 			preprocessingResult.forEach(function(element,index){
-				finalPercentage[index] = ( Math.ceil(element/sumStep2*100));
+				finalPercentage[index] = Math.abs( Math.ceil(element/sumStep2*100)));
 			});
 				
 			
@@ -440,7 +440,7 @@ var myEvidence = new Chart(document.getElementById("predictionEvidence").getCont
     }],
     labels: ['Humidity', 'Pressure', 'Temp', 'Wind',"Biodiversity"]
 },
-    type: 'polarArea',
+    type: 'pie',
     options: {}
 });	
 
