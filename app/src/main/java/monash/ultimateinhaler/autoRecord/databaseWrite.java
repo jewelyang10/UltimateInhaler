@@ -2,6 +2,7 @@ package monash.ultimateinhaler.autoRecord;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -15,6 +16,10 @@ import java.util.Date;
  */
 public class databaseWrite extends SQLiteOpenHelper {
 
+    private static final String TableName = "RAWINFO";
+    private static final String Column1_PK = "date_pk";
+    private static final String Column2_weather = "WESTHER";
+    private static final String Column3_pollen = "POLLEN";
     SQLiteDatabase db = null;
 
     public databaseWrite(Context context) {
@@ -32,11 +37,11 @@ public class databaseWrite extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        String CREATE_RAWINFO_TABLE = "CREATE TABLE " + "RAWINFO" +
+        String CREATE_RAWINFO_TABLE = "CREATE TABLE " + TableName +
                 "(" +
-                "date_pk" + " TEXT PRIMARY KEY," +
-                "WESTHER" + " BLOB," +
-                "POLLEN" + " BLOB" +
+                Column1_PK + " TEXT PRIMARY KEY," +
+                Column2_weather + " BLOB," +
+                Column3_pollen + " BLOB" +
                 ")";
 
         try {
@@ -57,12 +62,21 @@ public class databaseWrite extends SQLiteOpenHelper {
 
     public Boolean insertData(String Weather, String Pollen) {
         ContentValues singleEntry = new ContentValues();
-
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         singleEntry.put("date_pk", dateFormat.format(new Date()));
         singleEntry.put("WESTHER", Weather);
         singleEntry.put("POLLEN", Pollen);
         long resultNum = db.insert("RAWINFO", null, singleEntry);
         return resultNum != -1;
+    }
+
+    public Cursor getData(Date requestDate) {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Cursor res = db.rawQuery("select * from " + TableName + " where " + Column1_PK + " = " + dateFormat.format(requestDate), null);
+        return res;
+    }
+
+    public String getDateBasePath() {
+        return db.getPath();
     }
 }
