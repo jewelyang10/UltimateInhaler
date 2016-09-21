@@ -76,6 +76,7 @@ public class databaseWrite extends SQLiteOpenHelper {
         return res;
     }
 
+
     public String getDateBasePath() {
         return db.getPath();
     }

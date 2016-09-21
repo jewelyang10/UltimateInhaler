@@ -139,5 +139,4 @@ public class PredictionFragment extends Fragment {
         }
         return super.onOptionsItemSelected(item);
     }
-
 }

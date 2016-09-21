@@ -16,6 +16,7 @@ public class getPollenCount {
     public getPollenCount() {
     }
 
+
     public static String pollenCount() {
         URL url;
         HttpURLConnection conn = null;
