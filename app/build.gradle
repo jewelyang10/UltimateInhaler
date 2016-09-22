@@ -67,10 +67,12 @@ dependencies {
     compile 'com.hrules:horizontalnumberpicker:1.1.1'
     compile 'com.github.amlcurran.showcaseview:library:5.4.3'
     compile 'com.kyleduo.switchbutton:library:1.4.4'
-
 }
 
 apply plugin: 'com.google.gms.google-services'
+
+
+
 
 
 
