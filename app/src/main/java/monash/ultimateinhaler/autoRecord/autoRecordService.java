@@ -37,6 +37,7 @@ public class autoRecordService extends IntentService {
         singleInstance.insertData(weatherInfo, pollenInfo);
 
         Log.i(serviceTag, "finish");
+
     }
 
 }
