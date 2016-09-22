@@ -33,7 +33,7 @@ public class StartActivity extends AppCompatActivity {
     private int previousPosition;
     private Typeface ty1;
     private static final int REQUEST_CODE = 1234;
-
+    BottomBar bottomBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,11 +42,12 @@ public class StartActivity extends AppCompatActivity {
         // Sentry will look for uncaught exceptions from previous runs and send them
         Sentry.init(this.getApplicationContext(), "https://4c9327e0877c45bcbacee3fff7a38236:193fac1f37f74ba29983ecb1fb10be3f@sentry.io/96599");
         Sentry.captureMessage("Test test test");
+//        this.startService(new Intent(this, autoRecordService.class));
 
         loadTutorial();
 
         //Configure the typeface
-        ty1 = Typeface.createFromAsset(getAssets(),"fonts/PTSans/PTSansRegular.ttf");
+        ty1 = Typeface.createFromAsset(getAssets(), "fonts/OswBold.ttf");
 
         //Customize the title bar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -55,15 +56,11 @@ public class StartActivity extends AppCompatActivity {
         mTextView.setText("Ultimate Inhaler");
         mTextView.setGravity(Gravity.CENTER);
         mTextView.setTypeface(ty1);
-        mTextView.setTextSize(27);
-        mTextView.setTypeface(mTextView.getTypeface(), Typeface.BOLD);
-
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-      //  getSupportActionBar().setIcon(R.drawable.applogoblack);
-
+        //  getSupportActionBar().setIcon(R.drawable.applogoblack);
         //noinspection deprecation
-        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.actionbarbg));
+//        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.actionbarbg));
 
         if (!CheckNetwork()) {
 
@@ -78,7 +75,7 @@ public class StartActivity extends AppCompatActivity {
         fragmentTransaction.commit();
 
 
-        BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
+        bottomBar = (BottomBar) findViewById(R.id.bottomBar);
 
         bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
@@ -91,7 +88,7 @@ public class StartActivity extends AppCompatActivity {
                         FragmentTransaction fragmentTransaction =
                                 getSupportFragmentManager().beginTransaction();
                         fragmentTransaction.replace(R.id.fragment_containerStart, fragment);
-                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.addToBackStack("Fragment");
                         fragmentTransaction.commit();
                         break;
                     case R.id.nav_hospital:
@@ -101,8 +98,9 @@ public class StartActivity extends AppCompatActivity {
                         FragmentTransaction fragmentTransaction2 =
                                 getSupportFragmentManager().beginTransaction();
                         fragmentTransaction2.replace(R.id.fragment_containerStart, fragment2);
-                        fragmentTransaction2.addToBackStack(null);
-                        fragmentTransaction2.commit();                        break;
+                        fragmentTransaction2.addToBackStack("FragmentB");
+                        fragmentTransaction2.commit();
+                        break;
                     case R.id.nav_tips:
                         title = "TIPS";
 
@@ -111,7 +109,7 @@ public class StartActivity extends AppCompatActivity {
                         FragmentTransaction fragmentTransaction3 =
                                 getSupportFragmentManager().beginTransaction();
                         fragmentTransaction3.replace(R.id.fragment_containerStart, fragment3);
-                        fragmentTransaction3.addToBackStack(null);
+                        fragmentTransaction3.addToBackStack("FragmentB");
                         fragmentTransaction3.commit();
 
                         break;
@@ -122,8 +120,9 @@ public class StartActivity extends AppCompatActivity {
                         FragmentTransaction fragmentTransaction4 =
                                 getSupportFragmentManager().beginTransaction();
                         fragmentTransaction4.replace(R.id.fragment_containerStart, fragment4);
-                        fragmentTransaction4.addToBackStack(null);
-                        fragmentTransaction4.commit();                        break;
+                        fragmentTransaction4.addToBackStack("FragmentB");
+                        fragmentTransaction4.commit();
+                        break;
 
                     case R.id.nav_more:
                         title = "MORE";
@@ -132,8 +131,9 @@ public class StartActivity extends AppCompatActivity {
                         FragmentTransaction fragmentTransaction6 =
                                 getSupportFragmentManager().beginTransaction();
                         fragmentTransaction6.replace(R.id.fragment_containerStart, fragment6);
-                        fragmentTransaction6.addToBackStack(null);
-                        fragmentTransaction6.commit();                        break;
+                        fragmentTransaction6.addToBackStack("FragmentB");
+                        fragmentTransaction6.commit();
+                        break;
 
 //
 //                    case R.id.nav_prediction:
@@ -171,112 +171,12 @@ public class StartActivity extends AppCompatActivity {
             }
         });
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
-        //Bottom navigation
-//        AHBottomNavigation bottomNavigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
-//        // Create items
-//        @SuppressWarnings("deprecation") AHBottomNavigationItem item1 = new AHBottomNavigationItem("Weather", R.drawable.ic_wb_sunny_black_24dp, R.color.fab2_color);
-//        @SuppressWarnings("deprecation") AHBottomNavigationItem item2 = new AHBottomNavigationItem("Map", R.drawable.red_worldwide_location, R.color.fab1_color);
-//        @SuppressWarnings("deprecation") AHBottomNavigationItem item3 = new AHBottomNavigationItem("Tips", R.drawable.idea, R.color.fab3_color);
-//        @SuppressWarnings("deprecation") AHBottomNavigationItem item4 = new AHBottomNavigationItem("Diary", R.drawable.ic_mode_edit_black_24dp, R.color.fab4_color);
-//
-//
-//// Add items
-//        bottomNavigation.addItem(item1);
-//        bottomNavigation.addItem(item2);
-//        bottomNavigation.addItem(item3);
-//        bottomNavigation.addItem(item4);
-//
-//// Set background colorFEFEFE
-//        //bottomNavigation.setDefaultBackgroundColor(Color.parseColor("#000000"));
-//
-//// Disable the translation inside the CoordinatorLayout
-//        bottomNavigation.setBehaviorTranslationEnabled(false);
-//
-//// Change colors
-////        bottomNavigation.setAccentColor(Color.parseColor("#F63D2B"));
-////        bottomNavigation.setInactiveColor(Color.parseColor("#747474"));
-//        bottomNavigation.setAccentColor(Color.parseColor("#FF4081"));
-//        bottomNavigation.setInactiveColor(Color.parseColor("#747474"));
-//
-//// Force to tint the drawable (useful for font with icon for example)
-//        bottomNavigation.setForceTint(true);
-//
-//// Force the titles to be displayed (against Material Design guidelines!)
-//        bottomNavigation.setForceTitlesDisplay(true);
-//
-//// Use colored navigation with circle reveal effect
-//        bottomNavigation.setColored(true);
-//
-//// Set current item programmatically
-//        bottomNavigation.setCurrentItem(0);
-//
-//// Customize notification (title, background, typeface)
-//        bottomNavigation.setNotificationBackgroundColor(Color.parseColor("#F63D2B"));
-//
-//// Add or remove notification for each item
-//        bottomNavigation.setNotification("4", 1);
-//        bottomNavigation.setNotification("", 1);
-//
-//// Set listeners
-//        bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
-//            @Override
-//            public boolean onTabSelected(int position, boolean wasSelected) {
-//                // Do something cool here...
-//                if (position == 0 && wasSelected == false) {
-//                    MainFragment fragment = new MainFragment();
-//                    FragmentTransaction fragmentTransaction =
-//                            getSupportFragmentManager().beginTransaction();
-//                    fragmentTransaction.replace(R.id.fragment_container, fragment);
-//                    fragmentTransaction.addToBackStack(null);
-//                    fragmentTransaction.commit();
-//                } else if (position == 1 && wasSelected == false) {
-//                    FindHospitalsFragment fragment = new FindHospitalsFragment();
-//                    FragmentTransaction fragmentTransaction =
-//                            getSupportFragmentManager().beginTransaction();
-//                    fragmentTransaction.replace(R.id.fragment_container, fragment);
-//                    fragmentTransaction.addToBackStack(null);
-//                    fragmentTransaction.commit();
-//                } else if (position == 2 && wasSelected == false) {
-//                    TipsFragment fragment = new TipsFragment();
-//                    FragmentTransaction fragmentTransaction =
-//                            getSupportFragmentManager().beginTransaction();
-//                    fragmentTransaction.replace(R.id.fragment_container, fragment);
-//                    fragmentTransaction.addToBackStack(null);
-//                    fragmentTransaction.commit();
-//                } else if (position == 3 && wasSelected == false) {
-//                    CalendarFragment fragment = new CalendarFragment();
-//                    FragmentTransaction fragmentTransaction =
-//                            getSupportFragmentManager().beginTransaction();
-//                    fragmentTransaction.replace(R.id.fragment_container, fragment);
-//                    fragmentTransaction.addToBackStack(null);
-//                    fragmentTransaction.commit();
-//                }else{
-//                    Toast.makeText(getApplicationContext(), "Wrong", Toast.LENGTH_LONG).show();;
-//                }
-//                return true;
-//            }
-//        });
-//        bottomNavigation.setOnNavigationPositionListener(new AHBottomNavigation.OnNavigationPositionListener() {
-//            @Override
-//            public void onPositionChange(int y) {
-//                // Manage the new y position
-//            }
-//        });
-
 
     }
 
     @Override
-    public void onBackPressed() {}
+    public void onBackPressed() {
+    }
 
     //Check the mobile's network state
     private boolean CheckNetwork() {
@@ -319,13 +219,13 @@ public class StartActivity extends AppCompatActivity {
 
     private ArrayList<TutorialItem> getTutorialItems(Context context) {
         TutorialItem tutorialItem1 = new TutorialItem(R.string.slide_1_biodiversity, R.string.slide_1_biodiversity_subtitle,
-                R.color.slide_1, R.drawable.transparent,R.drawable.tut_page_1_background);
+                R.color.slide_1, R.drawable.transparent, R.drawable.tut_page_1_background);
 
         TutorialItem tutorialItem2 = new TutorialItem(R.string.slide_2_diary, R.string.slide_2_diary_subtitle,
-                R.color.slide_2,  R.drawable.tut_page_2_front,  R.drawable.tut_page_2_background);
+                R.color.slide_2, R.drawable.tut_page_2_front, R.drawable.tut_page_2_background);
 
         TutorialItem tutorialItem3 = new TutorialItem(R.string.slide_3_tips, R.string.slide_3_tips_subtitle,
-                R.color.slide_3, R.drawable.tut_page_3_foreground,   R.drawable.tut_page_3_background);
+                R.color.slide_3, R.drawable.tut_page_3_foreground, R.drawable.tut_page_3_background);
 
         TutorialItem tutorialItem4 = new TutorialItem(R.string.slide_4_weather, R.string.slide_4_weather_subtitle,
                 R.color.slide_4, R.drawable.tut_page_3_background, R.drawable.tut_page_4_background);
@@ -338,16 +238,17 @@ public class StartActivity extends AppCompatActivity {
 
         return tutorialItems;
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //    super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE){
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
 //            Toast.makeText(this, "Tutorial finished", Toast.LENGTH_LONG).show();
 
         }
     }
 
-    public void setToolBar(String title, String subtitle){
+    public void setToolBar(String title, String subtitle) {
 
 
         if (subtitle != null) {
@@ -356,29 +257,35 @@ public class StartActivity extends AppCompatActivity {
             mTextView = (TextView) toolbar.findViewById(R.id.toolbar_title);
             TextView subTextView = (TextView) toolbar.findViewById(R.id.toolbar_subtitle);
             mTextView.setText(title);
-            mTextView.setTextColor(Color.BLACK);
-            subTextView.setTextColor(Color.BLACK);
+            mTextView.setTextColor(Color.WHITE);
+            subTextView.setTextColor(Color.WHITE);
             subTextView.setText(subtitle);
             subTextView.setVisibility(View.VISIBLE);
-        }else{
+
+        } else {
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
             mTextView = (TextView) toolbar.findViewById(R.id.toolbar_title);
             TextView subTextView = (TextView) toolbar.findViewById(R.id.toolbar_subtitle);
             mTextView.setText(title);
             subTextView.setVisibility(View.GONE);
-            mTextView.setTextColor(Color.BLACK);
-            subTextView.setTextColor(Color.BLACK);
+            mTextView.setTextColor(Color.WHITE);
+            subTextView.setTextColor(Color.WHITE);
         }
 
     }
 
-    public void setToolBarColor(){
+    public void setDiaryToolBarColor() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        mTextView = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        mTextView.setTextColor(Color.WHITE);
+        TextView subTextView = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        subTextView.setTextColor(Color.WHITE);
     }
 
-
+    public void setToolBarColor() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        TextView textView = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        textView.setTextColor(Color.RED);
+    }
 }

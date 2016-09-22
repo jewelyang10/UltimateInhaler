@@ -6,12 +6,11 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="@drawable/bluebackground"
+    android:background="@drawable/vignette"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
         <LinearLayout
             android:layout_marginTop="60dp"
-
             android:id="@+id/calendar1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

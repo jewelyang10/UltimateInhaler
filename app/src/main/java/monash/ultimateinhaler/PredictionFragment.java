@@ -82,7 +82,10 @@ public class PredictionFragment extends Fragment {
         setHasOptionsMenu(true);
 
         Bundle rawData = this.getArguments();
+        StartActivity startActivity = (StartActivity) getActivity();
 
+        // Set title bar
+        startActivity.setToolBar("PREDICTION", null);
         //set up basic layout
         rootview = inflater.inflate(R.layout.fragment_prediction, container, false);
         WebView predictBase = (WebView) rootview.findViewById(R.id.predictBaseContainer);

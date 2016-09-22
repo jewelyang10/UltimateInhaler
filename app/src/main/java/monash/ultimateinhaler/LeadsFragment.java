@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,9 +58,6 @@ public class LeadsFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Lead currentLead = mLeadsAdapter.getItem(position);
-                Toast.makeText(getActivity(),
-                        "Iniciar screen de detalle para: \n" + currentLead.getName(),
-                        Toast.LENGTH_SHORT).show();
             }
         });
 

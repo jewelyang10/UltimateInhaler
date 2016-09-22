@@ -21,6 +21,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.hrules.horizontalnumberpicker.HorizontalNumberPicker;
+import com.hrules.horizontalnumberpicker.HorizontalNumberPickerListener;
 import com.shawnlin.numberpicker.NumberPicker;
 
 import java.text.DateFormat;
@@ -34,7 +36,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DiaryDetailsFragment extends Fragment {
+public class DiaryDetailsFragment extends Fragment implements HorizontalNumberPickerListener {
     View rootView;
     RadioButton tightChestNone, tightChestSome,tightChestAlot,
             wheezingNone,wheezingSome, wheezingAlot,tirednessNone, tirednessSome,tirednessAlot,
@@ -48,6 +50,7 @@ public class DiaryDetailsFragment extends Fragment {
     SQLiteDatabase sqLiteDatabase;
     String passDate;
     Records records;
+    HorizontalNumberPicker numberPicker;
 
     public DiaryDetailsFragment() {
         // Required empty public constructor
@@ -83,6 +86,7 @@ public class DiaryDetailsFragment extends Fragment {
 
             // Set title bar
             startActivity.setToolBar(finalDay, passDate);
+            startActivity.setDiaryToolBarColor();
 
         } catch (ParseException e) {
             e.printStackTrace();
@@ -110,10 +114,21 @@ public class DiaryDetailsFragment extends Fragment {
         feelingStressedAlot = (RadioButton) rootView.findViewById(R.id.radio_button_others_alot);
 
         saveTracker = (Button) rootView.findViewById(R.id.saveTracking_button);
-        openInhalerWindow = (ImageButton) rootView.findViewById(R.id.open_inhaler_number_button);
+
+        numberPicker = (HorizontalNumberPicker) rootView.findViewById(R.id.horizontal_number_picker1);
+        numberPicker.setMaxValue(20);
+        numberPicker.setBackgroundColor(
+                getResources().getColor(android.R.color.transparent));
+        numberPicker.getTextValueView()
+                .setTextColor(getResources().getColor(android.R.color.holo_blue_bright));
+        numberPicker.getTextValueView().setTextSize(22);
+
+        numberPicker.setListener((HorizontalNumberPickerListener) this);
+
+//        openInhalerWindow = (ImageButton) rootView.findViewById(R.id.open_inhaler_number_button);
 
 
-        totalInhalerText = (TextView) rootView.findViewById(R.id.totalinhaler_text);
+//        totalInhalerText = (TextView) rootView.findViewById(R.id.totalinhaler_text);
 
         SetDiaryDetailsIfDiaryAlreadyExist();
 
@@ -126,12 +141,13 @@ public class DiaryDetailsFragment extends Fragment {
             }
         });
 
-        openInhalerWindow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openInhalerDialog();
-            }
-        });
+//        openInhalerWindow.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+////                openInhalerDialog();
+//
+//            }
+//        });
         // Inflate the layout for this fragment
         return rootView;
 
@@ -140,6 +156,12 @@ public class DiaryDetailsFragment extends Fragment {
         @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_exit_diary, menu);  // Use filter.xml from step 1
+    }
+
+    @Override
+    public void onHorizontalNumberPickerChanged(HorizontalNumberPicker horizontalNumberPicker,
+                                                int value) {
+        selectedNo = Integer.toString(value);
     }
 
     @Override
@@ -267,6 +289,7 @@ public class DiaryDetailsFragment extends Fragment {
         com.shawnlin.numberpicker.NumberPicker numberPicker = (com.shawnlin.numberpicker.NumberPicker) viewInflated.findViewById(R.id.number_picker);
 
 // set divider color
+        //noinspection deprecation
         numberPicker.setDividerColor(getResources().getColor(R.color.colorPrimary));
         numberPicker.setDividerColorResource(R.color.colorPrimary);
 
@@ -275,6 +298,7 @@ public class DiaryDetailsFragment extends Fragment {
         numberPicker.setFormatter(R.string.number_picker_formatter);
 
 // set text color
+        //noinspection deprecation
         numberPicker.setTextColor(getResources().getColor(R.color.colorPrimary));
         numberPicker.setTextColorResource(R.color.colorPrimary);
 
@@ -289,6 +313,8 @@ public class DiaryDetailsFragment extends Fragment {
         numberPicker.setTypeface(R.string.roboto_light, Typeface.NORMAL);
         numberPicker.setTypeface(R.string.roboto_light);
 
+        selectedNo = "0";
+
         numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
@@ -298,6 +324,7 @@ public class DiaryDetailsFragment extends Fragment {
             }
 
         });
+
                 // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
                 builder.setView(viewInflated);
 
@@ -329,7 +356,8 @@ public class DiaryDetailsFragment extends Fragment {
             ((RadioButton)tightChestGroup.getChildAt(Integer.valueOf(records.getTight_chest()))).setChecked(true);
             ((RadioButton)wheezingGroup.getChildAt(Integer.valueOf(records.getWheezing()))).setChecked(true);
             ((RadioButton)tirednessGroup.getChildAt(Integer.valueOf(records.getTiredness()))).setChecked(true);
-            totalInhalerText.setText(records.getInhaler());
+//            totalInhalerText.setText(records.getInhaler());
+            numberPicker.setValue(Integer.valueOf(records.getInhaler()));
             selectedNo = records.getInhaler();
             ((RadioButton)feelingStressedGroup.getChildAt(Integer.valueOf(records.getFeeling_stressed()))).setChecked(true);
 

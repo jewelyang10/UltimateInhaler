@@ -24,6 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="56dp"
         android:text="Question"
+        android:textColor="#fff"
         android:textAppearance="?attr/textAppearanceListItem"
         tools:text="Ayuda?t" />
 

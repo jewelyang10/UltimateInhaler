@@ -30,6 +30,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String WEATHER_COL_5 = "wind";
     public static final String WEATHER_COL_6 = "pollen";
 
+    public static final String NOTIFY = "notify";
+    public static final String NOTIFY_COL_1 = "id";
+    public static final String NOTIFY_COL_2 = "notified";
+
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
         SQLiteDatabase db = this.getReadableDatabase();
@@ -56,14 +60,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + WEATHER_COL_6 + " TEXT)")
         ;
 
+        db.execSQL("create table " + NOTIFY + " ( " +
+                NOTIFY_COL_1 + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + NOTIFY_COL_2 + " TEXT)")
+        ;
     }
 
     //Upgrade database
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + DIARY_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + WEATHER_TABLE);
-        onCreate(db);
+//        db.execSQL("DROP TABLE IF EXISTS " + DIARY_TABLE);
+//        db.execSQL("DROP TABLE IF EXISTS " + WEATHER_TABLE);
+//        db.execSQL("DROP TABLE IF EXISTS " + NOTIFY);
+
+//        onCreate(db);
 
     }
 
@@ -104,6 +114,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 return true;
     }
 
+    //Insert switch status into notify table
+    public boolean insertStatus(String status){
+        SQLiteDatabase db = this.getReadableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(NOTIFY_COL_2, status);
+        long result = db.insert(NOTIFY, null, contentValues);
+        if (result == -1)
+            return false;
+        else
+            return true;
+
+    }
     //Ckeck if today's weather condition already exit in database
     public int todayWeatherExist(String date){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -168,6 +190,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return true;
 
     }
+
+    //Update the notify table
+    public boolean updateNotifyStatus(String status) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(NOTIFY_COL_2, status);
+        String[] value = {"1"};
+        String selection = "id = ?";
+
+        long result = db.update(NOTIFY, contentValues, selection, value);
+        if (result == -1)
+            return false;
+        else
+            return true;
+
+    }
+
 
     //Get all diary from database
     public ArrayList<Records> getRecords() {
@@ -262,5 +301,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         res.close();
         return list;
+    }
+
+    //Check the notify table empty or not
+    public int checkNotifyTableEmpty(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String count = "SELECT count(*) FROM " + NOTIFY;
+        Cursor mcursor = db.rawQuery(count, null);
+        mcursor.moveToFirst();
+        int icount = mcursor.getInt(0);
+        if(icount>0)
+             return 1;
+        else
+            return 0;
+    }
+
+    //Get the switch button status
+    public String getStatus(){
+        String status = null;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery("select * from " + NOTIFY + " where " + NOTIFY_COL_1 + " = 1", null);
+        res.moveToFirst();
+        if (res.moveToFirst()) {
+            do {
+                status = res.getString(1);
+            } while (res.moveToNext());
+
+        }
+        db.close();
+        res.close();
+        return status;
     }
 }

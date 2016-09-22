@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimary">#16546A</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="blue_grey_500">#607D8B</color>
@@ -52,5 +52,8 @@
     <color name="calendarblueNontransparent">#6E9AFD</color>
 
     <color name="red">#FFFF0000</color>
+
+    <color name="custom_showcase_bg">#b9002153</color>
+
 
 </resources>

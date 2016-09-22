@@ -383,11 +383,13 @@
 <!--android:background="@drawable/sky"-->
 <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
 <!--android:id="@+id/swipe">-->
+<!--suppress AndroidDomInspection -->
 <RelativeLayout
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="@drawable/bluebackground">
+    android:background="@drawable/vignette"
+    android:id="@+id/fragment_main_layout">
 
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -446,6 +448,8 @@
                         android:layout_marginLeft="5dp"
                         android:id="@+id/myRatingBar"
                         style="@style/foodRatingBar"
+                        android:clickable="false"
+                        android:isIndicator="true"
                         />
                 </LinearLayout>
 

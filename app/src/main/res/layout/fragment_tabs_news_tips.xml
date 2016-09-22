@@ -33,7 +33,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/bluebackground">
+    android:background="@drawable/vignette">
     <com.astuetz.PagerSlidingTabStrip
         android:id="@+id/tabs"
         android:layout_marginTop="60dp"
@@ -41,7 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:textSize="15sp"
-        android:textColor="#000000"
+        android:textColor="#FFF"
         app:pstsDividerColor="#10D194"
         app:pstsIndicatorColor="@color/red"
         app:pstsUnderlineColor="@color/blue"

@@ -22,6 +22,8 @@ import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.Target;
 import com.joshdholtz.sentry.Sentry;
 
 import org.json.JSONArray;
@@ -86,6 +88,11 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
 //    SimpleRatingBar simpleRatingBar;
     RatingBar simpleRatingBar;
     TextView today_predict;
+    ShowcaseView showcaseView;
+    private int container = 0;
+    private Target tr1, tr2, tr3;
+    private int count;
+
 
     public MainFragment() {
         // Required empty public constructor
@@ -95,9 +102,16 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        super.onSaveInstanceState(savedInstanceState);
+        if (savedInstanceState == null){
+            count = 0;
+        }else{
+            count = savedInstanceState.getInt("count");
+            Log.v("savedState",Integer.toString(count));
+        }
+            rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        myDb = new DatabaseHelper(this.getContext());
+            myDb = new DatabaseHelper(this.getContext());
 //        sqLiteDatabase = myDb.getWritableDatabase();
 //        myDb.onUpgrade(sqLiteDatabase,2,3);
 //        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
@@ -121,58 +135,46 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
 //        });
 
 //        simpleRatingBar = (SimpleRatingBar) rootView.findViewById(R.id.myRatingBar);
-        simpleRatingBar = (RatingBar) rootView.findViewById(R.id.myRatingBar);
-        mViewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
+            simpleRatingBar = (RatingBar) rootView.findViewById(R.id.myRatingBar);
+            mViewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
 
-        List<Drawable> drawables = new ArrayList<>();
-        Resources res = getResources();
+            List<Drawable> drawables = new ArrayList<>();
+            Resources res = getResources();
 
-        @SuppressWarnings("deprecation") Drawable drawableFlower = res.getDrawable(R.drawable.flower50);
-        drawables.add(drawableFlower);
+            @SuppressWarnings("deprecation") Drawable drawableFlower = res.getDrawable(R.drawable.flower50);
+            drawables.add(drawableFlower);
 
-        @SuppressWarnings("deprecation") Drawable drawableMask = res.getDrawable(R.drawable.escapemask);
-        drawables.add(drawableMask);
+            @SuppressWarnings("deprecation") Drawable drawableMask = res.getDrawable(R.drawable.escapemask);
+            drawables.add(drawableMask);
 
 //        mCardAdapter = new CardPagerAdapter(this.getContext(),2,"ddd",drawables);
-        mCardAdapter = new CardPagerAdapter(this.getContext(), 2, "Recommendation & Recommendation",drawables);
+            mCardAdapter = new CardPagerAdapter(this.getContext(), 2, "Recommendation & Recommendation", drawables);
 
-        mFragmentCardAdapter = new CardFragmentPagerAdapter(getFragmentManager(),
-                dpToPixels(2, getActivity()));
-        mCardShadowTransformer = new ShadowTransformer(mViewPager, mCardAdapter);
-        mFragmentCardShadowTransformer = new ShadowTransformer(mViewPager, mFragmentCardAdapter);
-        mViewPager.setAdapter(mCardAdapter);
-        mViewPager.setPageTransformer(false, mCardShadowTransformer);
-        mViewPager.setOffscreenPageLimit(3);
+            mFragmentCardAdapter = new CardFragmentPagerAdapter(getFragmentManager(),
+                    dpToPixels(2, getActivity()));
+            mCardShadowTransformer = new ShadowTransformer(mViewPager, mCardAdapter);
+            mFragmentCardShadowTransformer = new ShadowTransformer(mViewPager, mFragmentCardAdapter);
+            mViewPager.setAdapter(mCardAdapter);
+            mViewPager.setPageTransformer(false, mCardShadowTransformer);
+            mViewPager.setOffscreenPageLimit(3);
 
-        //call function to display the last state
-        getTheLastDiaryStressedSate();
-        StartActivity startActivity = (StartActivity) getActivity();
+            //call function to display the last state
+            getTheLastDiaryStressedSate();
+            StartActivity startActivity = (StartActivity) getActivity();
 
-        // Set title bar
-        startActivity.setToolBar("Ultimate Inhaler", null);
+            // Set title bar
+            startActivity.setToolBar("Ultimate Inhaler", null);
 
-        if(savedInstanceState!=null) {
-            myAsyncTaskIsRunning = savedInstanceState.getBoolean("myAsyncTaskIsRunning");
-        }
-        if(myAsyncTaskIsRunning) {
+//        if(savedInstanceState!=null) {
+//            myAsyncTaskIsRunning = savedInstanceState.getBoolean("myAsyncTaskIsRunning");
+//        }
+//        if(myAsyncTaskIsRunning) {
 
-                //Configure Progress Bar for pollen count
+            //Configure Progress Bar for pollen count
 //                myprogressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
 //
 //
-                progressingTextView = (TextView) rootView.findViewById(R.id.pollen_count_text);
-                myAsyncTask = new GetPollenCount();
-                myAsyncTask.execute();
-
-
-                service = new YahooWeatherService(this);
-                dialog = new ProgressDialog(this.getActivity());
-                dialog.setMessage("Loading...");
-                dialog.show();
-                service.refreshWeather("Melbourne, Australia");
-
-
-        }
+            progressingTextView = (TextView) rootView.findViewById(R.id.pollen_count_text);
 
 
 //        //Configure Progress Bar for pollen count
@@ -181,16 +183,16 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
 //        GetPollenCount getPollenCount = new GetPollenCount();
 //        getPollenCount.execute();
 
-        //Configure recommendation
-       // recommendation = (TextView) rootView.findViewById(R.id.recommendation);
+            //Configure recommendation
+            // recommendation = (TextView) rootView.findViewById(R.id.recommendation);
 
-        //Configure weather information
+            //Configure weather information
 //        dateTextView_now= (TextView) rootView.findViewById(R.id.textView_today);
-        weatherIconImageView = (ImageView) rootView.findViewById(R.id.weatherIconImageView);
-        temperatureTextView = (TextView) rootView.findViewById(R.id.temperatureTextView);
+            weatherIconImageView = (ImageView) rootView.findViewById(R.id.weatherIconImageView);
+            temperatureTextView = (TextView) rootView.findViewById(R.id.temperatureTextView);
 //        conditionTextView = (TextView) rootView.findViewById(R.id.conditionTextView);
-        locationTextView = (TextView) rootView.findViewById(R.id.locationTextView);
-        today_predict = (TextView) rootView.findViewById(R.id.today_predict);
+            locationTextView = (TextView) rootView.findViewById(R.id.locationTextView);
+            today_predict = (TextView) rootView.findViewById(R.id.today_predict);
 
 //        windTextView = (TextView) rootView.findViewById(R.id.windtextView_now);
 //        sunriseTextView = (TextView) rootView.findViewById(R.id.sunrisetextView);
@@ -209,11 +211,48 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
 //        dialog.show();
 //        service.refreshWeather("Melbourne, Australia");
 
+            //Get today date
+            DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+            Date date = new Date();
+            todayDate = dateFormat.format(date);
 
+            //Check today weather already exist or not
+
+            if (myDb.todayWeatherExist(todayDate) == 0) {
+                myAsyncTask = new GetPollenCount();
+                myAsyncTask.execute();
+
+                service = new YahooWeatherService(this);
+                dialog = new ProgressDialog(this.getActivity());
+                dialog.setMessage("Loading...");
+                dialog.show();
+                service.refreshWeather("Melbourne, Australia");
+
+            } else {
+                WeatherCondition weatherCondition = myDb.getWeatherByDiaryDateTracked(todayDate);
+                progressingTextView.setText(weatherCondition.getPollen());
+
+                service = new YahooWeatherService(this);
+                dialog = new ProgressDialog(this.getActivity());
+                dialog.setMessage("Loading...");
+                dialog.show();
+                service.refreshWeather("Melbourne, Australia");
+
+
+
+            }
 
         // Inflate the layout for this fragment
         return rootView;
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
+        outState.putInt("count", count);
+    }
+
+
 
     @Override
     public void serviceSuccess(Channel channel) {
@@ -267,7 +306,7 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
         pressureDb = channel.getAtmosphere().getPressure() + " in";
         windDb = channel.getWind().getSpeed() + " mph";
 
-//        insertWeatherIntoDatabase(todayDate,temperatureDb,humidityDb,pressureDb,windDb,pollenDb);
+        insertWeatherIntoDatabase(todayDate,temperatureDb,humidityDb,pressureDb,windDb,pollenDb);
 
         int[] foggy = {19,20,21,22};
         int[] thunderstorm = {0,1,2,3,4,5,6,35,37,38,39,40,45,47};
@@ -296,7 +335,7 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
 
             mCardAdapter = new CardPagerAdapter(this.getContext(),3,recom, drawables);
             today_predict.setText("You are Safe!");
-            today_predict.setTextColor(Color.parseColor("#28CB1D"));
+            today_predict.setTextColor(Color.parseColor("#EADD3E"));
 
         }else if(Arrays.toString(thunderstorm).matches(".*[\\[ ]" + imageConditionCode + "[\\],].*")){
             List<Drawable> drawables = new ArrayList<>();
@@ -322,7 +361,7 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
 
             mCardAdapter = new CardPagerAdapter(this.getContext(),1,recom,drawables);
             today_predict.setText("You are Safe!");
-            today_predict.setTextColor(Color.parseColor("#28CB1D"));
+            today_predict.setTextColor(Color.parseColor("#EADD3E"));
 
         }else if(Arrays.toString(heavySnow).matches(".*[\\[ ]" +imageConditionCode + "[\\],].*")){
             List<Drawable> drawables = new ArrayList<>();
@@ -379,7 +418,7 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
             mCardAdapter = new CardPagerAdapter(this.getContext(),1,recom,drawables);
 
             today_predict.setText("You are Safe!");
-            today_predict.setTextColor(Color.parseColor("#28CB1D"));
+            today_predict.setTextColor(Color.parseColor("#EADD3E"));
 
         }else if(Arrays.toString(day).matches(".*[\\[ ]" + imageConditionCode + "[\\],].*")){
 
@@ -403,7 +442,7 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
             mCardAdapter = new CardPagerAdapter(this.getContext(),3,recom,drawables);
 
             today_predict.setText("You are Safe!");
-            today_predict.setTextColor(Color.parseColor("#28CB1D"));
+            today_predict.setTextColor(Color.parseColor("#EADD3E"));
         }else {
 
             List<Drawable> drawables = new ArrayList<>();
@@ -425,7 +464,7 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
             mCardAdapter = new CardPagerAdapter(this.getContext(),3,recom,drawables);
 
             today_predict.setText("You are Safe!");
-            today_predict.setTextColor(Color.parseColor("#28CB1D"));
+            today_predict.setTextColor(Color.parseColor("#EADD3E"));
         }
 
         mCardAdapter.notifyDataSetChanged();
@@ -434,6 +473,23 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
         mViewPager.setAdapter(mCardAdapter);
         mViewPager.setPageTransformer(false, mCardShadowTransformer);
 
+
+//        if(count == 0){
+//            tr1 = new ViewTarget(R.id.today_predict, getActivity());
+//            tr2 = new ViewTarget(R.id.temperatureTextView, getActivity());
+//            tr3 = new ViewTarget(R.id.viewPager, getActivity());
+//
+//            showcaseView = new ShowcaseView.Builder(getActivity())
+//                    .setTarget(Target.NONE)
+//                    .setOnClickListener(this)
+//                    .setContentTitle("Home Page")
+//                    .setContentText("Provide your prediction and recommendations with current weather, pollen and last state.")
+//                    .setStyle(R.style.CustomShowcaseTheme)
+//                    .build();
+//            Log.v("showcase times", "1");
+//            showcaseView.setButtonText("OK");
+//            count = 1;
+//        }
 
     }
 
@@ -446,6 +502,40 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
 
     public static float dpToPixels(int dp, Context context) {
         return dp * (context.getResources().getDisplayMetrics().density);
+    }
+
+//    @Override
+//    public void onClick(View v) {
+//        switch(container) {
+//            case 0:
+//                showcaseView.setShowcase(tr1, true);
+//                showcaseView.setContentTitle("Last state tracked in diary");
+//                showcaseView.setContentText("The latest state");
+//                break;
+//            case 1:
+//                showcaseView.setShowcase(tr2, true);
+//                showcaseView.setContentTitle("Weather information");
+//                showcaseView.setContentText("Temperature, location, pollen");
+//                break;
+//            case 2:
+//                showcaseView.setShowcase(tr3, true);
+//                showcaseView.setContentTitle("Recommendations for you");
+//                showcaseView.setContentText("Different recommendations according to different weather condition!");
+//                showcaseView.setButtonText("OK");
+//                break;
+//            case 3:
+//                showcaseView.hide();
+//                break;
+//        }
+//        container++;
+//
+//
+//    }
+
+
+    @Override
+    public void onSaveInstanceSate(Bundle outState){
+        super.onSaveInstanceState(outState);
     }
 
     /*
@@ -520,8 +610,8 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
 
                 getResources().getString(R.string.app_name);
 
-                myAsyncTaskIsRunning = false;
-                myAsyncTask = null;
+//                myAsyncTaskIsRunning = false;
+//                myAsyncTask = null;
             } catch (JSONException e) {
                 e.printStackTrace();
                 Sentry.captureException(e);
@@ -536,19 +626,19 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
 
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean("myAsyncTaskIsRunning",myAsyncTaskIsRunning);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if(myAsyncTask!=null) myAsyncTask.cancel(true);
-        myAsyncTask = null;
-
-    }
+//    @Override
+//    public void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        outState.putBoolean("myAsyncTaskIsRunning",myAsyncTaskIsRunning);
+//    }
+//
+//    @Override
+//    public void onDestroy() {
+//        super.onDestroy();
+//        if(myAsyncTask!=null) myAsyncTask.cancel(true);
+//        myAsyncTask = null;
+//
+//    }
 
 
     public void insertWeatherIntoDatabase(String date, String temperature, String humidity,
@@ -558,7 +648,9 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
                 myDb.insertWeatherIntoDatabase(date,temperature,humidity,pressure,wind,pollen);
             }else
             {
-                myDb.updateTodayWeatherRecord(date,temperature,humidity,pressure,wind,pollen);
+//                myDb.updateTodayWeatherRecord(date,temperature,humidity,pressure,wind,pollen);
+                myDb.updateTodayWeatherRecord(date,temperature,humidity,pressure,wind,"low");
+
             }
         }catch (Exception e){
 //            Toast.makeText(getContext(),"Weather Database error",Toast.LENGTH_LONG).show();
@@ -567,6 +659,7 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
 
 
     }
+
 
     public void getTheLastDiaryStressedSate(){
 
@@ -618,15 +711,34 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
         }else{
 
             LinearLayout linearLayout = (LinearLayout) rootView.findViewById(R.id.stateOverView);
-            valueTV.setText("Track your attack now!");
+            valueTV.setText("Track your attack!");
             //noinspection ResourceType
             valueTV.setId(5);
-            valueTV.setLayoutParams(new LinearLayout.LayoutParams(
+            valueTV.setTextColor(Color.RED);
+//            valueTV.setClickable(true);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT));
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            params.setMargins(0, 12, 0, 0);
+            valueTV.setLayoutParams(params);
+
 
             ((LinearLayout) linearLayout).addView(valueTV);
             simpleRatingBar.setVisibility(View.GONE);
+//            valueTV.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//
+//                    CalendarFragment fragment4 = new CalendarFragment();
+//                    FragmentTransaction fragmentTransaction4 =
+//                            getFragmentManager().beginTransaction();
+//                    fragmentTransaction4.replace(R.id.fragment_containerStart, fragment4);
+//                    fragmentTransaction4.addToBackStack("FragmentB");
+//                    fragmentTransaction4.commit();
+//                }
+//            });
+
+
         }
 
 
@@ -634,6 +746,6 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
     }
 
 
-
-
 }
+
+

@@ -66,5 +66,10 @@
     <string name="number_picker_formatter">%02d</string>
 
     <string name="heartBar">Heart Bar</string>
+    <string name="showcase_fragment_title">ShowcaseView and Fragments?</string>
+    <string name="showcase_fragment_title_2">Even works with transactions</string>
+    <string name="showcase_fragment_message">Click the button to find out whether this works with Fragments, too.</string>
+
+    <string name="use_listener_finish">You did it!</string>
 
 </resources>

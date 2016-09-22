@@ -20,7 +20,9 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
              app:popupTheme="@style/AppTheme.PopupOverlay"
-            android:background="?attr/colorPrimary">
+            android:background="#4295B2">
+
+            <!--android:background="?attr/colorPrimary">-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -32,10 +34,10 @@
                 android:text="Ultimate Inhaler"
                 android:layout_gravity="center"
                 android:id="@+id/toolbar_title"
-                android:textSize="17sp"
+                android:textSize="28dp"
                 android:textStyle="bold"
-                android:textColor="#000"
-                android:typeface="serif" />
+                android:textColor="#696BF3"
+                />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -70,6 +72,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         xmlns:app="http://schemas.android.com/apk/res-auto">
+        <!--suppress AndroidDomInspection -->
+
         <FrameLayout
             android:id="@+id/fragment_containerStart"
             android:layout_width="match_parent"
@@ -85,7 +89,7 @@
             android:layout_alignParentBottom="true"
             app:bb_inActiveTabAlpha="0.6"
             app:bb_activeTabAlpha="1"
-            app:bb_inActiveTabColor="#4F1FA8"
+            app:bb_inActiveTabColor="#98339E"
             app:bb_activeTabColor="#fff" />
     </RelativeLayout>
     <!--<com.aurelhubert.ahbottomnavigation.AHBottomNavigation-->

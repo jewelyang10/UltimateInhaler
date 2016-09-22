@@ -64,9 +64,16 @@ dependencies {
     compile 'com.shawnlin:number-picker:2.0.1'
     compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
     compile 'com.github.wooplr:Spotlight:1.2.2'
+    compile 'com.hrules:horizontalnumberpicker:1.1.1'
+    compile 'com.github.amlcurran.showcaseview:library:5.4.3'
+    compile 'com.kyleduo.switchbutton:library:1.4.4'
+
 }
 
 apply plugin: 'com.google.gms.google-services'
+
+
+
 
 
 

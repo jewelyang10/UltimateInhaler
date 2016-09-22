@@ -3,8 +3,8 @@ package monash.ultimateinhaler;
 
 import android.app.ProgressDialog;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -22,44 +22,26 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.joshdholtz.sentry.Sentry;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 
-import monash.ultimateinhaler.data.Channel;
-import monash.ultimateinhaler.data.Item;
-import monash.ultimateinhaler.service.WeatherServiceCallback;
 import monash.ultimateinhaler.service.YahooWeatherService;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HistoryFragment extends Fragment implements WeatherServiceCallback {
+public class HistoryFragment extends Fragment {
     View rootView;
     TableLayout tableLayout;
     ArrayList<Records> history;
     private YahooWeatherService service;
     private ProgressDialog dialog;
     DatabaseHelper myDb;
-    private GetPollenCount myAsyncTask = null;
     private boolean myAsyncTaskIsRunning = true;
     SQLiteDatabase sqLiteDatabase;
     TextView monthly_textView;
@@ -94,17 +76,6 @@ public class HistoryFragment extends Fragment implements WeatherServiceCallback 
         month = (String) args.getSerializable("month");
         Log.v("passedMonth", month);
 
-        //Get the pollen
-        myAsyncTask = new GetPollenCount();
-        myAsyncTask.execute();
-
-        //Get weather
-        service = new YahooWeatherService(this);
-        dialog = new ProgressDialog(this.getActivity());
-        dialog.setMessage("Loading...");
-        dialog.show();
-        service.refreshWeather("Melbourne, Australia");
-
         displayHistory();
         return rootView;
     }
@@ -126,6 +97,9 @@ public class HistoryFragment extends Fragment implements WeatherServiceCallback 
         }
         String mongthName = new DateFormatSymbols().getMonths()[mongthToInt-1];
         monthly_textView.setText(mongthName);
+        Typeface ty1 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/LS-Light.otf");
+        monthly_textView.setTypeface(ty1);
+        monthly_textView.setTextColor(Color.parseColor("#FFFFFF"));
 
         Log.v("mongthName",mongthName);
         Collections.sort(history, new Comparator<Records>() {
@@ -169,6 +143,7 @@ public class HistoryFragment extends Fragment implements WeatherServiceCallback 
             diaryDate.setGravity(Gravity.CENTER);
             diaryDate.setTextSize(19);
             diaryDate.setLayoutParams(layoutParams);
+            diaryDate.setTextColor(Color.parseColor("#FFFFFF"));
 
 
 
@@ -182,6 +157,7 @@ public class HistoryFragment extends Fragment implements WeatherServiceCallback 
 
             ratingBar.setClickable(false);
             ratingBar.setFocusable(false);
+            ratingBar.setIsIndicator(true);
             if (Integer.valueOf(history.get(i).getInhaler()) == 0) {
                 ratingBar.setRating(0);
             }else if (Integer.valueOf(history.get(i).getInhaler()) >= 1 &&
@@ -220,19 +196,22 @@ public class HistoryFragment extends Fragment implements WeatherServiceCallback 
                 //Populate the temperature
                 temperature.setText(weatherCondition.getTemperature());
 //                Log.v("temperature",weatherCondition.getTemperature());
+                temperature.setTextColor(Color.parseColor("#FFFFFF"));
 
-
-                //Populate the pollen count
-                pollen.setText(weatherCondition.getPollen());
+                    //Populate the pollen count
+                    pollen.setText(weatherCondition.getPollen());
 //                Log.v("pollen", weatherCondition.getPollen());
+                pollen.setTextColor(Color.parseColor("#FFFFFF"));
 
             }else{
                 //Populate the temperature
                 temperature.setText("N/A");
+                temperature.setTextColor(Color.parseColor("#FFFFFF"));
 
 
                 //Populate the pollen count
                 pollen.setText("N/A");
+                pollen.setTextColor(Color.parseColor("#FFFFFF"));
             }
 
             tableRow.addView(diaryDate, 0);
@@ -269,66 +248,66 @@ public class HistoryFragment extends Fragment implements WeatherServiceCallback 
     }
 
 
-    @Override
-    public void serviceSuccess(Channel channel) {
-        dialog.hide();
-
-        Item item = channel.getItem();
-
-        int resourceId = getResources().getIdentifier("drawable/icon_" + item.getCondition().getCode(), null, getContext().getPackageName());
-        int tomorrowId = getResources().getIdentifier("drawable/icon_" + item.getForecast().getCode(), null, getContext().getPackageName());
-
-
-        @SuppressWarnings("deprecation")
-        Drawable weatherIconDrawable = getResources().getDrawable(resourceId);
-        @SuppressWarnings("deprecation")
-        Drawable weatherIconDrawable_next = getResources().getDrawable(tomorrowId);
-
-        int f = item.getCondition().getTemperature();
-        double cn = (f - 32) *  5 / 9;
-        int ctn = (int) Math.floor(cn);
-
-
-        //Get the current system date
-
-        //Get today date
-        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        Date date = new Date();
-        todayDate = dateFormat.format(date);
-
-        //Get the weather condition and save into database
-        temperatureDb = Integer.toString(ctn);
-        humidityDb = channel.getAtmosphere().getHumidity();
-        pressureDb = channel.getAtmosphere().getPressure() + " in";
-        windDb = channel.getWind().getSpeed() + " mph";
-
-        insertWeatherIntoDatabase(todayDate, temperatureDb, humidityDb, pressureDb, windDb, pollenDb);
-
-
-    }
-
-    @Override
-    public void serviceFailure(Exception exception) {
-        dialog.hide();
-        Log.v("Weather exception", exception.getMessage());
-    }
-
-    public void insertWeatherIntoDatabase(String date, String temperature, String humidity,
-                                          String pressure, String wind, String pollen){
-        try{
-            if (myDb.todayWeatherExist(date) == 0){
-                myDb.insertWeatherIntoDatabase(date,temperature,humidity,pressure,wind,pollen);
-            }else
-            {
-                myDb.updateTodayWeatherRecord(date,temperature,humidity,pressure,wind,pollen);
-            }
-        }catch (Exception e){
-//            Toast.makeText(getContext(),"Weather Database error",Toast.LENGTH_LONG).show();
-            Log.v("Weather databse error", e.getMessage());
-        }
-
-
-    }
+//    @Override
+//    public void serviceSuccess(Channel channel) {
+//        dialog.hide();
+//
+//        Item item = channel.getItem();
+//
+//        int resourceId = getResources().getIdentifier("drawable/icon_" + item.getCondition().getCode(), null, getContext().getPackageName());
+//        int tomorrowId = getResources().getIdentifier("drawable/icon_" + item.getForecast().getCode(), null, getContext().getPackageName());
+//
+//
+//        @SuppressWarnings("deprecation")
+//        Drawable weatherIconDrawable = getResources().getDrawable(resourceId);
+//        @SuppressWarnings("deprecation")
+//        Drawable weatherIconDrawable_next = getResources().getDrawable(tomorrowId);
+//
+//        int f = item.getCondition().getTemperature();
+//        double cn = (f - 32) *  5 / 9;
+//        int ctn = (int) Math.floor(cn);
+//
+//
+//        //Get the current system date
+//
+//        //Get today date
+//        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+//        Date date = new Date();
+//        todayDate = dateFormat.format(date);
+//
+//        //Get the weather condition and save into database
+//        temperatureDb = Integer.toString(ctn);
+//        humidityDb = channel.getAtmosphere().getHumidity();
+//        pressureDb = channel.getAtmosphere().getPressure() + " in";
+//        windDb = channel.getWind().getSpeed() + " mph";
+//
+////        insertWeatherIntoDatabase(todayDate, temperatureDb, humidityDb, pressureDb, windDb, pollenDb);
+//
+//
+//    }
+//
+//    @Override
+//    public void serviceFailure(Exception exception) {
+//        dialog.hide();
+//        Log.v("Weather exception", exception.getMessage());
+//    }
+//
+//    public void insertWeatherIntoDatabase(String date, String temperature, String humidity,
+//                                          String pressure, String wind, String pollen){
+//        try{
+//            if (myDb.todayWeatherExist(date) == 0){
+//                myDb.insertWeatherIntoDatabase(date,temperature,humidity,pressure,wind,pollen);
+//            }else
+//            {
+//                myDb.updateTodayWeatherRecord(date,temperature,humidity,pressure,wind,pollen);
+//            }
+//        }catch (Exception e){
+////            Toast.makeText(getContext(),"Weather Database error",Toast.LENGTH_LONG).show();
+//            Log.v("Weather databse error", e.getMessage());
+//        }
+//
+//
+//    }
 
 
         /*
@@ -337,83 +316,4 @@ public class HistoryFragment extends Fragment implements WeatherServiceCallback 
 
      */
 
-    //Get the pollen count
-    private class GetPollenCount extends AsyncTask<String, Void, String> {
-
-        @Override
-        /*
-        doInBackground
-        @
-
-         */
-        protected String doInBackground(String... args) {
-            URL url;
-            HttpURLConnection conn = null;
-            String resmsg = "";
-            // Making HTTP request
-            try {
-                url = new URL("https://socialpollencount.co.uk/api/forecast?location=[51.7546407,-1.2510746]");
-                conn = (HttpURLConnection) url.openConnection();
-                conn.setReadTimeout(10000);
-                conn.setConnectTimeout(15000);
-                conn.setRequestMethod("GET");
-                //make some HTTP headers
-                conn.setRequestProperty("Content-Type", "application/json");
-                conn.setRequestProperty("Accept", "application/json");
-                //Read response
-                InputStream instream = new BufferedInputStream(conn.getInputStream());
-                BufferedReader buffer = new BufferedReader(new InputStreamReader(instream));
-                String s;
-                while ((s = buffer.readLine()) != null) {
-                    resmsg += s;
-                }
-            } catch (Exception e) {
-                Log.e("JSON", e.getMessage());
-                Sentry.captureException(e);
-
-            } finally {
-                if (conn != null) {
-                    conn.disconnect();
-                }
-            }
-            return resmsg;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            JSONArray count = null;
-            String pollencount = null;
-            try {
-                JSONObject raw = new JSONObject(s);
-                count = raw.getJSONArray("forecast");
-                pollencount = count.getJSONObject(0).getString("pollen_count");
-                myAsyncTaskIsRunning = false;
-                myAsyncTask = null;
-            } catch (JSONException e) {
-                e.printStackTrace();
-                Sentry.captureException(e);
-
-            }
-            pollencount = "low";
-            pollenDb = pollencount;
-            Log.v("pollen count", pollenDb);
-
-
-        }
-
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean("myAsyncTaskIsRunning", myAsyncTaskIsRunning);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if(myAsyncTask!=null) myAsyncTask.cancel(true);
-        myAsyncTask = null;
-
-    }
 }

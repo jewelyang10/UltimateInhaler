@@ -15,7 +15,7 @@ import android.widget.ImageButton;
  */
 public class MoreFragment extends Fragment {
     View rootView;
-    ImageButton prediction, faq;
+    ImageButton prediction, faq, notify;
 
     public MoreFragment() {
         // Required empty public constructor
@@ -30,6 +30,7 @@ public class MoreFragment extends Fragment {
 
         prediction = (ImageButton) rootView.findViewById(R.id.prediction_fragment);
         faq = (ImageButton) rootView.findViewById(R.id.faq_fragment);
+        notify = (ImageButton) rootView.findViewById(R.id.notify_fragment);
 
         prediction.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,10 +59,22 @@ public class MoreFragment extends Fragment {
             }
         });
 
+        notify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ReminderFragment fragment6 = new ReminderFragment();
+                FragmentTransaction fragmentTransaction6 =
+                        getFragmentManager().beginTransaction();
+                fragmentTransaction6.replace(R.id.fragment_containerStart, fragment6);
+                fragmentTransaction6.addToBackStack(null);
+                fragmentTransaction6.commit();
+            }
+        });
+
         StartActivity startActivity = (StartActivity) getActivity();
 
         // Set title bar
-        startActivity.setToolBar("More", null);
+        startActivity.setToolBar("MORE", null);
 //        startActivity.setToolBarColor();
 
 

@@ -3,30 +3,30 @@
         id="@+id/nav_home"
         icon="@drawable/partlysunny_outline"
         title="Today"
-        barColorWhenSelected="#94C1DB"
+        barColorWhenSelected="#4295B2"
         />
     <tab
         id="@+id/nav_hospital"
         icon="@drawable/red_worldwide_location"
         title="Nearby"
-        barColorWhenSelected="#94C1DB"/>
+        barColorWhenSelected="#4295B2"/>
     <tab
         id="@+id/nav_tips"
         icon="@drawable/seotips24"
         title="Tips"
-        barColorWhenSelected="#94C1DB"/>
+        barColorWhenSelected="#4295B2"/>
 
     <tab
         id="@+id/nav_diary"
         icon="@drawable/edit_property"
         title="Diary"
-        barColorWhenSelected="#94C1DB"/>
+        barColorWhenSelected="#4295B2"/>
 
     <tab
         id="@+id/nav_more"
         icon="@drawable/more50"
         title="More"
-        barColorWhenSelected="#94C1DB"/>
+        barColorWhenSelected="#4295B2"/>
 
 
     <!--<tab-->

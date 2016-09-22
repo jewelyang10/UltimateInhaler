@@ -95,7 +95,7 @@ public class CalendarFragment extends Fragment implements Serializable {
         StartActivity startActivity = (StartActivity) getActivity();
 
         // Set title bar
-        startActivity.setToolBar("Diary", null);
+        startActivity.setToolBar("DIARY", null);
         final SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy");
 
         //Configure the button
@@ -217,7 +217,7 @@ public class CalendarFragment extends Fragment implements Serializable {
 //                        alertDialog.show();
                         new SweetAlertDialog(getContext(), SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText("Notice")
-                                .setContentText("You must select a date!")
+                                .setContentText("Diary must be the past!")
                                 .setConfirmText("Yes, got it!")
                                 .show();
                         selectedDate = null;
@@ -410,7 +410,7 @@ public class CalendarFragment extends Fragment implements Serializable {
                 .headingTvText("Track yourself")
                 .subHeadingTvColor(Color.parseColor("#ffffff"))
                 .subHeadingTvSize(16)
-                .subHeadingTvText("Want to track diary?\nWant to know the history.")
+                .subHeadingTvText("Track yourself.\n You will know the main contributor according to the history.")
                 .maskColor(Color.parseColor("#dc000000"))
                 .target(view)
                 .lineAnimDuration(400)
