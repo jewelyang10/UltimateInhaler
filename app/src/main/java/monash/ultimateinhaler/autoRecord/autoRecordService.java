@@ -22,7 +22,7 @@ public class autoRecordService extends IntentService {
 
     public autoRecordService() {
         super(serviceTag);
-        currentContext = getApplicationContext();
+        //currentContext = getApplicationContext();
     }
 
 
@@ -33,7 +33,7 @@ public class autoRecordService extends IntentService {
         String weatherInfo = getWeather.weatherDetail();
         String pollenInfo = getPollenCount.pollenCount();
 
-        databaseWrite singleInstance = new databaseWrite(currentContext);
+        databaseWrite singleInstance = new databaseWrite(this);
         singleInstance.insertData(weatherInfo, pollenInfo);
 
         Log.i(serviceTag, "finish");
