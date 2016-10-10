@@ -124,6 +124,7 @@ public class DiaryDetailsFragment extends Fragment implements HorizontalNumberPi
         numberPicker.getTextValueView().setTextSize(22);
 
         numberPicker.setListener((HorizontalNumberPickerListener) this);
+        selectedNo = "0";
 
 //        openInhalerWindow = (ImageButton) rootView.findViewById(R.id.open_inhaler_number_button);
 
@@ -247,7 +248,7 @@ public class DiaryDetailsFragment extends Fragment implements HorizontalNumberPi
 
             //Show msg to tell user to input everything record
             new SweetAlertDialog(getContext())
-                    .setTitleText("Please answer all questions!")
+                    .setTitleText("Oops, seems you forgot to answer questions?")
                     .show();
         }
 

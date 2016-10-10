@@ -29,6 +29,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String WEATHER_COL_4 = "pressure";
     public static final String WEATHER_COL_5 = "wind";
     public static final String WEATHER_COL_6 = "pollen";
+    public static final String WEATHER_COL_7 = "tomorrow_pollen";
 
     public static final String NOTIFY = "notify";
     public static final String NOTIFY_COL_1 = "id";
@@ -57,7 +58,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + WEATHER_COL_3 + " TEXT, "
                 + WEATHER_COL_4 + " TEXT, "
                 + WEATHER_COL_5 + " TEXT,"
-                + WEATHER_COL_6 + " TEXT)")
+                + WEATHER_COL_6 + " TEXT,"
+                + WEATHER_COL_7 + " TEXT)")
         ;
 
         db.execSQL("create table " + NOTIFY + " ( " +
@@ -69,11 +71,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //Upgrade database
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-//        db.execSQL("DROP TABLE IF EXISTS " + DIARY_TABLE);
-//        db.execSQL("DROP TABLE IF EXISTS " + WEATHER_TABLE);
-//        db.execSQL("DROP TABLE IF EXISTS " + NOTIFY);
+        db.execSQL("DROP TABLE IF EXISTS " + DIARY_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + WEATHER_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + NOTIFY);
 
-//        onCreate(db);
+        onCreate(db);
 
     }
 
@@ -98,7 +100,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //Insert weather into weather table
     public boolean insertWeatherIntoDatabase(String date, String temperature, String humidity,
-                                             String pressure, String wind, String pollen){
+                                             String pressure, String wind, String pollen, String tomorrow_pollen){
             SQLiteDatabase db = this.getReadableDatabase();
             ContentValues contentValues = new ContentValues();
             contentValues.put(WEATHER_COL_1, date);
@@ -107,7 +109,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             contentValues.put(WEATHER_COL_4, pressure);
             contentValues.put(WEATHER_COL_5, wind);
             contentValues.put(WEATHER_COL_6, pollen);
-            long result = db.insert(WEATHER_TABLE, null, contentValues);
+            contentValues.put(WEATHER_COL_7, tomorrow_pollen);
+
+        long result = db.insert(WEATHER_TABLE, null, contentValues);
             if (result == -1)
                 return false;
             else
@@ -171,7 +175,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //Update the current record of a weather
     public boolean updateTodayWeatherRecord(String date, String temperature, String humidity,
-                                            String pressure, String wind, String pollen) {
+                                            String pressure, String wind, String pollen, String tomorrow_pollen) {
         SQLiteDatabase db = this.getReadableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(WEATHER_COL_2, temperature);
@@ -179,6 +183,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(WEATHER_COL_4, pressure);
         contentValues.put(WEATHER_COL_5, wind);
         contentValues.put(WEATHER_COL_6, pollen);
+        contentValues.put(WEATHER_COL_7, tomorrow_pollen);
 
         String[] value = {date};
         String selection = "date = ?";
@@ -269,6 +274,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 weatherCondition.setPressure(res.getString(3));
                 weatherCondition.setWind(res.getString(4));
                 weatherCondition.setPollen(res.getString(5));
+                weatherCondition.setTomorrow_pollen(res.getString(6));
 
             } while (res.moveToNext());
 

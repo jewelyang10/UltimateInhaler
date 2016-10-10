@@ -21,10 +21,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/history_title"
-        android:id="@+id/history_table"
         android:layout_marginRight="2dp"
         android:layout_marginLeft="2dp"
         android:layout_marginTop="8dp"
+        android:id="@+id/header"
         android:background="#80ffffff">
 
         <TableRow
@@ -40,9 +40,9 @@
                 />
 
             <TextView
-                android:layout_width="88dp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:text="Stressed"
+                android:text="Health Pressure"
                 android:textColor="#000"
                 android:layout_column="1"
                 android:textSize="20dp"
@@ -50,7 +50,7 @@
                 />
 
             <TextView
-                android:layout_width="65dp"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:text="T\u00B0C"
                 android:textColor="#000"
@@ -74,6 +74,21 @@
         </TableRow>
 
     </TableLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:layout_below="@+id/header">
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="2dp"
+            android:layout_marginLeft="2dp"
+            android:id="@+id/history_table"
+            >
+
+        </TableLayout>
+    </ScrollView>
 
 
     </RelativeLayout>

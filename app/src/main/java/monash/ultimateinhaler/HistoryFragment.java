@@ -22,12 +22,14 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import java.text.DateFormatSymbols;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import monash.ultimateinhaler.service.YahooWeatherService;
 
@@ -84,30 +86,43 @@ public class HistoryFragment extends Fragment {
     @SuppressWarnings("deprecation")
     public void displayHistory(){
 
-        history = myDb.getSpecifiedMonthRecords(month);
-        Log.v("month",month);
-        Log.v("history as month",Integer.toString(history.size()));
+        Date today = new Date();
+        Calendar cal = new GregorianCalendar();
+        cal.setTime(today);
+        cal.add(Calendar.DAY_OF_MONTH, -30);
+        Date today30 = cal.getTime();
 
-        Integer mongthToInt = 0;
-        if(month.charAt(0) == '0') {
-            month = month.substring(1, 2);
-            mongthToInt = Integer.valueOf(month);
-        }else{
-            mongthToInt = Integer.valueOf(month);
-        }
-        String mongthName = new DateFormatSymbols().getMonths()[mongthToInt-1];
-        monthly_textView.setText(mongthName);
+//        history = myDb.getSpecifiedMonthRecords(month);
+        history = myDb.getRecords();
+//        Log.v("month",month);
+//        Log.v("history as month",Integer.toString(history.size()));
+
+//        Integer mongthToInt = 0;
+//        if(month.charAt(0) == '0') {
+//            month = month.substring(1, 2);
+//            mongthToInt = Integer.valueOf(month);
+//        }else{
+//            mongthToInt = Integer.valueOf(month);
+//        }
+//        String mongthName = new DateFormatSymbols().getMonths()[mongthToInt-1];
+//        monthly_textView.setText(mongthName);
+//        Typeface ty1 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/LS-Light.otf");
+//        monthly_textView.setTypeface(ty1);
+//        monthly_textView.setTextColor(Color.parseColor("#FFFFFF"));
+
+//        Log.v("mongthName",mongthName);
+
+        monthly_textView.setText("Last 30 days");
         Typeface ty1 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/LS-Light.otf");
         monthly_textView.setTypeface(ty1);
         monthly_textView.setTextColor(Color.parseColor("#FFFFFF"));
 
-        Log.v("mongthName",mongthName);
         Collections.sort(history, new Comparator<Records>() {
             @Override
             public int compare(Records lhs, Records rhs) {
                 Calendar calendarlhs = Calendar.getInstance();
                 Calendar calendarrhs = Calendar.getInstance();
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // HH:mm:ss
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy"); // HH:mm:ss
                 try {
                     calendarlhs.setTime(dateFormat.parse(lhs.getDate()));
 
@@ -124,103 +139,123 @@ public class HistoryFragment extends Fragment {
             }
         });
 
+        boolean before = false;
         for (int i = 0; i < history.size() ; i++) {
-            tableLayout = (TableLayout) rootView.findViewById(R.id.history_table);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy"); // HH:mm:ss
+            try {
+                Date date = dateFormat.parse(history.get(i).getDate());
 
-            TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT);
+                if(date.before(today30))
+                    before = true;
+                else
+                    before = false;
 
-            layoutParams.setMargins(10,10,10,10);
+                Log.v("before", "30days");
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
-            TableRow tableRow = new TableRow(getContext());
+            if (before) {
+                Log.v("before", "true");
 
-            //Pupulate the date for history
-            TextView diaryDate = new TextView(getContext());
+                continue;
+
+            } else {
+                tableLayout = (TableLayout) rootView.findViewById(R.id.history_table);
+
+                TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT);
+
+                layoutParams.setMargins(10, 10, 10, 10);
+
+                TableRow tableRow = new TableRow(getContext());
+
+                //Pupulate the date for history
+                TextView diaryDate = new TextView(getContext());
 
 
-            diaryDate.setText(history.get(i).getDate());
-            diaryDate.setGravity(Gravity.CENTER);
-            diaryDate.setTextSize(19);
-            diaryDate.setLayoutParams(layoutParams);
-            diaryDate.setTextColor(Color.parseColor("#FFFFFF"));
+                diaryDate.setText(history.get(i).getDate());
+                diaryDate.setGravity(Gravity.CENTER);
+                diaryDate.setTextSize(19);
+                diaryDate.setLayoutParams(layoutParams);
+                diaryDate.setTextColor(Color.parseColor("#FFFFFF"));
 
 
+                //Pupolate the stressed extent
 
-            //Pupolate the stressed extent
-
-            //Set the rating bar style
-            ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(getContext(), R.style.foodRatingBar);
-            RatingBar ratingBar = new RatingBar(contextThemeWrapper, null, 0);
+                //Set the rating bar style
+                ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(getContext(), R.style.foodRatingBar);
+                RatingBar ratingBar = new RatingBar(contextThemeWrapper, null, 0);
 
 //            SimpleRatingBar ratingBar = new SimpleRatingBar(getContext());
 
-            ratingBar.setClickable(false);
-            ratingBar.setFocusable(false);
-            ratingBar.setIsIndicator(true);
-            if (Integer.valueOf(history.get(i).getInhaler()) == 0) {
-                ratingBar.setRating(0);
-            }else if (Integer.valueOf(history.get(i).getInhaler()) >= 1 &&
-                    Integer.valueOf(history.get(i).getInhaler()) <= 5){
-                ratingBar.setRating(1);
-            }else if (Integer.valueOf(history.get(i).getInhaler()) >= 6 &&
-                    Integer.valueOf(history.get(i).getInhaler()) <= 12){
-                ratingBar.setRating(3);
-            }else if (Integer.valueOf(history.get(i).getInhaler()) >= 13 &&
-                    Integer.valueOf(history.get(i).getInhaler()) <= 20)
-            {
-                ratingBar.setRating(4);
-            }else {
-                ratingBar.setRating(0);
-            }
+                ratingBar.setClickable(false);
+                ratingBar.setFocusable(false);
+                ratingBar.setIsIndicator(true);
+                if (Integer.valueOf(history.get(i).getInhaler()) == 0) {
+                    ratingBar.setRating(0);
+                } else if (Integer.valueOf(history.get(i).getInhaler()) >= 1 &&
+                        Integer.valueOf(history.get(i).getInhaler()) <= 5) {
+                    ratingBar.setRating(1);
+                } else if (Integer.valueOf(history.get(i).getInhaler()) >= 6 &&
+                        Integer.valueOf(history.get(i).getInhaler()) <= 12) {
+                    ratingBar.setRating(3);
+                } else if (Integer.valueOf(history.get(i).getInhaler()) >= 13 &&
+                        Integer.valueOf(history.get(i).getInhaler()) <= 20) {
+                    ratingBar.setRating(4);
+                } else {
+                    ratingBar.setRating(0);
+                }
 
-            ratingBar.setLayoutParams(layoutParams);
+                ratingBar.setLayoutParams(layoutParams);
 
-            //Create a temperature textview
-            TextView temperature = new TextView(getContext());
-            temperature.setTextSize(19);
-            temperature.setGravity(Gravity.CENTER);
-            temperature.setLayoutParams(layoutParams);
+                //Create a temperature textview
+                TextView temperature = new TextView(getContext());
+                temperature.setTextSize(19);
+                temperature.setGravity(Gravity.CENTER);
+                temperature.setLayoutParams(layoutParams);
 
-            //Create a pollen textview
+                //Create a pollen textview
 
-            TextView pollen = new TextView(getContext());
-            pollen.setGravity(Gravity.CENTER);
-            pollen.setTextSize(19);
-            pollen.setLayoutParams(layoutParams);
+                TextView pollen = new TextView(getContext());
+                pollen.setGravity(Gravity.CENTER);
+                pollen.setTextSize(19);
+                pollen.setLayoutParams(layoutParams);
 
-            //Get the weather condition for that date
-            WeatherCondition weatherCondition = myDb.getWeatherByDiaryDateTracked(history.get(i).getDate());
-            if (weatherCondition.getDate() != null) {
+                //Get the weather condition for that date
+                WeatherCondition weatherCondition = myDb.getWeatherByDiaryDateTracked(history.get(i).getDate());
+                if (weatherCondition.getDate() != null) {
 
-                //Populate the temperature
-                temperature.setText(weatherCondition.getTemperature());
+                    //Populate the temperature
+                    temperature.setText(weatherCondition.getTemperature());
 //                Log.v("temperature",weatherCondition.getTemperature());
-                temperature.setTextColor(Color.parseColor("#FFFFFF"));
+                    temperature.setTextColor(Color.parseColor("#FFFFFF"));
 
                     //Populate the pollen count
                     pollen.setText(weatherCondition.getPollen());
 //                Log.v("pollen", weatherCondition.getPollen());
-                pollen.setTextColor(Color.parseColor("#FFFFFF"));
+                    pollen.setTextColor(Color.parseColor("#FFFFFF"));
 
-            }else{
-                //Populate the temperature
-                temperature.setText("N/A");
-                temperature.setTextColor(Color.parseColor("#FFFFFF"));
+                } else {
+                    //Populate the temperature
+                    temperature.setText("N/A");
+                    temperature.setTextColor(Color.parseColor("#FFFFFF"));
 
 
-                //Populate the pollen count
-                pollen.setText("N/A");
-                pollen.setTextColor(Color.parseColor("#FFFFFF"));
+                    //Populate the pollen count
+                    pollen.setText("N/A");
+                    pollen.setTextColor(Color.parseColor("#FFFFFF"));
+                }
+
+                tableRow.addView(diaryDate, 0);
+                tableRow.addView(ratingBar, 1);
+                tableRow.addView(temperature, 2);
+                tableRow.addView(pollen, 3);
+                tableRow.setBackground(getResources().getDrawable(R.drawable.tablerow_border));
+
+                tableLayout.addView(tableRow);
             }
-
-            tableRow.addView(diaryDate, 0);
-            tableRow.addView(ratingBar, 1);
-            tableRow.addView(temperature, 2);
-            tableRow.addView(pollen, 3);
-            tableRow.setBackground(getResources().getDrawable(R.drawable.tablerow_border));
-
-            tableLayout.addView(tableRow, i +1);
         }
     }
 

@@ -12,17 +12,20 @@ public class WeatherCondition implements Serializable {
     private String pressure;
     private String wind;
     private String pollen;
+    private String tomorrow_pollen;
+
 
     public WeatherCondition() {
     }
 
-    public WeatherCondition(String date, String temperature, String humidity, String pressure, String wind, String pollen) {
+    public WeatherCondition(String date, String temperature, String humidity, String pressure, String wind, String pollen, String tomorrow_pollen) {
         this.date = date;
         this.temperature = temperature;
         this.humidity = humidity;
         this.pressure = pressure;
         this.wind = wind;
         this.pollen = pollen;
+        this.tomorrow_pollen = tomorrow_pollen;
     }
 
     public String getDate() {
@@ -71,5 +74,13 @@ public class WeatherCondition implements Serializable {
 
     public void setPollen(String pollen) {
         this.pollen = pollen;
+    }
+
+    public String getTomorrow_pollen() {
+        return tomorrow_pollen;
+    }
+
+    public void setTomorrow_pollen(String tomorrow_pollen) {
+        this.tomorrow_pollen = tomorrow_pollen;
     }
 }

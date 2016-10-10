@@ -1,22 +1,18 @@
 package monash.ultimateinhaler;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.joshdholtz.sentry.Sentry;
 import com.roughike.bottombar.BottomBar;
@@ -25,10 +21,11 @@ import com.roughike.bottombar.OnTabSelectListener;
 
 import java.util.ArrayList;
 
+import monash.ultimateinhaler.service.NetworkService;
 import za.co.riggaroo.materialhelptutorial.TutorialItem;
 import za.co.riggaroo.materialhelptutorial.tutorial.MaterialTutorialActivity;
 
-public class StartActivity extends AppCompatActivity {
+public class StartActivity extends AppCompatActivity implements NetworkService.ConnectivityReceiverListener  {
     private TextView mTextView;
     private int previousPosition;
     private Typeface ty1;
@@ -62,11 +59,14 @@ public class StartActivity extends AppCompatActivity {
         //noinspection deprecation
 //        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.actionbarbg));
 
-        if (!CheckNetwork()) {
+//        if (!CheckNetwork()) {
+//
+//            Toast.makeText(StartActivity.this, "No internet!Please check your internet!", Toast.LENGTH_SHORT).show();
+//            openDialog();
+//        }
 
-            Toast.makeText(StartActivity.this, "No internet!Please check your internet!", Toast.LENGTH_SHORT).show();
-            openDialog();
-        }
+        checkConnection();
+
         //Set the fragment initially
         MainFragment fragment = new MainFragment();
         FragmentTransaction fragmentTransaction =
@@ -134,27 +134,6 @@ public class StartActivity extends AppCompatActivity {
                         fragmentTransaction6.addToBackStack("FragmentB");
                         fragmentTransaction6.commit();
                         break;
-
-//
-//                    case R.id.nav_prediction:
-//                        title = "Prediction";
-//
-//                        PredictionFragment fragment5 = new PredictionFragment();
-//                        FragmentTransaction fragmentTransaction5 =
-//                                getSupportFragmentManager().beginTransaction();
-//                        fragmentTransaction5.replace(R.id.fragment_containerStart, fragment5);
-//                        fragmentTransaction5.addToBackStack(null);
-//                        fragmentTransaction5.commit();                        break;
-//                    case R.id.nav_about:
-//                        title = "About";
-//
-//                        LeadsFragment fragment6 = new LeadsFragment();
-//                        FragmentTransaction fragmentTransaction6 =
-//                                getSupportFragmentManager().beginTransaction();
-//                        fragmentTransaction6.replace(R.id.fragment_containerStart, fragment6);
-//                        fragmentTransaction6.addToBackStack(null);
-//                        fragmentTransaction6.commit();                        break;
-
                 }
                 // update selected fragment and title
                 if (getSupportActionBar() != null) {
@@ -174,41 +153,59 @@ public class StartActivity extends AppCompatActivity {
 
     }
 
+    private void checkConnection() {
+        boolean isConnected = NetworkService.isConnected();
+        showSnack(isConnected);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // register connection status listener
+        MyApplication.getInstance().setConnectivityListener(this);
+    }
+
+    /**
+     * Callback will be triggered when there is change in
+     * network connection
+     */
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        showSnack(isConnected);
+    }
+
+    private void showSnack(boolean isConnected) {
+        String message;
+        int color;
+        if (isConnected) {
+            message = "Good! Connected to Internet";
+            color = Color.WHITE;
+        } else {
+            message = "Your device is not connected to internet. Please check the connection!";
+//            new SweetAlertDialog(this,SweetAlertDialog.WARNING_TYPE)
+//                    .setTitleText("No connection")
+//                    .setContentText(message)
+//                    .setConfirmText("OK!")
+//                    .show();
+            color = Color.WHITE;
+            Snackbar snackbar = Snackbar
+                    .make(findViewById(R.id.bottomBar), message, Snackbar.LENGTH_LONG);
+
+            View sbView = snackbar.getView();
+            TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+            textView.setTextColor(color);
+            snackbar.show();
+
+        }
+
+
+    }
     @Override
     public void onBackPressed() {
     }
 
-    //Check the mobile's network state
-    private boolean CheckNetwork() {
-        boolean haveConnectedWifi = false;
-        boolean haveConnectedMobile = false;
-
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
-        for (NetworkInfo ni : netInfo) {
-            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
-                if (ni.isConnected())
-                    haveConnectedWifi = true;
-            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
-                if (ni.isConnected())
-                    haveConnectedMobile = true;
-        }
-        return haveConnectedWifi || haveConnectedMobile;
-    }
-
-    //Open dialog when internet error occurs
-    public void openDialog() {
-        AlertDialog alertDialog = new AlertDialog.Builder(StartActivity.this).create();
-        alertDialog.setTitle("Internet Error");
-        alertDialog.setMessage("Make sure your open your internet connection!");
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        alertDialog.show();
-    }
 
     public void loadTutorial() {
         Intent mainAct = new Intent(this, MaterialTutorialActivity.class);

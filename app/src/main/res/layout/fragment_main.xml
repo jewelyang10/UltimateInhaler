@@ -408,7 +408,7 @@
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/card_diaryview"
                 android:layout_width="match_parent"
-                android:layout_height="63dp"
+                android:layout_height="35dp"
                 card_view:cardCornerRadius="5dp"
                 card_view:contentPadding="0dp"
                 android:layout_marginTop="15dp"
@@ -433,14 +433,6 @@
                         android:layout_marginLeft="35dp"
                         />
 
-                    <!--<monash.ultimateinhaler.SimpleRatingBar-->
-                        <!--android:id="@+id/myRatingBar"-->
-                        <!--android:layout_marginLeft="5dp"-->
-                        <!--android:layout_marginTop="12dp"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--style="@style/RatingBar.Heart"/>-->
-
                     <RatingBar
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -453,16 +445,49 @@
                         />
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Today state"
-                    android:layout_marginTop="35dp"
-                    android:gravity="center"
-                    android:id="@+id/today_predict"
-                    android:textStyle="bold"
-                    android:textSize="19dp"/>
+            </android.support.v7.widget.CardView>
 
+            <android.support.v7.widget.CardView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/card_view_next"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            card_view:cardCornerRadius="0dp"
+            card_view:contentPadding="0dp"
+            android:layout_below="@+id/card_diaryview"
+            android:layout_marginTop="1dp"
+            android:layout_marginLeft="13dp"
+            android:layout_marginRight="13dp"
+            card_view:cardBackgroundColor="#30ffffff">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:id="@+id/predict"
+                    >
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Today state"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginLeft="35dp"
+                        android:id="@+id/today_predict"
+                        android:textColor="#fff"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Tomorrow state"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginLeft="35dp"
+                        android:id="@+id/tomorrow_predict"
+                        android:textColor="#fff"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        />
+                </LinearLayout>
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
@@ -476,7 +501,7 @@
                 android:layout_marginTop="13dp"
                 android:layout_marginLeft="13dp"
                 android:layout_marginRight="13dp"
-                android:layout_below="@+id/card_diaryview"
+                android:layout_below="@+id/card_view_next"
                 card_view:cardBackgroundColor="#80ffffff">
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -581,30 +606,7 @@
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
 
-            <!--<android.support.v7.widget.CardView-->
-                <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-                <!--xmlns:card_view="http://schemas.android.com/apk/res-auto"-->
-                <!--android:id="@+id/card_view_next"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="40dp"-->
-                <!--card_view:cardCornerRadius="0dp"-->
-                <!--card_view:contentPadding="0dp"-->
-                <!--android:layout_below="@+id/card_view"-->
-                <!--android:layout_marginTop="20dp"-->
-                <!--android:layout_marginLeft="13dp"-->
-                <!--android:layout_marginRight="13dp"-->
-                <!--card_view:cardBackgroundColor="#fff">-->
-                <!--<TextView-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:text = "Asthma Recommendations"-->
-                    <!--android:textSize="20dp"-->
-                    <!--android:layout_marginLeft="20dp"-->
-                    <!--android:layout_gravity="center"-->
-                    <!--android:layout_marginTop="5dp"-->
-                    <!--android:textColor="#3AB7D6"/>-->
 
-            <!--</android.support.v7.widget.CardView>-->
 
             <!--<android.support.v7.widget.CardView-->
                 <!--xmlns:android="http://schemas.android.com/apk/res/android"-->

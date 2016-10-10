@@ -20,10 +20,10 @@
     <string name="slide_3_tips">New with asthma? Want to know the general tips and news?</string>
     <string name="slide_4_weather">Want to know the current weather and pollen count?</string>
 
-    <string name="slide_1_biodiversity_subtitle">We offer the biodiversity around you.</string>
-    <string name="slide_2_diary_subtitle">We offer tracking overview according your diary</string>
-    <string name="slide_3_tips_subtitle">We offer general tips for you to relieve yourself.</string>
-    <string name="slide_4_weather_subtitle">We offer weather temperature and pollen count for you.</string>
+    <string name="slide_1_biodiversity_subtitle">Check out surrounding biodiversity to minimise allergic reaction to Asthma.</string>
+    <string name="slide_2_diary_subtitle">Track your history will help determine your triggers.</string>
+    <string name="slide_3_tips_subtitle">We offer general tips for you to help yourself.</string>
+    <string name="slide_4_weather_subtitle">We offer weather temperature and pollen count for you. You could know the likelihood of Asthma episode</string>
     <string name="view_sample_tut">View Tutorial Example</string>
 
     <!--Fold Cell-->

@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,8 +23,6 @@ import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.github.amlcurran.showcaseview.ShowcaseView;
-import com.github.amlcurran.showcaseview.targets.Target;
 import com.joshdholtz.sentry.Sentry;
 
 import org.json.JSONArray;
@@ -34,8 +33,11 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -63,11 +65,12 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
             sunsetTextView, dateTextView_now;
     private TextView conditionTextView, conditionTextView_next,recommendation;
     private TextView locationTextView, locationTextView_next, dateTextView_tomorrow;
-
+    TextView predict;
     private String todayDate, temperatureDb, humidityDb, pressureDb, windDb, pollenDb;
     private YahooWeatherService service;
     private ProgressDialog dialog;
 
+    String tomorrowPollen, tomorrowWeather;
     ProgressBar myprogressBar;
     TextView progressingTextView;
     Handler progressHandler = new Handler();
@@ -85,12 +88,8 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
     DatabaseHelper myDb;
     SQLiteDatabase sqLiteDatabase;
     ArrayList<Records> history;
-//    SimpleRatingBar simpleRatingBar;
     RatingBar simpleRatingBar;
     TextView today_predict;
-    ShowcaseView showcaseView;
-    private int container = 0;
-    private Target tr1, tr2, tr3;
     private int count;
 
 
@@ -110,31 +109,12 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
             Log.v("savedState",Integer.toString(count));
         }
             rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        predict = (TextView) rootView.findViewById(R.id.tomorrow_predict);
 
             myDb = new DatabaseHelper(this.getContext());
-//        sqLiteDatabase = myDb.getWritableDatabase();
-//        myDb.onUpgrade(sqLiteDatabase,2,3);
-//        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
-//        swipeRefreshLayout.setColorSchemeColors(android.R.color.holo_blue_dark, android.R.color.holo_green_light, android.R.color.holo_green_dark);
-//        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                swipeRefreshLayout.setRefreshing(true);
-//                Log.d("Swipe", "Refreshing");
-//                ( new Handler()).postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        swipeRefreshLayout.setRefreshing(false);
-//                        dialog.setMessage("Loading...");
-//                        dialog.show();
-//                        service.refreshWeather("Melbourne, Australia");
-//
-//                    }
-//                }, 3000);
-//            }
-//        });
+//            sqLiteDatabase = myDb.getWritableDatabase();
+//            myDb.onUpgrade(sqLiteDatabase,2,3);
 
-//        simpleRatingBar = (SimpleRatingBar) rootView.findViewById(R.id.myRatingBar);
             simpleRatingBar = (RatingBar) rootView.findViewById(R.id.myRatingBar);
             mViewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
 
@@ -219,9 +199,13 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
             //Check today weather already exist or not
 
             if (myDb.todayWeatherExist(todayDate) == 0) {
-                myAsyncTask = new GetPollenCount();
-                myAsyncTask.execute();
 
+                myAsyncTask = new GetPollenCount();
+                try {
+                    myAsyncTask.execute(generateKey("FGMG6acd"));
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                }
                 service = new YahooWeatherService(this);
                 dialog = new ProgressDialog(this.getActivity());
                 dialog.setMessage("Loading...");
@@ -230,7 +214,26 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
 
             } else {
                 WeatherCondition weatherCondition = myDb.getWeatherByDiaryDateTracked(todayDate);
+
+                //Today pollen info
                 progressingTextView.setText(weatherCondition.getPollen());
+
+                //Set the tomorrow prediction
+                String text ="";
+                //Set the prediction for tomorrow likelihood
+                if (weatherCondition.getTomorrow_pollen().equals("Low")) {
+                    text = "Tomorrow asthma episode:  <font color=\"blue\">Low</font>";
+                } else if (weatherCondition.getTomorrow_pollen().equals("Medium")) {
+                    text = "Tomorrow asthma episode:  <font color=\"yellow\">Medium</font>";
+                } else if (weatherCondition.getTomorrow_pollen().equals("High")) {
+                    text = "Tomorrow asthma episode:  <font color=\"red\">High</font>";
+                } else {
+                    text = "Tomorrow asthma episode:  <font color=\"red\">Low</font>";
+                }
+                predict.setText(Html.fromHtml(text), TextView.BufferType.SPANNABLE);
+
+                pollenDb = weatherCondition.getPollen();
+                tomorrowPollen = weatherCondition.getTomorrow_pollen();
 
                 service = new YahooWeatherService(this);
                 dialog = new ProgressDialog(this.getActivity());
@@ -306,7 +309,7 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
         pressureDb = channel.getAtmosphere().getPressure() + " in";
         windDb = channel.getWind().getSpeed() + " mph";
 
-        insertWeatherIntoDatabase(todayDate,temperatureDb,humidityDb,pressureDb,windDb,pollenDb);
+        insertWeatherIntoDatabase(todayDate,temperatureDb,humidityDb,pressureDb,windDb,pollenDb,tomorrowPollen);
 
         int[] foggy = {19,20,21,22};
         int[] thunderstorm = {0,1,2,3,4,5,6,35,37,38,39,40,45,47};
@@ -334,8 +337,11 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
                     + "•\tConsider wearing a facemask in certain situations when allergy is severe and exposure to high amounts of pollen is unavoidable.\n";
 
             mCardAdapter = new CardPagerAdapter(this.getContext(),3,recom, drawables);
-            today_predict.setText("You are Safe!");
-            today_predict.setTextColor(Color.parseColor("#EADD3E"));
+//            today_predict.setText("Attack Likelihood: High");
+
+            String text = "Asthma episode: <font color=\"red\">High</font>";
+            today_predict.setText(Html.fromHtml(text), TextView.BufferType.SPANNABLE);
+//            today_predict.setTextColor(Color.parseColor("#EADD3E"));
 
         }else if(Arrays.toString(thunderstorm).matches(".*[\\[ ]" + imageConditionCode + "[\\],].*")){
             List<Drawable> drawables = new ArrayList<>();
@@ -347,8 +353,11 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
 
             mCardAdapter = new CardPagerAdapter(this.getContext(),1,recom,drawables);
 
-            today_predict.setText("Not suggest togo outside!");
-            today_predict.setTextColor(Color.parseColor("#F96651"));
+//            today_predict.setText("Attack Likelihood: High");
+
+            String text = "Asthma episode: <font color=\"red\">High</font>";
+            today_predict.setText(Html.fromHtml(text), TextView.BufferType.SPANNABLE);
+//            today_predict.setTextColor(Color.parseColor("#F96651"));
 
         }else if(Arrays.toString(snow).matches(".*[\\[ ]" + imageConditionCode + "[\\],].*")){
 
@@ -360,8 +369,11 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
             String recom = "•\tWhen travelling in the car, keep the windows shut and use recirculating air conditioning (if possible).\n";
 
             mCardAdapter = new CardPagerAdapter(this.getContext(),1,recom,drawables);
-            today_predict.setText("You are Safe!");
-            today_predict.setTextColor(Color.parseColor("#EADD3E"));
+//            today_predict.setText("Attack Likelihood: Low");
+
+            String text = "Attack likelihood: <font color=\"blue\">Low</font>";
+            today_predict.setText(Html.fromHtml(text), TextView.BufferType.SPANNABLE);
+//            today_predict.setTextColor(Color.parseColor("#EADD3E"));
 
         }else if(Arrays.toString(heavySnow).matches(".*[\\[ ]" +imageConditionCode + "[\\],].*")){
             List<Drawable> drawables = new ArrayList<>();
@@ -373,8 +385,11 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
 
             mCardAdapter = new CardPagerAdapter(this.getContext(),1,recom,drawables);
 
-            today_predict.setText("Not suggest togo outside!");
-            today_predict.setTextColor(Color.parseColor("#F96651"));
+//            today_predict.setText("Attack Likelihood: High");
+            String text = "Asthma episode: <font color=\"blue\">Low</font>";
+            today_predict.setText(Html.fromHtml(text), TextView.BufferType.SPANNABLE);
+
+//            today_predict.setTextColor(Color.parseColor("#F96651"));
 
         }else if(Arrays.toString(windy).matches(".*[\\[ ]" + imageConditionCode + "[\\],].*")){
 
@@ -402,8 +417,11 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
             mCardAdapter = new CardPagerAdapter(this.getContext(),4,recom,drawables);
 
 
-            today_predict.setText("Not suggest togo outside!");
-            today_predict.setTextColor(Color.parseColor("#F96651"));
+//            today_predict.setText("Attack Likelihood: High");
+            String text = "Asthma episode: <font color=\"red\">High</font>";
+            today_predict.setText(Html.fromHtml(text), TextView.BufferType.SPANNABLE);
+
+//            today_predict.setTextColor(Color.parseColor("#F96651"));
 
         }else if(Arrays.toString(night).matches(".*[\\[ ]" + imageConditionCode + "[\\],].*"))
         {
@@ -417,8 +435,11 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
 
             mCardAdapter = new CardPagerAdapter(this.getContext(),1,recom,drawables);
 
-            today_predict.setText("You are Safe!");
-            today_predict.setTextColor(Color.parseColor("#EADD3E"));
+//            today_predict.setText("Attack Likelihood: Low");
+            String text = "Asthma episode: <font color=\"blue\">Low</font>";
+            today_predict.setText(Html.fromHtml(text), TextView.BufferType.SPANNABLE);
+
+//            today_predict.setTextColor(Color.parseColor("#EADD3E"));
 
         }else if(Arrays.toString(day).matches(".*[\\[ ]" + imageConditionCode + "[\\],].*")){
 
@@ -441,8 +462,11 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
                     + "•\tDry your bed linen and clothes indoors during the pollen season, if possible.\n";
             mCardAdapter = new CardPagerAdapter(this.getContext(),3,recom,drawables);
 
-            today_predict.setText("You are Safe!");
-            today_predict.setTextColor(Color.parseColor("#EADD3E"));
+            String text = "Asthma episode: <font color=\"blue\">Low</font>";
+            today_predict.setText(Html.fromHtml(text), TextView.BufferType.SPANNABLE);
+
+//            today_predict.setText("Attack Likelihood: Low");
+//            today_predict.setTextColor(Color.parseColor("#EADD3E"));
         }else {
 
             List<Drawable> drawables = new ArrayList<>();
@@ -463,8 +487,11 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
                     + "•\tDry your bed linen and clothes indoors during the pollen season, if possible.\n";
             mCardAdapter = new CardPagerAdapter(this.getContext(),3,recom,drawables);
 
-            today_predict.setText("You are Safe!");
-            today_predict.setTextColor(Color.parseColor("#EADD3E"));
+//            today_predict.setText("Attack Likelihood: Medium");
+            String text = "Asthma episode: <font color=\"yellow\">Medium</font>";
+            today_predict.setText(Html.fromHtml(text), TextView.BufferType.SPANNABLE);
+
+//            today_predict.setTextColor(Color.parseColor("#EADD3E"));
         }
 
         mCardAdapter.notifyDataSetChanged();
@@ -504,33 +531,6 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
         return dp * (context.getResources().getDisplayMetrics().density);
     }
 
-//    @Override
-//    public void onClick(View v) {
-//        switch(container) {
-//            case 0:
-//                showcaseView.setShowcase(tr1, true);
-//                showcaseView.setContentTitle("Last state tracked in diary");
-//                showcaseView.setContentText("The latest state");
-//                break;
-//            case 1:
-//                showcaseView.setShowcase(tr2, true);
-//                showcaseView.setContentTitle("Weather information");
-//                showcaseView.setContentText("Temperature, location, pollen");
-//                break;
-//            case 2:
-//                showcaseView.setShowcase(tr3, true);
-//                showcaseView.setContentTitle("Recommendations for you");
-//                showcaseView.setContentText("Different recommendations according to different weather condition!");
-//                showcaseView.setButtonText("OK");
-//                break;
-//            case 3:
-//                showcaseView.hide();
-//                break;
-//        }
-//        container++;
-//
-//
-//    }
 
 
     @Override
@@ -559,7 +559,7 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
             String resmsg = "";
             // Making HTTP request
             try {
-                url = new URL("https://socialpollencount.co.uk/api/forecast?location=[51.7546407,-1.2510746]");
+                url = new URL("http://ws.weatherzone.com.au/?lt=twcid&lc=9477&locdet=1&fc=1&pollen=1&rollover=18&format=json&u=100205-867&k=" + args[0]);
                 conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(10000);
                 conn.setConnectTimeout(15000);
@@ -592,8 +592,8 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
             String pollencount = null;
             try {
                 JSONObject raw = new JSONObject(s);
-                count = raw.getJSONArray("forecast");
-                pollencount = count.getJSONObject(0).getString("pollen_count");
+                count = raw.getJSONArray("countries");
+                pollencount = count.getJSONObject(0).getJSONArray("locations").getJSONObject(0).getJSONObject("local_forecasts").getJSONArray("forecasts").getJSONObject(0).getString("pollen_text");
                 if (pollencount.equals("Low")){
                     progressingTextView.setText("Low");
 //                    myprogressBar.setProgress(30);
@@ -612,13 +612,29 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
 
 //                myAsyncTaskIsRunning = false;
 //                myAsyncTask = null;
+
+                tomorrowPollen = count.getJSONObject(0).getJSONArray("locations").getJSONObject(0).getJSONObject("local_forecasts").getJSONArray("forecasts").getJSONObject(1).getString("pollen_text");
+                tomorrowWeather = count.getJSONObject(0).getJSONArray("locations").getJSONObject(0).getJSONObject("local_forecasts").getJSONArray("forecasts").getJSONObject(1).getString("rain_prob");
+
             } catch (JSONException e) {
                 e.printStackTrace();
                 Sentry.captureException(e);
 
             }
-            pollencount = "Low";
-            progressingTextView.setText(pollencount);
+
+             progressingTextView.setText(pollencount);
+            String text ="";
+            //Set the prediction for tomorrow likelihood
+            if (tomorrowPollen.equals("Low")) {
+                text = "Tomorrow asthma episode:  <font color=\"blue\">Low</font>";
+            } else if (tomorrowPollen.equals("Medium")) {
+                text = "Tomorrow asthma episode:  <font color=\"yellow\">Medium</font>";
+            } else if (tomorrowPollen.equals("High")) {
+                text = "Tomorrow asthma episode:  <font color=\"red\">High</font>";
+            } else {
+                text = "Tomorrow asthma episode:  <font color=\"red\">Low</font>";
+            }
+            predict.setText(Html.fromHtml(text), TextView.BufferType.SPANNABLE);
 
             pollenDb = pollencount;
 
@@ -642,15 +658,13 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
 
 
     public void insertWeatherIntoDatabase(String date, String temperature, String humidity,
-                                          String pressure, String wind, String pollen){
+                                          String pressure, String wind, String pollen, String tomorrowPollen){
         try{
             if (myDb.todayWeatherExist(date) == 0){
-                myDb.insertWeatherIntoDatabase(date,temperature,humidity,pressure,wind,pollen);
+                myDb.insertWeatherIntoDatabase(date,temperature,humidity,pressure,wind,pollen,tomorrowPollen);
             }else
             {
-//                myDb.updateTodayWeatherRecord(date,temperature,humidity,pressure,wind,pollen);
-                myDb.updateTodayWeatherRecord(date,temperature,humidity,pressure,wind,"low");
-
+                myDb.updateTodayWeatherRecord(date,temperature,humidity,pressure,wind,pollen,tomorrowPollen);
             }
         }catch (Exception e){
 //            Toast.makeText(getContext(),"Weather Database error",Toast.LENGTH_LONG).show();
@@ -675,7 +689,7 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
                 public int compare(Records lhs, Records rhs) {
                     Calendar calendarlhs = Calendar.getInstance();
                     Calendar calendarrhs = Calendar.getInstance();
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // HH:mm:ss
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy"); // HH:mm:ss
                     try {
                         calendarlhs.setTime(dateFormat.parse(lhs.getDate()));
 
@@ -721,30 +735,32 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
                     LinearLayout.LayoutParams.WRAP_CONTENT);
             params.setMargins(0, 12, 0, 0);
             valueTV.setLayoutParams(params);
-
-
             ((LinearLayout) linearLayout).addView(valueTV);
             simpleRatingBar.setVisibility(View.GONE);
-//            valueTV.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//
-//                    CalendarFragment fragment4 = new CalendarFragment();
-//                    FragmentTransaction fragmentTransaction4 =
-//                            getFragmentManager().beginTransaction();
-//                    fragmentTransaction4.replace(R.id.fragment_containerStart, fragment4);
-//                    fragmentTransaction4.addToBackStack("FragmentB");
-//                    fragmentTransaction4.commit();
-//                }
-//            });
-
-
         }
-
-
-
     }
 
+    public static String generateKey(String password) throws
+            NoSuchAlgorithmException {
+        String key = null;
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
+        String today = dateFormat.format(calendar.getTime());
+        if (today != null)
+        {
+            String[] str = today.split("/");
+            key = Integer.toString(Integer.parseInt(str[0]) * 2 +
+                    Integer.parseInt(str[1]) * 100 * 3 + Integer.parseInt(str[2]) * 10000 *
+                    17) ;
+            MessageDigest m = MessageDigest.getInstance("md5");
+            byte[] data = key.getBytes();
+            m.update(data, 0, data.length);
+            BigInteger i = new BigInteger(1,
+                    m.digest(password.getBytes()));
+            return String.format("%1$032X", i);
+        }
+        return key;
+    }
 
 }
 
