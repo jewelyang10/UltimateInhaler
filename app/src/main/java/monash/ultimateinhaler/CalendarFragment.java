@@ -41,7 +41,6 @@ public class CalendarFragment extends Fragment implements Serializable {
     private View rootView;
     protected String selectedDate;
     protected ArrayList<Records> records;
-    private  NumberPicker np;
     DatabaseHelper myDb;
     SQLiteDatabase sqLiteDatabase;
     String selectedNo;

@@ -173,8 +173,8 @@ public class DiaryDetailsFragment extends Fragment implements HorizontalNumberPi
             new SweetAlertDialog(getContext(), SweetAlertDialog.WARNING_TYPE)
                     .setTitleText("Are you sure?")
                     .setContentText("Won't be able to save your diary!")
-                    .setCancelText("No, cancel it!")
-                    .setConfirmText("Yes, no save!")
+                    .setCancelText("No")
+                    .setConfirmText("Yes")
                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sDialog) {
@@ -248,7 +248,8 @@ public class DiaryDetailsFragment extends Fragment implements HorizontalNumberPi
 
             //Show msg to tell user to input everything record
             new SweetAlertDialog(getContext())
-                    .setTitleText("Oops, seems you forgot to answer questions?")
+                    .setTitleText("Oops")
+                    .setContentText("Forgot some questions?")
                     .show();
         }
 

@@ -177,7 +177,9 @@ public class HistoryFragment extends Fragment {
 
                 diaryDate.setText(history.get(i).getDate());
                 diaryDate.setGravity(Gravity.CENTER);
-                diaryDate.setTextSize(19);
+//                diaryDate.setTextSize(13);
+                diaryDate.setTextSize(13);
+
                 diaryDate.setLayoutParams(layoutParams);
                 diaryDate.setTextColor(Color.parseColor("#FFFFFF"));
 
@@ -212,7 +214,9 @@ public class HistoryFragment extends Fragment {
 
                 //Create a temperature textview
                 TextView temperature = new TextView(getContext());
-                temperature.setTextSize(19);
+//                temperature.setTextSize(13);
+                temperature.setTextSize(13);
+
                 temperature.setGravity(Gravity.CENTER);
                 temperature.setLayoutParams(layoutParams);
 
@@ -220,7 +224,9 @@ public class HistoryFragment extends Fragment {
 
                 TextView pollen = new TextView(getContext());
                 pollen.setGravity(Gravity.CENTER);
-                pollen.setTextSize(19);
+//                pollen.setTextSize(13);
+                pollen.setTextSize(13);
+
                 pollen.setLayoutParams(layoutParams);
 
                 //Get the weather condition for that date
@@ -228,23 +234,23 @@ public class HistoryFragment extends Fragment {
                 if (weatherCondition.getDate() != null) {
 
                     //Populate the temperature
-                    temperature.setText(weatherCondition.getTemperature());
+                    temperature.setText("     " + weatherCondition.getTemperature());
 //                Log.v("temperature",weatherCondition.getTemperature());
                     temperature.setTextColor(Color.parseColor("#FFFFFF"));
 
                     //Populate the pollen count
-                    pollen.setText(weatherCondition.getPollen());
+                    pollen.setText("        " +weatherCondition.getPollen());
 //                Log.v("pollen", weatherCondition.getPollen());
                     pollen.setTextColor(Color.parseColor("#FFFFFF"));
 
                 } else {
                     //Populate the temperature
-                    temperature.setText("N/A");
+                    temperature.setText("      N/A");
                     temperature.setTextColor(Color.parseColor("#FFFFFF"));
 
 
                     //Populate the pollen count
-                    pollen.setText("N/A");
+                    pollen.setText("      N/A");
                     pollen.setTextColor(Color.parseColor("#FFFFFF"));
                 }
 

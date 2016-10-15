@@ -181,4 +181,8 @@
         <item name="android:paddingBottom">4dp</item>
     </style>
 
+    <style name="MyTextAppearance">
+        <item name="android:textSize">12dp</item>
+        <item name="android:textColor">#4295B2</item>
+    </style>
 </resources>

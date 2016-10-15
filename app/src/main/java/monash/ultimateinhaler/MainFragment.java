@@ -222,13 +222,13 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
                 String text ="";
                 //Set the prediction for tomorrow likelihood
                 if (weatherCondition.getTomorrow_pollen().equals("Low")) {
-                    text = "Tomorrow asthma episode:  <font color=\"blue\">Low</font>";
+                    text = "Tomorrow episode:  <font color=\"blue\">Low</font>";
                 } else if (weatherCondition.getTomorrow_pollen().equals("Medium")) {
-                    text = "Tomorrow asthma episode:  <font color=\"yellow\">Medium</font>";
+                    text = "Tomorrow episode:  <font color=\"yellow\">Medium</font>";
                 } else if (weatherCondition.getTomorrow_pollen().equals("High")) {
-                    text = "Tomorrow asthma episode:  <font color=\"red\">High</font>";
+                    text = "Tomorrow episode:  <font color=\"red\">High</font>";
                 } else {
-                    text = "Tomorrow asthma episode:  <font color=\"red\">Low</font>";
+                    text = "Tomorrow episode:  <font color=\"red\">Low</font>";
                 }
                 predict.setText(Html.fromHtml(text), TextView.BufferType.SPANNABLE);
 
@@ -371,7 +371,7 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
             mCardAdapter = new CardPagerAdapter(this.getContext(),1,recom,drawables);
 //            today_predict.setText("Attack Likelihood: Low");
 
-            String text = "Attack likelihood: <font color=\"blue\">Low</font>";
+            String text = "Asthma episode: <font color=\"blue\">Low</font>";
             today_predict.setText(Html.fromHtml(text), TextView.BufferType.SPANNABLE);
 //            today_predict.setTextColor(Color.parseColor("#EADD3E"));
 
@@ -594,16 +594,16 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
                 JSONObject raw = new JSONObject(s);
                 count = raw.getJSONArray("countries");
                 pollencount = count.getJSONObject(0).getJSONArray("locations").getJSONObject(0).getJSONObject("local_forecasts").getJSONArray("forecasts").getJSONObject(0).getString("pollen_text");
-                if (pollencount.equals("Low")){
+                if (pollencount.equals("Low")) {
                     progressingTextView.setText("Low");
 //                    myprogressBar.setProgress(30);
-                }else if (pollencount.equals("Moderate")){
+                } else if (pollencount.equals("Moderate")) {
                     progressingTextView.setText("Moderate");
 //                    myprogressBar.setProgress(50);
-                }else if (pollencount.equals("High")){
+                } else if (pollencount.equals("High")) {
                     progressingTextView.setText("High");
 //                    myprogressBar.setProgress(80);
-                }else {
+                } else {
                     progressingTextView.setText("No information");
 //                    myprogressBar.setProgress(100);
                 }
@@ -622,22 +622,30 @@ public class MainFragment extends Fragment implements WeatherServiceCallback {
 
             }
 
-             progressingTextView.setText(pollencount);
-            String text ="";
+            progressingTextView.setText(pollencount);
+            String text = "";
             //Set the prediction for tomorrow likelihood
-            if (tomorrowPollen.equals("Low")) {
-                text = "Tomorrow asthma episode:  <font color=\"blue\">Low</font>";
-            } else if (tomorrowPollen.equals("Medium")) {
-                text = "Tomorrow asthma episode:  <font color=\"yellow\">Medium</font>";
-            } else if (tomorrowPollen.equals("High")) {
-                text = "Tomorrow asthma episode:  <font color=\"red\">High</font>";
-            } else {
-                text = "Tomorrow asthma episode:  <font color=\"red\">Low</font>";
+            if (tomorrowPollen != null) {
+                if (tomorrowPollen.equals("Low")) {
+                    text = "Tomorrow episode:  <font color=\"blue\">Low</font>";
+                } else if (tomorrowPollen.equals("Medium")) {
+                    text = "Tomorrow episode:  <font color=\"yellow\">Medium</font>";
+                } else if (tomorrowPollen.equals("High")) {
+                    text = "Tomorrow episode:  <font color=\"red\">High</font>";
+                } else {
+                    text = "Tomorrow episode:  <font color=\"red\">Low</font>";
+                }
+                predict.setText(Html.fromHtml(text), TextView.BufferType.SPANNABLE);
+
+                pollenDb = pollencount;
+
+            }else{
+                text = "Tomorrow episode:  <font color=\"blue\">Low</font>";
+
+                predict.setText(Html.fromHtml(text), TextView.BufferType.SPANNABLE);
+
+                pollenDb = pollencount;
             }
-            predict.setText(Html.fromHtml(text), TextView.BufferType.SPANNABLE);
-
-            pollenDb = pollencount;
-
         }
 
     }
